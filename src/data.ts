@@ -197,8 +197,8 @@ export const articles: Article[] = [
  *     python3 scripts/sample-palette.py <image...> --count=7
  *
  * over whatever the prints on the desk currently are, and paste the result.
- * DESIGN_DIRECTION §2 requires hues to be sampled rather than invented; this is
- * the list that proves it. Re-derive it whenever the prints change. D49.
+ * This list DESCRIBES the pictures; it never constrains which pictures may go
+ * on the desk. Re-derive it whenever they change. D49.
  */
 export const swatches = [
   { hex: '#F7E8D5', name: 'Snow, lit' },

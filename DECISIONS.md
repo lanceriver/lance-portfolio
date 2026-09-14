@@ -799,11 +799,25 @@ Run against the alpine plate it returns snow-lit, snow shadow, ochre, cobalt,
 slate, umber, terracotta — the hand-authored list, rediscovered. So D2's claim
 now has a measurement behind it instead of a memory.
 
-The genuinely useful column is the last one: it says whether a photograph's
-colours already live in the same world as the paintings or are pulling
-somewhere new. That is the question to ask of every photograph that goes on the
-desk, because Field Notes is about to become the one photographic surface on a
-painted site, and the palette is what will hold the two together.
+The last column reports the nearest existing token, which is informative and
+nothing more.
+
+**Correction, same day.** I wrote here that agreement with the painted palette
+was "the question to ask of every photograph that goes on the desk", and then
+started applying it — reading a photograph Lance liked and advising against it
+on the grounds that its greens and greys did not match the paintings. He stopped
+that: *"why does it matter whether the pics match the colours, the point is that
+i want it to have my favourite pictures from my trips."*
+
+He is right, and the error is worth recording because it is a specific way to be
+wrong: I built a measuring tool and then let it start making decisions. The
+swatch strip is **derived**. It describes whatever is on the desk; it does not
+get a vote on what goes there. Field Notes is the personal section, the pictures
+are the point, and the only thing that follows from a change of pictures is that
+the strip is re-run.
+
+The site's own tokens are unaffected — those are chosen, they are used for type,
+rules, the ridge and the slate ground, and no photograph touches them.
 
 Two bugs of mine, both caught by reading the output rather than the code: a
 format string that passed a tuple where three integers were wanted, and tone
