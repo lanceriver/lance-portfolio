@@ -770,3 +770,45 @@ rules are doing different jobs and the comments say so.
 
 Verified across 560 / 588 / 900 / 1300 / 1440: zero height change on every row
 in both states, and at 1440 all four title blocks measure 81px.
+
+## D49 — the palette is derived, not chosen
+*2026-09-14 · Opus*
+
+Lance is replacing the demo prints with photographs from his own travels, and
+asked what else would personalise the desk. The first answer was the object
+already sitting there: the swatch strip says *"Sampled from the plates"* and
+*"Every colour on this site was lifted from a painting."* That was true, and it
+was done by eye. Once the prints are his photographs it has to be true again,
+and by then nobody will remember which seven colours were picked or why.
+
+`scripts/sample-palette.py` derives them. Quantise, then select by coverage with
+a perceptual-distance floor in Lab, so the strip gets the colours the image is
+made of rather than seven versions of the same blue. Two things make the output
+worth reading rather than just correct:
+
+- **Share is re-attributed.** Every quantiser bucket is assigned to its nearest
+  pick, so the percentage reported is the proportion of the image a swatch
+  actually speaks for. The raw bucket count answers a question nobody asked —
+  it read 2-4% per swatch when the honest figures are 4-25%.
+- **Names come from the site's own vocabulary.** Where a sampled colour is
+  within ΔE 14 of an existing token it is called by that token's name; only a
+  genuinely new colour gets a generated description. The first pass generated
+  three swatches called "Mid Azure", which is no use as a label.
+
+Run against the alpine plate it returns snow-lit, snow shadow, ochre, cobalt,
+slate, umber, terracotta — the hand-authored list, rediscovered. So D2's claim
+now has a measurement behind it instead of a memory.
+
+The genuinely useful column is the last one: it says whether a photograph's
+colours already live in the same world as the paintings or are pulling
+somewhere new. That is the question to ask of every photograph that goes on the
+desk, because Field Notes is about to become the one photographic surface on a
+painted site, and the palette is what will hold the two together.
+
+Two bugs of mine, both caught by reading the output rather than the code: a
+format string that passed a tuple where three integers were wanted, and tone
+buckets taken from HSV *value* instead of Lab lightness — by which measure a
+saturated cobalt is "pale", which is both wrong and useless on a swatch.
+
+`swatches` moved to `data.ts` with the rest of the content, so replacing it when
+the photographs arrive is a one-file edit.

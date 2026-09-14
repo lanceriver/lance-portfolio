@@ -191,6 +191,25 @@ export const articles: Article[] = [
 ]
 
 
+/**
+ * The Field Notes swatch strip. Derived, not chosen: run
+ *
+ *     python3 scripts/sample-palette.py <image...> --count=7
+ *
+ * over whatever the prints on the desk currently are, and paste the result.
+ * DESIGN_DIRECTION §2 requires hues to be sampled rather than invented; this is
+ * the list that proves it. Re-derive it whenever the prints change. D49.
+ */
+export const swatches = [
+  { hex: '#F7E8D5', name: 'Snow, lit' },
+  { hex: '#93B1D5', name: 'Snow shadow' },
+  { hex: '#CE9B5B', name: 'Ochre' },
+  { hex: '#0979E5', name: 'Cobalt' },
+  { hex: '#2D70AF', name: 'Slate' },
+  { hex: '#8F3C20', name: 'Umber' },
+  { hex: '#5C3E25', name: 'Terracotta' },
+]
+
 export const navLinks = [
   { label: 'Work', href: '#work' },
   { label: 'About', href: '#about' },

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
+import { swatches } from '../data'
 import { useReducedMotion } from '../hooks/useReducedMotion'
 import { useScrollDriver } from '../hooks/useScrollDriver'
 import { clamp } from '../lib/math'
@@ -179,16 +180,6 @@ const OBJECTS: Obj[] = [
     stiffness: 120,
     damping: 18,
   },
-]
-
-const SWATCHES = [
-  { hex: '#0D7EE6', name: 'Zenith' },
-  { hex: '#2F8CE2', name: 'Azure' },
-  { hex: '#B3C0D8', name: 'Snow shadow' },
-  { hex: '#F0EAE0', name: 'Snow, lit' },
-  { hex: '#C79969', name: 'Ochre' },
-  { hex: '#8C3F3E', name: 'Rust' },
-  { hex: '#656B59', name: 'Olive' },
 ]
 
 /** Extra hold past a full viewport, so the cover completes before the release. */
@@ -478,7 +469,7 @@ function ObjectBody({ o, onOpen }: { o: Obj; onOpen: () => void }) {
       <div className="palette">
         <p className="palette__label eyebrow">Sampled from the plates</p>
         <ul className="palette__strip">
-          {SWATCHES.map((s) => (
+          {swatches.map((s) => (
             <li key={s.hex} style={{ background: s.hex }}>
               <span className="vh">{s.name}</span>
             </li>
