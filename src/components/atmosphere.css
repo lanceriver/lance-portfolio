@@ -1,0 +1,56 @@
+/* The Hero's atmospheres. Nothing here touches the painting. */
+
+.atmosphere { position: absolute; inset: 0; pointer-events: none; }
+
+.snow  { position: absolute; inset: 0; z-index: 4; overflow: hidden; }
+/* The flock passes BEHIND the village.
+   The mask is the painting's own skyline, derived from its pixels rather than
+   traced by hand: sky and snow are background, anything else 8-connected to the
+   left or right edge of the frame is built fabric. That connectivity rule is
+   what keeps the dark rock on the mountain face out of it — it is an island in
+   the snow and never reaches an edge — so the birds pass in front of the
+   mountains, as a distant bird does, and behind the roofs, the conifers and the
+   church spire, as a distant bird also does. `cover / center` matches
+   `.hero__plate` exactly, so the two crop identically at every aspect ratio.
+   The painting itself is untouched: one image, still, no layers. DECISIONS D43. */
+.birds {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  overflow: hidden;
+  -webkit-mask: url('/plates/alpine-skyline-mask.png') center / cover no-repeat;
+  mask: url('/plates/alpine-skyline-mask.png') center / cover no-repeat;
+}
+
+.flake {
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 50% !important;   /* the one exception to the no-radius rule: a snowflake */
+  background: rgba(255, 255, 255, .9);
+  will-change: transform;
+}
+
+/* Deliberately simple painted marks — the way a child draws a distant bird.
+   A shallow squashed "m". No anatomy, no gloss, no shadow. DECISIONS D5. */
+.bird {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 52px;
+  height: 28px;
+  opacity: .96;
+  will-change: transform;
+}
+.bird svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.bird path {
+  fill: none;
+  stroke: var(--bird-mark);
+  stroke-width: 4.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.bird .tail { stroke: var(--bird-tail); stroke-width: 3.4; }
+.bird .wing { transform-box: fill-box; will-change: transform; }
+.bird .wing--l { transform-origin: 100% 70%; }
+.bird .wing--r { transform-origin: 0% 70%; }

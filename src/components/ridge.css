@@ -1,0 +1,37 @@
+.ridge {
+  position: absolute;
+  left: 0;
+  right: 0;
+  /* one pixel of overlap into the section, so no subpixel hairline can open up
+     between the SVG's base row and the slate ground below it */
+  bottom: calc(100% - 1px);
+  height: clamp(92px, 11.5vw, 172px);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.ridge__svg { display: block; width: 100%; height: 100%; }
+
+.ridge__mass { fill: var(--slate-deep); }
+
+/* Snow lying along the crest, not an outline drawn around a shape — which is
+   why it is a band and not a hairline. At 3px it was invisible; at this weight
+   it reads as the thing it is, and it is the only cream in the section above
+   the type. */
+.ridge__crest {
+  fill: none;
+  stroke: url(#ridge-light);
+  /* constant device width: preserveAspectRatio="none" would otherwise stretch
+     the stroke with the landform */
+  vector-effect: non-scaling-stroke;
+  stroke-width: 11;
+  stroke-linejoin: round;
+}
+
+@media (max-width: 900px) {
+  /* A shorter range on a narrow screen — at 11.5vw the peaks would eat the
+     whole of Field Notes' bottom margin. The crest is a fixed device width, so
+     it has to come down with it or the snow out-weighs the mountain. */
+  .ridge { height: clamp(72px, 20vw, 110px); }
+  .ridge__crest { stroke-width: 5; }
+}

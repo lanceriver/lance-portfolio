@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Opus — transition frames</title>
+<style>
+*{box-sizing:border-box;margin:0}
+html,body{height:100%;overflow:hidden}
+body{background:#F0EAE0;font:11px/1.4 ui-monospace,monospace;color:#1B2A33}
+section{display:none;position:relative;height:100vh;overflow:hidden}
+section.on{display:block}
+section.grid{display:none}
+section.grid.on{display:grid}
+.tag{position:absolute;left:10px;top:10px;z-index:20;background:rgba(27,42,51,.82);color:#F0EAE0;padding:5px 9px;letter-spacing:.04em}
+
+.plate{position:absolute;inset:0;background:url('../../public/plates/alpine-village.webp') center/cover no-repeat}
+.cplate{position:absolute;inset:0;background:url('../../public/plates/coastal-road.webp') center/cover no-repeat}
+
+.snowfield{position:absolute;left:0;right:0;bottom:0;height:44vh;
+  background:linear-gradient(to bottom,
+    rgba(179,192,216,0) 0%, rgba(179,192,216,.06) 30%, rgba(179,192,216,.30) 56%,
+    rgba(179,192,216,.72) 78%, #B3C0D8 92%, #B3C0D8 100%);}
+.grain{position:absolute;left:0;right:0;bottom:0;height:44vh;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/></filter><rect width='140' height='140' filter='url(%23n)' opacity='.45'/></svg>");}
+
+/* A3: dissolved painting (top half) directly against the real page ground (bottom half) */
+#a3{grid-template-rows:1fr 1fr}
+#a3 .top{position:relative;overflow:hidden;background:#0D7EE6}
+#a3 .top .plate{background-position:center bottom}
+#a3 .bot{background:#B3C0D8}
+
+/* B: flat CSS sky (top) against the painting's own top row (bottom) */
+.cjoin{grid-template-rows:.34fr .66fr}
+.cjoin .top{background:#2F8CE2}
+.cjoin .bot{position:relative;overflow:hidden}
+.cjoin .bot .cplate{background-position:center top}
+.joingrain{position:absolute;left:0;right:0;top:0;height:26%;mix-blend-mode:overlay;opacity:.2;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/></filter><rect width='140' height='140' filter='url(%23n)' opacity='.45'/></svg>");}
+
+.nav{position:fixed;right:10px;top:10px;z-index:40;display:flex;gap:4px}
+.nav a{background:rgba(27,42,51,.82);color:#F0EAE0;padding:5px 8px;text-decoration:none}
+.nav a.cur{background:#C79969;color:#1B2A33}
+</style>
+</head>
+<body>
+
+<section id="a1"><div class="tag">A1 · hero dissolve — fade 0.55</div>
+  <div class="plate"></div><div class="snowfield" style="opacity:.55"></div><div class="grain" style="opacity:.26"></div></section>
+
+<section id="a2"><div class="tag">A2 · hero dissolve — fade 0.85</div>
+  <div class="plate"></div><div class="snowfield" style="opacity:.85"></div><div class="grain" style="opacity:.4"></div></section>
+
+<section id="a3" class="grid"><div class="tag">A3 · JOIN — fully dissolved painting (top) meets page ground #B3C0D8 (bottom)</div>
+  <div class="top"><div class="plate"></div><div class="snowfield" style="opacity:1;height:100%"></div><div class="grain" style="opacity:.5;height:100%"></div></div>
+  <div class="bot"></div></section>
+
+<section id="b1" class="grid cjoin"><div class="tag">B1 · JOIN — flat #2F8CE2 meets painted sky. opacity 1, scale 1.14, origin TOP</div>
+  <div class="top"></div>
+  <div class="bot"><div class="cplate" style="transform:scale(1.14);transform-origin:center top"></div><div class="joingrain"></div></div></section>
+
+<section id="b2" class="grid cjoin"><div class="tag">B2 · JOIN — same, settled to scale 1.0. Join colour identical at every scale.</div>
+  <div class="top"></div>
+  <div class="bot"><div class="cplate" style="transform:scale(1);transform-origin:center top"></div><div class="joingrain"></div></div></section>
+
+<section id="b3" class="grid cjoin"><div class="tag">B3 · CONTROL — the rejected approach: #438DDD stack + dark 90° overlay</div>
+  <div class="top" style="background:linear-gradient(to bottom,#315a76 0%,#3f79a9 24%,#438ddd 70%,#438ddd 100%)"></div>
+  <div class="bot"><div class="cplate" style="transform:scale(1)"></div>
+    <div style="position:absolute;inset:0;background:linear-gradient(90deg,rgba(7,14,17,.55),rgba(7,14,17,.10) 60%)"></div></div></section>
+
+<section id="b4"><div class="tag">B4 · settled — full frame, untouched</div>
+  <div class="cplate" style="transform:scale(1)"></div></section>
+
+<section id="c1" class="grid cjoin"><div class="tag">C1 · MAGNIFIED SKY — scale 2.20, origin center top. Frame is pure sky; blur is invisible on flat colour.</div>
+  <div class="top"></div>
+  <div class="bot"><div class="cplate" style="transform:scale(2.20);transform-origin:center top"></div><div class="joingrain"></div></div></section>
+
+<section id="c2" class="grid cjoin"><div class="tag">C2 · settling — scale 1.70</div>
+  <div class="top"></div>
+  <div class="bot"><div class="cplate" style="transform:scale(1.70);transform-origin:center top"></div><div class="joingrain"></div></div></section>
+
+<section id="c3" class="grid cjoin"><div class="tag">C3 · settling — scale 1.30</div>
+  <div class="top"></div>
+  <div class="bot"><div class="cplate" style="transform:scale(1.30);transform-origin:center top"></div><div class="joingrain"></div></div></section>
+
+<section id="c4"><div class="tag">C4 · FULL VIEWPORT at scale 2.20 — no band at all; the whole screen is painted sky</div>
+  <div class="cplate" style="transform:scale(2.20);transform-origin:center top;background-position:center top"></div></section>
+
+<section id="c5"><div class="tag">C5 · FULL VIEWPORT at scale 1.45</div>
+  <div class="cplate" style="transform:scale(1.45);transform-origin:center top;background-position:center top"></div></section>
+
+<section id="d1"><div class="tag">D1 · FEATHERED top edge, 22vh, over flat #2F8CE2</div>
+  <div style="position:absolute;inset:0;background:#2F8CE2"></div>
+  <div class="cplate" style="background-position:center top;-webkit-mask-image:linear-gradient(to bottom,transparent 0,rgba(0,0,0,.35) 12vh,#000 22vh);mask-image:linear-gradient(to bottom,transparent 0,rgba(0,0,0,.35) 12vh,#000 22vh)"></div></section>
+
+<section id="d2"><div class="tag">D2 · FEATHERED top edge, 42vh (deep feather)</div>
+  <div style="position:absolute;inset:0;background:#2F8CE2"></div>
+  <div class="cplate" style="background-position:center top;-webkit-mask-image:linear-gradient(to bottom,transparent 0,rgba(0,0,0,.3) 22vh,#000 42vh);mask-image:linear-gradient(to bottom,transparent 0,rgba(0,0,0,.3) 22vh,#000 42vh)"></div></section>
+
+<section id="d3"><div class="tag">D3 · TIPPED-IN PLATE — honest paper edge on a sky page (no illusion to break)</div>
+  <div style="position:absolute;inset:0;background:linear-gradient(to bottom,#2F8CE2,#4087C3)"></div>
+  <div style="position:absolute;left:6vw;right:6vw;top:12vh;bottom:12vh;background:#FBF6EC;padding:16px 16px 0;box-shadow:0 3px 6px rgba(20,40,60,.10),0 34px 80px -18px rgba(12,30,48,.42)">
+    <div style="position:absolute;inset:16px 16px 62px;background:url('../../public/plates/coastal-road.webp') center/cover no-repeat"></div>
+    <div style="position:absolute;left:18px;bottom:20px;font:16px Georgia,serif;color:#3F362A">Plate II · The coast road, late morning</div>
+  </div></section>
+
+<div class="nav" id="nav"></div>
+<script>
+const ids=['a1','a2','a3','b1','b2','b3','b4','c1','c2','c3','c4','c5','d1','d2','d3'];
+const nav=document.getElementById('nav');
+function show(id){
+  ids.forEach(i=>document.getElementById(i).classList.toggle('on', i===id));
+  [...nav.children].forEach(a=>a.classList.toggle('cur', a.dataset.id===id));
+  history.replaceState(null,'','#'+id);
+}
+ids.forEach(i=>{const a=document.createElement('a');a.href='#'+i;a.textContent=i;a.dataset.id=i;a.onclick=e=>{e.preventDefault();show(i)};nav.appendChild(a)});
+show(ids.includes(location.hash.slice(1))?location.hash.slice(1):'a1');
+window.showFrame=show;
+</script>
+</body>
+</html>

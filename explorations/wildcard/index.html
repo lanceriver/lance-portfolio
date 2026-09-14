@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wildcard — The Tissue Guard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Archivo:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    /* grounds */
+    --snow-lit:   #F0EAE0;
+    --snow-warm:  #F6F0E6;
+    --paper:      #FBF6EC;
+    /* ink */
+    --ink:        #1B2A33;
+    --ink-warm:   #3F362A;
+    --ink-soft:   #5C6B73;
+    /* warm accents */
+    --parchment:  #DED3C0;
+    --stone:      #D5C0A5;
+    --ochre:      #C79969;
+    --ochre-deep: #9C7A50;
+  }
+
+  *{ box-sizing:border-box; }
+  html{ background:var(--snow-lit); }
+  body{
+    margin:0;
+    background:var(--snow-lit);
+    color:var(--ink);
+    font-family:'Archivo', Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+
+  ::selection{ background:var(--ochre); color:var(--paper); }
+
+  a, button{ font-family:inherit; }
+
+  :focus-visible{
+    outline:2px solid var(--ochre);
+    outline-offset:3px;
+  }
+
+  .display{
+    font-family:'Fraunces', 'Iowan Old Style', Georgia, serif;
+    font-style:italic;
+    font-variation-settings:'opsz' 144, 'wght' 340, 'SOFT' 0, 'WONK' 0;
+  }
+
+  .eyebrow{
+    font-family:'Archivo', sans-serif;
+    font-weight:600;
+    font-size:11px;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+  }
+
+  .caption-face{
+    font-family:'Fraunces', Georgia, serif;
+    font-style:normal;
+    font-variation-settings:'opsz' 14, 'wght' 400;
+    color:var(--ink-warm);
+  }
+
+  /* ————————————————— running head ————————————————— */
+  .runninghead{
+    max-width:1440px;
+    margin:0 auto;
+    padding: clamp(20px,3vw,32px) clamp(20px,4vw,72px) 16px;
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    border-bottom:1px solid rgba(27,42,33,.14);
+  }
+
+  /* ————————————————— intro ————————————————— */
+  .intro{
+    max-width:1440px;
+    margin:0 auto;
+    padding: clamp(96px,16vh,180px) clamp(20px,4vw,72px) clamp(80px,12vh,140px);
+  }
+  .intro .eyebrow{ margin:0 0 22px; }
+  .intro h1{
+    margin:0 0 34px;
+    font-size:clamp(52px,8.6vw,132px);
+    line-height:.86;
+    letter-spacing:-0.045em;
+    font-weight:340;
+    max-width:14ch;
+  }
+  .intro h1 .line{ display:block; overflow:hidden; }
+  .intro h1 .line-inner{
+    display:block;
+    transform:translateY(112%);
+    animation: impress .68s cubic-bezier(.16,.84,.24,1) forwards;
+  }
+  .intro h1 .line:nth-child(1) .line-inner{ animation-delay:.06s; }
+  .intro h1 .line:nth-child(2) .line-inner{ animation-delay:.15s; }
+  @keyframes impress{ to{ transform:translateY(0); } }
+
+  .intro p{
+    max-width:34ch;
+    margin: 0 0 0 2px;
+    font-size:18px;
+    line-height:1.6;
+    color:var(--ink-soft);
+  }
+
+  .eyebrow-rule{
+    display:block;
+    width:0;
+    height:1px;
+    background:var(--ochre);
+    margin:0 0 26px;
+    animation: drawrule .5s cubic-bezier(.16,.84,.24,1) .35s forwards;
+  }
+  @keyframes drawrule{ to{ width:38px; } }
+
+  /* ————————————————— stage / pin ————————————————— */
+  .stage{
+    position:relative;
+    height:240vh;
+  }
+  .stage .pin{
+    position:sticky;
+    top:0;
+    height:100vh;
+    display:flex;
+    align-items:center;
+    overflow:hidden;
+  }
+
+  .numeral{
+    position:absolute;
+    left:calc(50% - 430px);
+    bottom:-6vh;
+    font-family:'Fraunces', Georgia, serif;
+    font-style:italic;
+    font-variation-settings:'opsz' 144, 'wght' 200;
+    font-size:clamp(180px,24vw,300px);
+    line-height:1;
+    color:var(--ink);
+    opacity:.055;
+    pointer-events:none;
+    user-select:none;
+    z-index:0;
+  }
+
+  .plate-sheet{
+    position:relative;
+    z-index:1;
+    margin-left:calc(50% - 250px);
+    width:min(46vw, 420px);
+    background:var(--paper);
+    padding:14px 14px 0;
+    box-shadow:
+      0 2px 4px rgba(27,42,51,.04),
+      0 18px 44px -12px rgba(27,42,51,.14);
+  }
+
+  .plate-window{
+    position:relative;
+    width:100%;
+    aspect-ratio: 3 / 4;
+    overflow:hidden;
+    background:var(--snow-warm);
+  }
+
+  .plate-img{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    object-position: 42% 38%;
+    display:block;
+  }
+
+  /* the guard leaf */
+  .tissue-shadow{
+    position:absolute;
+    top:-16px; left:-14px; right:-10px; bottom:-12px;
+    background: radial-gradient(closest-side, rgba(27,42,51,.5), rgba(27,42,51,0) 72%);
+    opacity:.15;
+    z-index:1;
+    pointer-events:none;
+    transform:translateZ(0);
+  }
+
+  .tissue-guard{
+    position:absolute;
+    top:-16px; left:-14px; right:-10px; bottom:-12px;
+    z-index:2;
+    background: rgba(251,246,236,.86);
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='matrix' values='0 0 0 0 0.24  0 0 0 0 0.21  0 0 0 0 0.16  0 0 0 0.05 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+    border:1px solid rgba(63,54,42,.12);
+    box-shadow: 0 1px 2px rgba(27,42,51,.06);
+    transform-origin: 18% 88%;
+    will-change:auto;
+    padding: 16px;
+    display:flex;
+    align-items:flex-end;
+  }
+  .stage.is-active .tissue-guard{ will-change:transform; }
+
+  .tissue-guard::before{
+    /* folded corner */
+    content:"";
+    position:absolute;
+    top:0; right:0;
+    width:30px; height:30px;
+    background:linear-gradient(135deg, transparent 50%, var(--stone) 50%);
+    clip-path: polygon(100% 0, 100% 100%, 0 0);
+    opacity:.55;
+  }
+
+  .tissue-caption{
+    position:relative;
+  }
+  .tissue-caption .num{
+    font-family:'Archivo', sans-serif;
+    font-weight:600;
+    font-size:10.5px;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:var(--ink-warm);
+    opacity:.72;
+    display:block;
+    margin-bottom:5px;
+  }
+  .tissue-caption .desc{
+    font-family:'Fraunces', Georgia, serif;
+    font-style:italic;
+    font-variation-settings:'opsz' 20, 'wght' 400;
+    font-size:16px;
+    color:var(--ink-warm);
+    opacity:.8;
+  }
+
+  .plate-caption{
+    padding:18px 14px 20px;
+  }
+  .plate-caption .caption-face{
+    font-size:16px;
+    line-height:1.5;
+  }
+
+  /* reduced motion: resolve tissue to its lifted, aside state */
+  @media (prefers-reduced-motion: reduce){
+    .tissue-guard{
+      transform: translate(64%, -20%) rotate(11deg) scale(.95);
+    }
+    .tissue-shadow{ opacity:.3; }
+    .intro h1 .line-inner{ animation:none; transform:translateY(0); }
+    .eyebrow-rule{ animation:none; width:38px; }
+  }
+
+  /* ————————————————— outro ————————————————— */
+  .outro{
+    max-width:1440px;
+    margin:0 auto;
+    padding: clamp(100px,16vh,180px) clamp(20px,4vw,72px) clamp(140px,20vh,240px);
+    display:flex;
+    justify-content:flex-end;
+  }
+  .outro .note{
+    max-width:30ch;
+    text-align:left;
+  }
+  .outro .eyebrow{ margin:0 0 16px; }
+  .outro p{
+    font-family:'Fraunces', Georgia, serif;
+    font-style:italic;
+    font-variation-settings:'opsz' 24, 'wght' 380;
+    font-size:clamp(22px,2.6vw,32px);
+    line-height:1.28;
+    letter-spacing:-0.01em;
+    color:var(--ink);
+    margin:0;
+  }
+
+  @media (max-width:860px){
+    .plate-sheet{ width:min(74vw, 340px); margin-left:calc(50% - 190px); }
+    .numeral{ left:calc(50% - 300px); font-size:clamp(140px,44vw,220px); }
+    .stage{ height:220vh; }
+  }
+</style>
+</head>
+<body>
+
+  <header class="runninghead">
+    <span class="eyebrow">Lance Rivera</span>
+    <span class="eyebrow">Software Engineer · Sydney</span>
+  </header>
+
+  <main>
+    <section class="intro">
+      <span class="eyebrow">Wildcard experiment</span>
+      <span class="eyebrow-rule"></span>
+      <h1 class="display">
+        <span class="line"><span class="line-inner">The tissue</span></span>
+        <span class="line"><span class="line-inner">guard</span></span>
+      </h1>
+      <p>Old illustrated plate books protect each painting with a leaf of glassine, printed with the plate's own caption, before you ever see the picture underneath. Scroll to lift it away.</p>
+    </section>
+
+    <section class="stage" id="stage">
+      <div class="pin">
+        <div class="numeral" aria-hidden="true">III</div>
+        <div class="plate-sheet">
+          <div class="plate-window">
+            <img
+              class="plate-img"
+              src="../../assets-source/lake-terrace.png"
+              alt="Illustrated café terrace above a lake, striped awning, geraniums in bloom, mountain peaks beyond"
+              loading="eager"
+            >
+            <div class="tissue-shadow" id="tissueShadow" aria-hidden="true"></div>
+            <div class="tissue-guard" id="tissueGuard">
+              <div class="tissue-caption">
+                <span class="num">Plate III</span>
+                <span class="desc">Café terrace, evening light</span>
+              </div>
+            </div>
+          </div>
+          <div class="plate-caption">
+            <span class="caption-face">A field note, held under glassine until the page asks to see it.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="outro">
+      <div class="note">
+        <span class="eyebrow">After</span>
+        <p>The plate remains. The guard rests where it was set down.</p>
+      </div>
+    </section>
+  </main>
+
+  <script>
+  (function(){
+    var stage = document.getElementById('stage');
+    var tissue = document.getElementById('tissueGuard');
+    var shadow = document.getElementById('tissueShadow');
+    var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (reduceMotion || !stage || !tissue) return;
+
+    var REST = { x:0,  y:0,   r:-1.4, s:1    };
+    var END  = { x:64, y:-20, r:11,   s:.95  };
+
+    function lerp(a,b,t){ return a + (b-a) * t; }
+    function clamp(v,min,max){ return Math.min(max, Math.max(min, v)); }
+
+    var smoothedT = 0;
+    var targetT = 0;
+    var rafId = null;
+    var active = false;
+
+    function computeTarget(){
+      var rect = stage.getBoundingClientRect();
+      var total = stage.offsetHeight - window.innerHeight;
+      var scrolled = -rect.top;
+      var p = total > 0 ? scrolled / total : 0;
+      p = clamp(p, 0, 1);
+      // arrival beat 0–.18, transit .18–.7, settled beat .7–1
+      var t = (p - 0.18) / (0.7 - 0.18);
+      targetT = clamp(t, 0, 1);
+    }
+
+    function apply(){
+      var x = lerp(REST.x, END.x, smoothedT);
+      var y = lerp(REST.y, END.y, smoothedT);
+      var r = lerp(REST.r, END.r, smoothedT);
+      var s = lerp(REST.s, END.s, smoothedT);
+      tissue.style.transform =
+        'translate(' + x.toFixed(2) + '%, ' + y.toFixed(2) + '%) ' +
+        'rotate(' + r.toFixed(2) + 'deg) scale(' + s.toFixed(3) + ')';
+
+      var hump = Math.sin(clamp(smoothedT,0,1) * Math.PI);
+      shadow.style.opacity = (0.15 + hump * 0.8).toFixed(3);
+    }
+
+    function tick(){
+      computeTarget();
+      smoothedT += (targetT - smoothedT) * 0.18;
+      apply();
+      if (active) {
+        rafId = requestAnimationFrame(tick);
+      } else if (Math.abs(targetT - smoothedT) > 0.001) {
+        // settle out even if observer fired just as motion was mid-flight
+        rafId = requestAnimationFrame(tick);
+      }
+    }
+
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        active = entry.isIntersecting;
+        if (active) {
+          stage.classList.add('is-active');
+          if (!rafId) rafId = requestAnimationFrame(tick);
+        } else {
+          stage.classList.remove('is-active');
+        }
+      });
+    }, { threshold: 0 });
+
+    io.observe(stage);
+
+    window.addEventListener('resize', function(){
+      computeTarget();
+    }, { passive:true });
+
+    // initial paint in case page loads mid-scroll
+    computeTarget();
+    smoothedT = targetT;
+    apply();
+  })();
+  </script>
+
+</body>
+</html>

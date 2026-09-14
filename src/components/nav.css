@@ -1,0 +1,81 @@
+.nav {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 100;
+  height: var(--nav-h);
+  display: flex;
+  align-items: center;
+  transition: color .3s var(--ease-settle);
+  pointer-events: none;
+}
+.nav__inner {
+  /* Full-bleed, not the centred 1440 shell — on a wide screen the shell left
+     LR stranded a long way in from the edge. A masthead frames the page. */
+  width: calc(100% - 2 * clamp(20px, 4vw, 72px));
+  margin-inline: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+  /* TODO: re-enable when the masthead rule is decided — Lance asked to see it
+     without (it cut straight through the Writing display type). The tone
+     machinery in Nav.tsx (`data-rule`, `.nav--norule`) is left intact so this
+     is a one-line revert. */
+  /* border-bottom: 1px solid currentColor; */
+  pointer-events: auto;
+}
+
+/* Legibility over a painting comes from the type itself, not from a scrim on
+   the section — a scrim there put a hard step between the bridge and the plate. */
+.nav--light { color: var(--paper); text-shadow: 0 1px 16px rgba(8, 26, 44, .55); }
+.nav--dark  { color: var(--ink); }
+/* .nav--light .nav__inner { border-bottom-color: rgba(251, 246, 236, .26); } */
+/* no rule drawn across a painting */
+/* .nav--norule .nav__inner { border-bottom-color: transparent; } */
+/* .nav--dark  .nav__inner { border-bottom-color: rgba(27, 42, 51, .14); } */
+
+.nav__brand {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 27px;
+  letter-spacing: -.06em;
+}
+
+.nav__links {
+  display: flex;
+  gap: clamp(16px, 2.2vw, 30px);
+  list-style: none;
+  padding: 0;
+  font-family: var(--sans);
+  font-size: 13.5px;
+}
+.nav__links a,
+.nav__links button {
+  position: relative;
+  padding-bottom: 3px;
+}
+/* a hairline under the word — never a pill, dot or fill */
+.nav__links a::after,
+.nav__links button::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform .32s var(--ease-settle);
+}
+@media (hover: hover) and (pointer: fine) {
+  .nav__links a:hover::after,
+  .nav__links button:hover::after { transform: scaleX(1); }
+}
+
+@media (max-width: 720px) {
+  .nav__links { gap: 14px; font-size: 12.5px; }
+  .nav__links li:nth-child(2),
+  .nav__links li:nth-child(3) { display: none; }
+}

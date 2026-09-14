@@ -1,0 +1,138 @@
+.cover { position: relative; background: var(--azure); }
+
+/* Slate gives way to the plate's own sky. One easing, one destination colour —
+   the reference prototype stacked three stops and laid a dark overlay on top,
+   which is exactly why it banded. */
+.cover__bridge {
+  height: 96vh;
+  background: linear-gradient(to bottom,
+    var(--slate-deep) 0%,
+    #2a6698 26%,
+    #2c78bd 48%,
+    #2e86d4 68%,
+    var(--azure) 88%,
+    var(--azure) 100%);
+}
+
+.cover__wrap { height: 210vh; position: relative; }
+
+.cover__scene {
+  --feather: 22vh;
+  --plate-scale: 1.06;
+  --copy-in: 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+  background: var(--azure);
+  isolation: isolate;
+}
+
+/* The plate. Full opacity always. Uniform scale only. No filters. */
+.cover__plate {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: url('/plates/coastal-road.webp') center top / cover no-repeat;
+  transform: scale(var(--plate-scale));
+  transform-origin: center top;
+  will-change: transform;
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0,
+    rgba(0, 0, 0, .35) calc(var(--feather) * .55),
+    #000 var(--feather)
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0,
+    rgba(0, 0, 0, .35) calc(var(--feather) * .55),
+    #000 var(--feather)
+  );
+}
+
+/* grain across the join zone only */
+.cover__grain {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  z-index: 2;
+  height: 40vh;
+  mix-blend-mode: overlay;
+  opacity: .18;
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, rgba(0,0,0,.5) 55%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 0%, rgba(0,0,0,.5) 55%, transparent 100%);
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/></filter><rect width='140' height='140' filter='url(%23n)' opacity='.45'/></svg>");
+}
+
+/* Type over the open sea. No scrim — the sea carries cream at full legibility. */
+/* Anchored bottom-left, over the sea and the harbour — the calm half of the
+   plate. The Hero is type-dominant and scrimmed; here the painting dominates
+   and the type is unscrimmed. That is the rhyme. */
+.cover__copy {
+  position: absolute;
+  z-index: 3;
+  left: max(clamp(20px, 4vw, 72px), calc((100vw - 1440px) / 2 + clamp(20px, 4vw, 72px)));
+  bottom: 13vh;
+  width: min(540px, 46vw);       /* px, not ch — ch here resolves against the
+                                    body font, not the display size */
+  color: var(--paper);
+  opacity: var(--copy-in);
+  text-shadow: 0 1px 26px rgba(10, 32, 54, .38);   /* holds cream on water without a scrim */
+}
+.cover__copy .eyebrow { color: rgba(251, 246, 236, .8); margin-bottom: 16px; }
+.cover__title {
+  margin: 0;
+  font-size: clamp(44px, 5.4vw, 92px);
+  line-height: .9;
+}
+.cover__lede {
+  font-family: var(--serif);
+  font-size: clamp(17px, 1.35vw, 21px);
+  line-height: 1.36;
+  margin-top: 18px;
+  max-width: 26ch;
+}
+.cover__mail {
+  display: inline-block;
+  margin-top: 16px;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(20px, 1.8vw, 27px);
+  border-bottom: 1px solid rgba(251, 246, 236, .5);
+  padding-bottom: 3px;
+  transition: border-color .3s var(--ease-settle);
+}
+.cover__mail:hover { border-bottom-color: var(--paper); }
+.cover__links {
+  display: flex;
+  gap: 24px;
+  list-style: none;
+  padding: 0;
+  margin: 20px 0 0;
+  font-family: var(--sans);
+  font-size: 13.5px;
+  letter-spacing: .05em;
+}
+.cover__links a { border-bottom: 1px solid rgba(251, 246, 236, .42); padding-bottom: 2px; }
+
+
+@media (max-width: 900px) {
+  .cover__bridge { height: 54vh; }
+  .cover__wrap { height: 180vh; }
+  .cover__copy { left: 20px; right: 20px; width: auto; bottom: 10vh; }
+  .cover__lede { max-width: 26ch; }
+}
+
+/* Reduced motion: the plate is simply there, settled, on the correct ground.
+   The join must still be seamless when static. */
+@media (prefers-reduced-motion: reduce) {
+  .cover__wrap { height: 100vh; }
+  .cover__scene {
+    position: relative;
+    --feather: 14vh;
+    --plate-scale: 1;
+    --copy-in: 1;
+  }
+}

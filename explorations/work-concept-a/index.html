@@ -1,0 +1,600 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Work — Concept A — Four Plates, Four Pauses</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..600,0..100,0..1;1,9..144,300..600,0..100,0..1&family=Archivo:wdth,wght@80..125,400..600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --snow-shadow:#B3C0D8;
+    --snow-drift:#D7DBE0;
+    --snow-lit:#F0EAE0;
+    --snow-warm:#F6F0E6;
+    --paper:#FBF6EC;
+    --cobalt:#0D7EE6;
+    --azure:#2F8CE2;
+    --slate:#3E79AD;
+    --slate-deep:#2A5F86;
+    --slate-ink:#28475B;
+    --ink:#1B2A33;
+    --ink-warm:#3F362A;
+    --ink-soft:#5C6B73;
+    --parchment:#DED3C0;
+    --stone:#D5C0A5;
+    --ochre:#C79969;
+    --ochre-deep:#9C7A50;
+    --rust:#8C3F3E;
+    --terracotta:#784D31;
+    --pine:#2C382B;
+
+    --font-display:'Fraunces', "Iowan Old Style", Georgia, serif;
+    --font-support:'Archivo', Helvetica, Arial, sans-serif;
+
+    --ease-settle: cubic-bezier(.16,.84,.24,1);
+    --ease-exit:   cubic-bezier(.55,0,.85,.35);
+    --ease-lift:   cubic-bezier(.34,1.32,.48,1);
+  }
+
+  *{box-sizing:border-box; border-radius:0 !important;}
+  html,body{margin:0;padding:0;background:var(--snow-lit);}
+  body{
+    font-family:var(--font-support);
+    color:var(--ink);
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  img{max-width:none;display:block;}
+
+  .grid-wrap{
+    max-width:1440px;
+    margin:0 auto;
+    padding:0 clamp(20px,4vw,72px);
+  }
+
+  /* ---------- type ---------- */
+  .eyebrow{
+    font-family:var(--font-support);
+    font-weight:500;
+    font-variation-settings:'wdth' 92;
+    font-size:11px;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    margin:0 0 18px;
+  }
+  .display-italic{
+    font-family:var(--font-display);
+    font-style:italic;
+    font-weight:340;
+    font-variation-settings:'opsz' 144,'SOFT' 12,'WONK' 0.2;
+    line-height:.86;
+    letter-spacing:-0.045em;
+    margin:0;
+    color:var(--ink);
+  }
+  .display-roman{
+    font-family:var(--font-display);
+    font-style:normal;
+    font-weight:320;
+    font-variation-settings:'opsz' 144,'SOFT' 6,'WONK' 0;
+    line-height:.9;
+    letter-spacing:-0.04em;
+    margin:0;
+    color:var(--ink);
+  }
+  .body-copy{
+    font-family:var(--font-support);
+    font-weight:400;
+    font-size:18px;
+    line-height:1.58;
+    color:var(--ink-soft);
+    max-width:34ch;
+    margin:0;
+  }
+  .caption{
+    font-family:var(--font-display);
+    font-style:normal;
+    font-weight:400;
+    font-variation-settings:'opsz' 14;
+    font-size:16px;
+    line-height:1.4;
+    color:var(--ink-warm);
+    margin:0;
+  }
+  .numeral{
+    font-family:var(--font-display);
+    font-style:italic;
+    font-weight:200;
+    font-variation-settings:'opsz' 144,'SOFT' 0,'WONK' 0;
+    color:var(--ink);
+    line-height:1;
+    pointer-events:none;
+    user-select:none;
+  }
+  .open-link{
+    display:inline-flex;
+    align-items:baseline;
+    gap:8px;
+    font-family:var(--font-support);
+    font-weight:500;
+    font-variation-settings:'wdth' 95;
+    font-size:13px;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    color:var(--ink);
+    text-decoration:none;
+    position:relative;
+    padding-bottom:3px;
+  }
+  .open-link::after{
+    content:"";
+    position:absolute;
+    left:0;bottom:0;
+    width:100%;
+    height:1px;
+    background:var(--ochre-deep);
+    transform:scaleX(.28);
+    transform-origin:left;
+    transition:transform .5s var(--ease-settle);
+  }
+  .open-link:hover::after,.open-link:focus-visible::after{transform:scaleX(1);}
+  .open-link:focus-visible{outline:2px solid var(--ochre); outline-offset:3px;}
+
+  /* ---------- section open ---------- */
+  .lead-in{height:56vh;}
+  .lead-out{height:70vh;}
+
+  .section-open{
+    padding:0 0 clamp(120px,16vh,220px);
+  }
+  .section-open .eyebrow{margin-left:2px;}
+  .section-title{
+    font-size:clamp(72px,10vw,168px);
+  }
+  .section-title span{display:block;}
+  .section-open .rule{
+    width:0;
+    height:1px;
+    background:var(--ink-soft);
+    opacity:.3;
+    margin-top:34px;
+    transition:width 1.1s var(--ease-settle);
+  }
+  .section-open.in .rule{width:180px;}
+
+  /* ---------- generic scene scaffolding ---------- */
+  .scene{position:relative;}
+  .scene-gap{height:34vh;}
+  .plate-sheet{
+    background:var(--paper);
+    padding:14px 14px 0;
+    box-shadow:0 2px 4px rgba(27,42,51,.04), 0 18px 44px -12px rgba(27,42,51,.14);
+  }
+  .plate-sheet img{width:100%;height:auto;display:block;}
+
+  /* =========================================================
+     SCENE I — WORN — arrival
+  ========================================================= */
+  .scene-worn{padding-bottom:clamp(80px,10vh,140px);}
+  .worn-frame{
+    position:relative;
+    display:grid;
+    grid-template-columns: 1fr;
+  }
+  .worn-numeral{
+    position:absolute;
+    left:clamp(-8px,-2vw,10px);
+    top:-64px;
+    font-size:clamp(150px,17vw,240px);
+    opacity:.055;
+    z-index:0;
+  }
+  .worn-plate-wrap{
+    position:relative;
+    z-index:1;
+    width:min(920px,86vw);
+    margin-left:clamp(20px,7vw,110px);
+    margin-right:0;
+    opacity:1;
+    transform:translate3d(-46px,54px,0) rotate(-6deg) scale(.94);
+    box-shadow:0 2px 3px rgba(27,42,51,.03), 0 6px 10px -6px rgba(27,42,51,.06);
+    transition:
+      transform .85s var(--ease-settle),
+      box-shadow .85s var(--ease-settle);
+  }
+  .worn-plate-wrap.laid{
+    transform:translate3d(0,0,0) rotate(0deg) scale(1);
+    box-shadow:0 2px 4px rgba(27,42,51,.04), 0 34px 70px -18px rgba(27,42,51,.22);
+  }
+  .worn-plate-wrap img{aspect-ratio:1/1;object-fit:cover;object-position:38% 46%;}
+  .worn-caption-block{
+    width:min(560px,86vw);
+    margin-left:clamp(20px,7vw,110px);
+    margin-top:26px;
+    display:flex;
+    flex-direction:column;
+    align-items:flex-start;
+    gap:14px;
+  }
+  .worn-caption-block .title{
+    font-size:clamp(40px,4.6vw,64px);
+  }
+  .worn-caption-block .cap-line{max-width:42ch;}
+
+  /* =========================================================
+     SCENE II — TABLELINE — aperture (mechanical, no springs)
+  ========================================================= */
+  .scene-tableline{
+    padding: clamp(60px,8vh,120px) 0;
+    overflow:hidden;
+  }
+  .tl-stage{
+    position:relative;
+    height:64vh;
+    min-height:420px;
+  }
+  .tl-numeral{
+    position:absolute;
+    right:clamp(4px,3vw,40px);
+    top:-10px;
+    font-size:clamp(120px,13vw,190px);
+    opacity:.06;
+    z-index:0;
+  }
+  .tl-title{
+    position:absolute;
+    left:clamp(20px,7vw,110px);
+    top:50%;
+    transform:translateY(-50%);
+    z-index:1;
+    font-size:clamp(64px,9vw,150px);
+    white-space:nowrap;
+  }
+  .tl-plate-wrap{
+    position:absolute;
+    left:clamp(20px,7vw,110px);
+    right:0;
+    top:8%;
+    bottom:8%;
+    z-index:2;
+    /* clip-path animated by JS: inset(top right bottom left) */
+    clip-path:inset(0% 4% 0% 96%);
+  }
+  .tl-plate-wrap img{
+    width:100%;height:100%;object-fit:cover;object-position:32% 40%;
+  }
+  .tl-plate-wrap .frame-edge{
+    position:absolute;inset:0;
+    box-shadow:0 2px 4px rgba(27,42,51,.05), 0 20px 46px -16px rgba(27,42,51,.2);
+    pointer-events:none;
+  }
+  .tl-caption{
+    position:absolute;
+    left:clamp(20px,7vw,110px);
+    bottom:-4vh;
+    z-index:3;
+    clip-path:inset(0 0 100% 0);
+  }
+  .tl-caption .cap-line{max-width:38ch;margin-bottom:12px;}
+
+  /* =========================================================
+     SCENE III — FIELDGUIDE — horizontal pin
+  ========================================================= */
+  .scene-fieldguide{height:150vh;}
+  .fg-sticky{
+    position:sticky;
+    top:0;
+    height:100vh;
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-start;
+  }
+  .fg-track-band{
+    position:relative;
+    height:66vh;
+    overflow:hidden;
+    background:var(--snow-drift);
+  }
+  .fg-track{
+    position:absolute;
+    top:0;left:0;
+    height:100%;
+    will-change:transform;
+  }
+  .fg-track img{height:100%;width:auto;object-fit:cover;}
+  .fg-mullions{position:absolute;inset:0;display:flex;pointer-events:none;z-index:2;}
+  .fg-mullions span{flex:1;border-right:10px solid var(--snow-lit);}
+  .fg-mullions span:last-child{border-right:none;}
+  .fg-info-band{
+    flex:1;
+    display:flex;
+    align-items:center;
+    position:relative;
+  }
+  .fg-info-band .grid-wrap{
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-between;
+    width:100%;
+  }
+  .fg-numeral{
+    font-size:clamp(130px,15vw,220px);
+    opacity:.06;
+    position:absolute;
+    left:clamp(20px,7vw,110px);
+    bottom:-6px;
+    z-index:0;
+  }
+  .fg-copy{position:relative;z-index:1;display:flex;flex-direction:column;gap:14px;max-width:520px;}
+  .fg-copy .title{font-size:clamp(40px,4.4vw,60px);}
+  .fg-copy .cap-line{max-width:38ch;}
+  .fg-progress{
+    position:relative;z-index:1;
+    width:120px;height:1px;background:var(--ink-soft);opacity:.3;
+    align-self:flex-end;
+    margin-bottom:10px;
+    overflow:hidden;
+  }
+  .fg-progress i{
+    display:block;height:100%;width:0%;background:var(--ochre-deep);
+  }
+
+  /* =========================================================
+     SCENE IV — DAYBOOK — rest
+  ========================================================= */
+  .scene-daybook{
+    padding:clamp(100px,14vh,180px) 0 clamp(60px,10vh,120px);
+    position:relative;
+    min-height:74vh;
+  }
+  .db-numeral{
+    position:absolute;
+    left:clamp(-10px,-1vw,20px);
+    top:6%;
+    font-size:clamp(240px,32vw,460px);
+    opacity:.05;
+    z-index:0;
+  }
+  .db-body{
+    position:relative;z-index:1;
+    display:flex;
+    justify-content:flex-end;
+  }
+  .db-plate-col{
+    width:min(320px,58vw);
+    margin-right:clamp(20px,7vw,110px);
+  }
+  .db-plate-wrap{
+    transform:translate3d(0,26px,0) rotate(-2.2deg) scale(.97);
+    box-shadow:0 2px 3px rgba(27,42,51,.03), 0 8px 14px -8px rgba(27,42,51,.08);
+    transition:transform .9s var(--ease-settle), box-shadow .9s var(--ease-settle);
+  }
+  .db-plate-wrap.laid{
+    transform:translate3d(0,0,0) rotate(-1deg) scale(1);
+    box-shadow:0 2px 4px rgba(27,42,51,.04), 0 22px 46px -16px rgba(27,42,51,.16);
+  }
+  .db-plate-wrap img{aspect-ratio:4/3;object-fit:cover;object-position:60% 35%;}
+  .db-caption{margin-top:22px;display:flex;flex-direction:column;gap:12px;align-items:flex-start;}
+  .db-caption .title{font-size:clamp(34px,3.6vw,48px);}
+  .db-caption .cap-line{max-width:34ch;}
+
+  /* ---------- reduced motion ---------- */
+  @media (prefers-reduced-motion: reduce){
+    *{transition-duration:.001ms !important; animation-duration:.001ms !important;}
+    .worn-plate-wrap{transform:none !important;}
+    .db-plate-wrap{transform:translate3d(0,0,0) rotate(-1deg) scale(1) !important;}
+    .tl-plate-wrap{clip-path:inset(0% 4% 0% 8%) !important;}
+    .tl-caption{clip-path:inset(0 0 0 0) !important;}
+    .section-open .rule{width:180px !important;}
+    .fg-sticky{position:relative;}
+    .scene-fieldguide{height:auto;}
+  }
+
+  /* ---------- small screens: keep personality, simplify travel ---------- */
+  @media (max-width:720px){
+    .tl-title{font-size:clamp(48px,13vw,80px);}
+    .fg-track-band{height:52vh;}
+    .scene-fieldguide{height:130vh;}
+  }
+</style>
+</head>
+<body>
+
+  <div class="lead-in"></div>
+
+  <header class="section-open" id="sectionOpen">
+    <div class="grid-wrap">
+      <p class="eyebrow">Selected Work</p>
+      <h2 class="section-title display-italic"><span>Selected</span><span>Work</span></h2>
+      <div class="rule"></div>
+    </div>
+  </header>
+
+  <!-- ============ SCENE I — WORN — ARRIVAL ============ -->
+  <section class="scene scene-worn" id="sceneI">
+    <div class="grid-wrap worn-frame">
+      <div class="numeral worn-numeral">I</div>
+      <div class="worn-plate-wrap plate-sheet" id="wornPlate">
+        <img src="../../assets-source/lake-terrace.png" alt="Painting of a café terrace above a lake, striped awning and geraniums, mountain peaks beyond.">
+      </div>
+      <div class="worn-caption-block">
+        <h3 class="title display-roman">Worn</h3>
+        <p class="caption cap-line">Your fit diary — for remembering what you wore, where you went, and how it felt.</p>
+        <a class="open-link" href="#">Open Worn ↗</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="scene-gap"></div>
+
+  <!-- ============ SCENE II — TABLELINE — APERTURE ============ -->
+  <section class="scene scene-tableline" id="sceneII">
+    <div class="grid-wrap">
+      <div class="tl-stage" id="tlStage">
+        <div class="numeral tl-numeral">II</div>
+        <h3 class="tl-title display-roman">Tableline</h3>
+        <div class="tl-plate-wrap" id="tlPlate">
+          <img src="../../assets-source/alpine-village.png" alt="Painting of a snowy alpine high street under a cobalt sky, blue and red cars parked along the road.">
+          <div class="frame-edge"></div>
+        </div>
+        <div class="tl-caption" id="tlCaption">
+          <p class="caption cap-line">A fast spreadsheet-like workspace for large datasets.</p>
+          <a class="open-link" href="#">View (demo) →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="scene-gap"></div>
+
+  <!-- ============ SCENE III — FIELDGUIDE — HORIZONTAL PIN ============ -->
+  <section class="scene scene-fieldguide" id="sceneIII">
+    <div class="fg-sticky">
+      <div class="fg-track-band">
+        <div class="fg-track" id="fgTrack">
+          <img src="../../assets-source/hill-path.png" alt="Painting of a walker in a red coat on a snowy village path, church spire in the distance." id="fgImg">
+        </div>
+        <div class="fg-mullions"><span></span><span></span><span></span></div>
+      </div>
+      <div class="fg-info-band">
+        <div class="numeral fg-numeral">III</div>
+        <div class="grid-wrap" style="display:flex;align-items:flex-end;justify-content:space-between;width:100%;">
+          <div class="fg-copy">
+            <h3 class="title display-roman">Fieldguide</h3>
+            <p class="caption cap-line">A compact visual research tool for collecting references and interface fragments.</p>
+            <a class="open-link" href="#">View (demo) →</a>
+          </div>
+          <div class="fg-progress"><i id="fgProgressBar"></i></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="scene-gap"></div>
+
+  <!-- ============ SCENE IV — DAYBOOK — REST ============ -->
+  <section class="scene scene-daybook" id="sceneIV">
+    <div class="numeral db-numeral">IV</div>
+    <div class="grid-wrap db-body">
+      <div class="db-plate-col">
+        <div class="db-plate-wrap plate-sheet" id="dbPlate">
+          <img src="../../assets-source/coastal-road.png" alt="Painting of the Amalfi coast with lemons, bougainvillea and a cream Fiat above the sea.">
+        </div>
+        <div class="db-caption">
+          <h3 class="title display-roman">Daybook</h3>
+          <p class="caption cap-line">A lightweight daily log for observations, links and experiments.</p>
+          <a class="open-link" href="#">View (demo) →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="lead-out"></div>
+
+<script>
+(function(){
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---- section-open rule draw ---- */
+  var openIO = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){ e.target.classList.add('in'); openIO.unobserve(e.target); }
+    });
+  },{threshold:.3});
+  openIO.observe(document.getElementById('sectionOpen'));
+
+  /* ---- Scene I : lay down once ---- */
+  var wornPlate = document.getElementById('wornPlate');
+  var ioI = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){ wornPlate.classList.add('laid'); ioI.unobserve(e.target); }
+    });
+  },{threshold:.35});
+  ioI.observe(wornPlate);
+
+  /* ---- Scene IV : gentle lay down once ---- */
+  var dbPlate = document.getElementById('dbPlate');
+  var ioIV = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){ dbPlate.classList.add('laid'); ioIV.unobserve(e.target); }
+    });
+  },{threshold:.35});
+  ioIV.observe(dbPlate);
+
+  if(!reduced){
+    /* ---- Scene II : mechanical aperture widen, tied linearly to scroll ---- */
+    var tlStage = document.getElementById('tlStage');
+    var tlPlate = document.getElementById('tlPlate');
+    var tlCaption = document.getElementById('tlCaption');
+
+    function clamp01(v){return Math.max(0,Math.min(1,v));}
+
+    function updateTL(){
+      var r = tlStage.getBoundingClientRect();
+      var vh = window.innerHeight;
+      // progress: 0 when stage top enters bottom of viewport, 1 when stage bottom reaches ~30% from top
+      var start = vh * 0.9;
+      var end = vh * 0.15;
+      var raw = (start - r.top) / (start - (r.height - (vh - end) + end));
+      // simpler: use top position mapped across a fixed travel distance
+      var travel = vh * 0.9;
+      var p = clamp01((start - r.top) / travel);
+
+      // mechanical, no easing curve — linear
+      var leftInset = 96 - p*88; // 96% -> 8%
+      tlPlate.style.clipPath = 'inset(0% 4% 0% ' + leftInset + '%)';
+
+      var capReveal = clamp01((p-0.55)/0.45);
+      tlCaption.style.clipPath = 'inset(0 0 ' + (100-100*capReveal) + '% 0)';
+    }
+
+    /* ---- Scene III : horizontal slide bound to scroll, spring-smoothed ---- */
+    var fgSection = document.getElementById('sceneIII');
+    var fgTrack = document.getElementById('fgTrack');
+    var fgImg = document.getElementById('fgImg');
+    var fgProgressBar = document.getElementById('fgProgressBar');
+    var fgTarget = 0, fgCurrent = 0, fgMax = 0;
+
+    function measureFG(){
+      var bandWidth = fgTrack.parentElement.clientWidth;
+      fgMax = Math.max(0, fgImg.clientWidth - bandWidth);
+    }
+    window.addEventListener('load', measureFG);
+    if(fgImg.complete) measureFG();
+
+    function updateFG(){
+      var r = fgSection.getBoundingClientRect();
+      var vh = window.innerHeight;
+      var total = r.height - vh; // pinned travel distance
+      var p = clamp01((0 - r.top) / Math.max(1,total));
+      fgTarget = p;
+      if(fgProgressBar) fgProgressBar.style.width = (p*100) + '%';
+    }
+
+    function raf(){
+      fgCurrent += (fgTarget - fgCurrent) * 0.14; // spring-ish smoothing
+      fgTrack.style.transform = 'translate3d(' + (-fgCurrent*fgMax) + 'px,0,0)';
+      requestAnimationFrame(raf);
+    }
+    requestAnimationFrame(raf);
+
+    function onScroll(){
+      updateTL();
+      updateFG();
+    }
+    window.addEventListener('scroll', onScroll, {passive:true});
+    window.addEventListener('resize', function(){ measureFG(); onScroll(); });
+    onScroll();
+  } else {
+    /* reduced motion: resolve final composed states, no listeners */
+    document.getElementById('tlPlate').style.clipPath = 'inset(0% 4% 0% 8%)';
+    document.getElementById('tlCaption').style.clipPath = 'inset(0 0 0 0)';
+  }
+})();
+</script>
+</body>
+</html>

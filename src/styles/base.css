@@ -1,0 +1,136 @@
+@import './tokens.css';
+
+/* ── reset ─────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+* { margin: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--page-ground);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 17px;
+  line-height: 1.58;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;            /* clip, not hidden — keeps position:sticky viewport-relative */
+  /* No transition here: --page-ground is written every frame by the Crossing's
+     scroll driver, and a transition on top of that only adds lag. */
+}
+
+img { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+
+/* DESIGN_DIRECTION §5.4 — printed paper is not rounded. Absolute. */
+* { border-radius: 0 !important; }
+
+:focus-visible {
+  outline: 2px solid var(--ochre);
+  outline-offset: 3px;
+}
+
+/* ── type scale ────────────────────────────────────────── */
+.shell { width: var(--shell); margin-inline: auto; }
+
+.display-i {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(80px, 10vw, 150px);
+  line-height: .79;
+  letter-spacing: -.07em;
+}
+.display-r {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(70px, 9vw, 132px);
+  line-height: .84;
+  letter-spacing: -.06em;
+}
+.subhead {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(26px, 2.6vw, 42px);
+  line-height: 1.08;
+  letter-spacing: -.02em;
+}
+.body { font-size: 17px; line-height: 1.58; color: var(--ink-soft); max-width: 34ch; }
+.eyebrow {
+  font-family: var(--sans);
+  font-weight: 500;
+  font-size: 11.5px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+}
+.eyebrow--rule { display: flex; align-items: center; gap: 13px; }
+.eyebrow--rule::before {
+  content: "";
+  width: var(--rule-w, 38px);
+  height: 1px;
+  background: currentColor;
+  transition: width .7s var(--ease-settle);
+}
+.caption {
+  font-family: var(--serif);
+  font-size: 16px;
+  line-height: 1.35;
+  color: var(--ink-warm);
+}
+
+/* plate numerals — Roman, hung in the margin, frequently cropped */
+.numeral {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 400;
+  line-height: .74;
+  color: var(--ink);
+  opacity: .055;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* ── the plate sheet — DESIGN_DIRECTION §5.4 ───────────── */
+.plate-sheet {
+  position: relative;
+  background: var(--paper);
+  padding: 14px 14px 0;
+  box-shadow:
+    0 2px 4px rgba(27, 42, 51, .04),
+    0 18px 44px -12px rgba(27, 42, 51, .14);
+}
+.plate-sheet img { width: 100%; height: 100%; object-fit: cover; }
+.plate-sheet__cap { padding: 16px 2px 18px; }
+
+/* ── utility ───────────────────────────────────────────── */
+.vh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+/* ── reduced motion — MOTION_DIRECTION §7 ──────────────────
+   Motion is removed. Content, hierarchy and composition are not. */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important;
+  }
+}
+
+/* The plate-book caption — number above, descriptor beneath. Adopted from the
+   wildcard exploration; it reads more like a real plate book than one italic line. */
+.plate-cap { display: grid; gap: 5px; }
+.plate-cap__label {
+  font-family: var(--sans);
+  font-weight: 500;
+  font-size: 10.5px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.plate-cap__text {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 17px;
+  line-height: 1.2;
+  color: var(--ink-warm);
+}

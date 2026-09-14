@@ -1,0 +1,181 @@
+/* Writing — the slate ground, the one dark section on the page. */
+.writing {
+  position: relative;
+  /* climbs over the held Field Notes — see `.notes-pin`. The z-index is what
+     makes it a cover rather than a neighbour: Field Notes is transformed during
+     the ascent, which makes it a stacking context of its own, and this has to
+     win against it. */
+  z-index: 2;
+  background: var(--slate-deep);
+  color: var(--paper);
+  padding: clamp(120px, 18vh, 220px) 0 clamp(130px, 20vh, 240px);
+}
+
+.writing__head {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, .62fr);
+  gap: clamp(30px, 5vw, 80px);
+  align-items: end;
+  margin-bottom: clamp(60px, 9vh, 120px);
+}
+.writing__head .eyebrow { grid-column: 1 / -1; color: rgba(251, 246, 236, .62); }
+.writing__title { margin: 18px 0 0; }
+.writing__title em { font-style: italic; }
+.writing__note { color: rgba(251, 246, 236, .7); align-self: end; padding-bottom: .6em; }
+
+.writing__layout {
+  display: grid;
+  grid-template-columns: minmax(0, .72fr) minmax(0, 1.28fr);
+  gap: clamp(44px, 7vw, 110px);
+  align-items: start;
+}
+
+/* ── the stack ─────────────────────────────────────────────
+   Real margin around it — the pile must read as a pile, with the sheets
+   beneath visible at the edges. */
+.stack {
+  position: sticky;
+  top: calc(var(--nav-h) + 34px);
+  height: min(58vh, 560px);
+  margin: 14px 22px 0;
+}
+.stack__sheet {
+  position: absolute;
+  inset: 0;
+  will-change: transform, opacity;
+  box-shadow:
+    0 2px 4px rgba(6, 16, 24, .18),
+    0 24px 56px -14px rgba(6, 16, 24, .5);
+}
+.stack__sheet img {
+  width: 100%;
+  height: calc(100% - 56px);
+  object-fit: cover;
+}
+.stack__sheet .plate-sheet__cap {
+  padding: 14px 2px 0;
+  font-size: 15px;
+  line-height: 1.25;
+  max-height: 42px;
+  overflow: hidden;
+}
+
+/* ── the list ─────────────────────────────────────────────── */
+.articles { list-style: none; margin: 0; padding: 0; }
+.articles li + li { border-top: 1px solid rgba(251, 246, 236, .22); }
+.articles li:first-child { border-top: 1px solid rgba(251, 246, 236, .22); }
+.articles li:last-child { border-bottom: 1px solid rgba(251, 246, 236, .22); }
+
+.article {
+  display: block;
+  position: relative;
+  width: 100%;
+  text-align: left;
+  padding: clamp(22px, 3vh, 34px) 0;
+  padding-right: 96px;              /* keeps the standfirst clear of "Read" */
+  cursor: pointer;
+}
+
+/* The row is a link now, and this is what says so. It appears on the active row
+   rather than on hover, because on a touch device the active row is the one a
+   second tap opens — the affordance has to be visible without a pointer.
+   Absolutely placed so that revealing it never reflows the list. */
+.article__read {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--sans);
+  font-weight: 500;
+  font-size: 11px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--gold);
+  opacity: 0;
+  transition: opacity .34s var(--ease-settle);
+  white-space: nowrap;
+}
+.article--active .article__read { opacity: 1; }
+.article__arrow { display: inline-block; transition: transform .3s var(--ease-lift); }
+.article:hover .article__arrow { transform: translateX(5px); }
+.article__date {
+  display: block;
+  font-family: var(--sans);
+  font-weight: 500;
+  font-size: 11px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: rgba(251, 246, 236, .55);
+}
+
+/* The active row goes roman → italic. That is the whole signal.
+   It used to draw an ochre hairline beneath the title as well; with "Read →"
+   already appearing on the active row that was a third marker for one state,
+   and Lance called it — the row now has a change of voice and a call to action,
+   which is enough. DECISIONS D46.
+
+   Georgia's italic is 11-21px wider than its roman for these strings, which at
+   some column widths is the difference between a title fitting on one line and
+   not. The row then grew a line under the cursor and shoved the rest of the
+   list down — reproduced at a 560px viewport, where the first title went from
+   28px tall to 56px on hover. So the box is sized by a hidden copy of itself
+   set in the italic, stacked in the same grid cell: the height is always the
+   hovered height, in both states, and nothing moves. DECISIONS D47. */
+.article__title {
+  display: grid;
+  /* Two lines always. This is rhythm, not the fix above: reserving only what
+     each title happens to need left one row carrying a blank line while its
+     neighbours had none, which reads as a spacing bug. A list of four whose
+     title blocks are all the same height reads as a list. */
+  min-height: 2.16em;                 /* 2 × the .subhead line-height */
+  margin: 10px 0 8px;
+  color: var(--paper);
+}
+.article__title > span,
+.article__title::after { grid-area: 1 / 1; }
+.article__title::after {
+  content: attr(data-title);
+  font-style: italic;
+  visibility: hidden;
+  pointer-events: none;
+}
+.article--active .article__title > span { font-style: italic; }
+
+.article__standfirst {
+  display: block;
+  color: rgba(251, 246, 236, .62);
+  font-size: 16px;
+  max-width: 40ch;
+}
+
+@media (max-width: 900px) {
+  .writing__head { grid-template-columns: 1fr; align-items: start; }
+  .writing__note { padding-bottom: 0; }
+  .writing__layout { grid-template-columns: 1fr; gap: 36px; }
+  .stack { position: relative; top: auto; height: 46vh; margin: 0 14px 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stack__sheet { transition: none; }
+}
+
+/* A departing sheet fades out under the pile; it is removed on a timer, so the
+   DOM stays bounded even if the tab is throttled and the transition never runs. */
+.stack__sheet--leaving {
+  opacity: 0;
+  transform: scale(.975);
+  transition: opacity .3s var(--ease-exit), transform .3s var(--ease-exit);
+  pointer-events: none;
+}
+
+@media (max-width: 900px) {
+  /* Flows instead of hanging — an absolute label would sit on top of the
+     standfirst once the column narrows. */
+  .article { padding-right: 0; }
+  .article__read {
+    position: static;
+    display: block;
+    margin-top: 14px;
+    transform: none;
+  }
+}

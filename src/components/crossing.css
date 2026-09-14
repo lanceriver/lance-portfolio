@@ -1,0 +1,32 @@
+.crossing {
+  position: relative;
+  padding: clamp(96px, 14vh, 170px) 0 clamp(84px, 12vh, 150px);
+  background: transparent;          /* the live page ground shows through */
+}
+
+.crossing__inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, .55fr);
+  gap: clamp(40px, 6vw, 96px);
+  align-items: end;
+}
+.crossing__inner .eyebrow { grid-column: 1 / -1; color: var(--ink-soft); }
+.crossing__title { margin: 22px 0 0; max-width: 15ch; }
+.crossing__title em { font-style: italic; }
+.crossing__note { align-self: end; padding-bottom: .7em; }
+
+@media (max-width: 900px) {
+  .crossing__inner { grid-template-columns: 1fr; align-items: start; }
+  .crossing__note { padding-bottom: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* the warm-up, rendered statically: the hero still joins on snow-shadow and
+     the page still arrives at snow-lit — it just does not animate */
+  .crossing {
+    background: linear-gradient(to bottom,
+      var(--snow-shadow) 0%,
+      var(--snow-drift) 46%,
+      var(--snow-lit) 100%);
+  }
+}

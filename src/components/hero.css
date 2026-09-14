@@ -1,0 +1,236 @@
+.hero-wrap { height: 158vh; position: relative; }
+
+.hero {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+  isolation: isolate;
+  background: var(--cobalt);
+  --fade: 0;
+}
+
+/* The painting. Static. Never transformed, never filtered. */
+.hero__plate {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: url('/plates/alpine-village.webp') center / cover no-repeat;
+}
+
+/* Legibility only where the type actually sits.
+   An ellipse anchored at the bottom-left darkens exactly the region under the
+   name and leaves the rest of the painting alone — a full-width wash would dull
+   the whole picture, and the picture is the identity. The second, very light
+   pass keeps the nav legible against the bright roofline. */
+.hero__shade {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  background:
+    radial-gradient(102% 98% at 0% 93%,
+      rgba(6, 11, 15, .50) 0%,
+      rgba(6, 11, 15, .36) 27%,
+      rgba(6, 11, 15, .21) 46%,
+      rgba(6, 11, 15, .07) 65%,
+      rgba(6, 11, 15, 0) 79%),
+    linear-gradient(180deg, rgba(6, 11, 15, .15) 0%, rgba(6, 11, 15, 0) 14%);
+}
+
+/* THE DISSOLVE — the foreground snow becomes the page.
+   Resolves to #B3C0D8, the painting's exact last row, so the eye crosses no
+   temperature boundary at the join. */
+.hero__dissolve {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 7;
+  height: 46vh;
+  opacity: var(--fade);
+  background: linear-gradient(
+    to bottom,
+    rgba(179, 192, 216, 0) 0%,
+    rgba(179, 192, 216, .06) 30%,
+    rgba(179, 192, 216, .30) 56%,
+    rgba(179, 192, 216, .72) 78%,
+    #b3c0d8 92%,
+    #b3c0d8 100%
+  );
+}
+
+/* Grain across the join zone — kills the last trace of a gradient band. */
+.hero__grain {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 8;
+  height: 46vh;
+  mix-blend-mode: overlay;
+  opacity: calc(var(--fade) * .5);
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/></filter><rect width='140' height='140' filter='url(%23n)' opacity='.45'/></svg>");
+}
+
+.hero__copy {
+  position: absolute;
+  z-index: 9;
+  left: max(clamp(20px, 4vw, 72px), calc((100vw - 1440px) / 2 + clamp(20px, 4vw, 72px)));
+  bottom: 11vh;
+  max-width: 46rem;
+  color: var(--paper);
+  will-change: transform, opacity;
+  /* The type carries its own legibility so the scrim does not have to dim the
+     painting. A wide soft shadow lifts cream off snow without reading as a
+     shadow; the tight one holds the thin strokes of the italic. */
+  text-shadow:
+    0 2px 28px rgba(5, 14, 24, .55),
+    0 1px 4px rgba(5, 14, 24, .34);
+}
+
+/* Small type needs a tight dark halo, not the headline's wide soft bloom —
+   a 28px spread does nothing for 11px caps. */
+/* 11px caps over a sunlit yellow façade need a genuine outline, not a hint of
+   one. At this size a dense halo reads as crispness, never as a drop shadow —
+   which is why it can be this strong while the painting stays untouched. */
+.hero__eyebrow,
+.hero__cue {
+  text-shadow:
+    0 1px 2px rgba(5, 14, 24, .95),
+    0 0 7px rgba(5, 14, 24, .88),
+    0 0 22px rgba(5, 14, 24, .55);
+}
+.hero__eyebrow { margin-bottom: 18px; opacity: 0; }
+/* the rule draws itself — a scaleX on the pseudo-element, no custom-property
+   animation and no specificity contest */
+.hero__eyebrow::before { transform: scaleX(0); transform-origin: left; }
+.hero__name { margin: 0; }
+
+/* ── the name responds to the pointer ──────────────────────
+   Each letter pivots on its own baseline and lifts, straightening slightly out
+   of the italic's lean as it goes — the same "lift and straighten" gesture the
+   plates use on hover, so the whole site shares one idea about being touched.
+   Its neighbours follow at about a third of the distance, which is what stops
+   it reading as a row of independent buttons.
+
+   `transform-origin: 50% 100%` and the back-out curve are adapted from
+   zainabkabira.com, which Lance pointed at. The rest — the direction of the
+   rotation, the neighbour falloff and the colour — is ours. */
+.hero__letter {
+  display: inline-block;
+  transform-origin: 50% 100%;
+  transition:
+    transform .42s var(--ease-lift),
+    color .22s ease-out;
+}
+@media (hover: hover) and (pointer: fine) {
+  .hero__name .line:hover .hero__letter { will-change: transform; }
+
+  .hero__letter:hover {
+    transform: translateY(-.15em) rotate(-6deg);
+    color: var(--gold);
+  }
+  /* the letter after the hovered one, and — via :has — the one before it */
+  .hero__letter:hover + .hero__letter,
+  .hero__letter:has(+ .hero__letter:hover) {
+    transform: translateY(-.055em) rotate(-2.2deg);
+    color: color-mix(in srgb, var(--gold) 55%, var(--paper));
+  }
+}
+
+/* IMPRESS — a mask opens from the baseline while the line rises and the
+   over-slant settles. Opacity does not animate; the mask does the work.
+
+   The mask has to clip below the baseline for the entrance, but it must not
+   also clip the hover lift: at line-height .79 the ascenders (L, R, the dot of
+   the i) sit within a hair of the box top, so a letter lifting .15em had its
+   head cut off. Headroom above, cancelled by an equal negative margin, so the
+   composition does not move a pixel. */
+/* The mask stays `overflow: hidden` — it also keeps each line's hover targets
+   inside its own box, and an open top lets a line claim the glyph bottoms of
+   the line above it. So the box gains headroom instead: padding above,
+   cancelled by an equal negative margin, which moves the clip without moving a
+   single pixel of the composition. At line-height .79 the ascenders (L, R, the
+   dot of the i) sit within a hair of the box top, and a letter lifting .15em on
+   hover had its head cut off. */
+.hero__name .line {
+  display: block;
+  overflow: hidden;
+  position: relative;
+  padding-top: .26em;
+  margin-top: -.26em;
+  padding-bottom: .06em;
+}
+/* The headroom makes the second line's box overlap the first line's glyphs.
+   Stack the upper line above the lower so the bottom of "Lance" still belongs
+   to "Lance". */
+.hero__name .line:first-child { z-index: 1; }
+.hero__name .line > span {
+  display: block;
+  transform: translateY(105%) skewX(-4.5deg);
+}
+.hero__lede {
+  text-shadow:
+    0 1px 3px rgba(5, 14, 24, .7),
+    0 0 18px rgba(5, 14, 24, .5);
+  font-family: var(--serif);
+  font-size: clamp(19px, 1.5vw, 24px);
+  line-height: 1.34;
+  max-width: 19ch;          /* holds it inside the scrim's dark core */
+  margin-top: 34px;         /* clears the descender of "Rivera" */
+  opacity: 0;
+  text-wrap: balance;
+}
+.hero__cue { font-size: 13px; letter-spacing: .04em; margin-top: 26px; opacity: 0; }
+
+/* ── entrance ──────────────────────────────────────────── */
+@keyframes impress {
+  to { transform: translateY(0) skewX(0deg); }
+}
+@keyframes riseIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes cueIn {
+  from { opacity: 0; }
+  to   { opacity: .82; }
+}
+@keyframes cueDrift {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(3px); }
+}
+
+.hero__eyebrow { animation: riseIn .7s var(--ease-settle) .15s forwards; }
+.hero__eyebrow::before { animation: drawRule .8s var(--ease-settle) .32s forwards; }
+.hero__name .line:nth-child(1) > span { animation: impress .62s var(--ease-settle) .30s forwards; }
+.hero__name .line:nth-child(2) > span { animation: impress .62s var(--ease-settle) .37s forwards; }
+.hero__lede { animation: riseIn .7s var(--ease-settle) .62s forwards; }
+.hero__cue {
+  animation:
+    cueIn .6s var(--ease-settle) .88s forwards,
+    cueDrift 2.4s ease-in-out 1.6s infinite;
+}
+
+@keyframes drawRule { to { transform: scaleX(1); } }
+
+@media (max-width: 900px) {
+  .hero-wrap { height: 150vh; }
+  .hero__copy { left: 20px; right: 20px; bottom: 12vh; }
+  .hero__lede { max-width: 22ch; }
+}
+
+/* Reduced motion: the composition arrives complete, nothing animates. */
+@media (prefers-reduced-motion: reduce) {
+  .hero-wrap { height: 100vh; }
+  .hero { position: relative; }
+  .hero__eyebrow, .hero__lede, .hero__cue { opacity: 1; animation: none; }
+  .hero__eyebrow::before { transform: scaleX(1); animation: none; }
+  .hero__name .line > span { transform: none; animation: none; }
+  /* colour still responds; nothing moves */
+  .hero__letter { transition: color .22s ease-out; }
+  .hero__letter:hover { transform: none; color: var(--gold); }
+  .hero__letter:hover + .hero__letter,
+  .hero__letter:has(+ .hero__letter:hover) { transform: none; }
+  .hero__cue { opacity: .82; }
+  .hero__dissolve, .hero__grain { opacity: 1; }
+}

@@ -1,0 +1,310 @@
+/* Field Notes.
+   Ground is the page's own snow-lit — not a separate beige, and never a haze. */
+
+/* ── THE ASCENT ───────────────────────────────────────────
+   Field Notes stops when its foot reaches the bottom of the viewport, and the
+   Writing section climbs over it until the desk is gone. Field Notes does not
+   slide away; it is covered. That is the whole transition — a border between
+   two colours is not one. DECISIONS D42.
+
+   The hold is a scroll-driven transform, not `position: sticky`. Sticky would
+   be the obvious tool and is one line, but it is also the one thing this
+   session cannot verify: the browser pane does not recompute sticky offsets
+   while it is being driven, so every reading of it — including a synthetic
+   control built beside the real thing — was indistinguishable from broken. The
+   driver is the mechanism the rest of this site already uses, and its
+   arithmetic is checked in Node by `npm run verify`, which is the only kind of
+   proof available here. See `FieldNotes.tsx`.
+
+   The transform costs no layout: the page is exactly as tall as it was, and the
+   ascent simply spends the scroll that used to slide two sets of padding past
+   each other. */
+.notes-pin { position: relative; }
+
+.notes {
+  position: relative;
+  padding: clamp(110px, 16vh, 200px) 0 clamp(120px, 18vh, 220px);
+  /* deliberately no `will-change: transform` — this box is the full width of
+     the page and ~1600px tall with eleven images in it, and permanently
+     promoting a layer that size costs more than the few frames of the ascent
+     save. The driver only touches it while the transition is on screen. */
+}
+
+.notes__head {
+  position: relative;
+  z-index: 10;                     /* every object passes BEHIND the title */
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, .52fr);
+  gap: clamp(30px, 5vw, 80px);
+  align-items: end;
+  pointer-events: none;
+}
+.notes__head .eyebrow { grid-column: 1 / -1; color: var(--ink-soft); }
+.notes__title { margin: 18px 0 0; max-width: 13ch; }
+.notes__title em { font-style: italic; }
+.notes__note { align-self: end; padding-bottom: .6em; max-width: 30ch; }
+
+/* ── the surface ──────────────────────────────────────────
+   Absolute placement, deliberately irregular. Not masonry, not a grid. */
+.notes__surface {
+  --px: 0;
+  --py: 0;
+  position: relative;
+  width: var(--shell);
+  margin: clamp(18px, 2.6vh, 36px) auto 0;   /* the title clears the first print entirely */
+  height: 108vh;
+  min-height: 1075px;
+}
+
+.obj {
+  position: absolute;
+  /* the drift lives on the wrapper so it never fights the entrance transform */
+  transform: translate3d(
+    calc(var(--px) * var(--depth) * 3.4px),
+    calc(var(--py) * var(--depth) * 3.4px),
+    0
+  );
+}
+.obj__inner { will-change: transform; }
+
+@media (hover: hover) and (pointer: fine) {
+  .obj__inner { cursor: pointer; }
+}
+
+.obj__print { position: relative; }
+.obj__expand { display: block; width: 100%; cursor: zoom-in; }
+.obj__expand img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* Placement — authored, not generated. Overlaps are intentional and the
+   z-order is deliberate: prints pass behind the quote, the palette sits on top. */
+.obj--terrace  { left: 0;    top: 1%;   width: min(44%, 590px); z-index: 2; }
+.obj--glyph    { left: 47%;  top: 0;    width: min(17%, 220px); z-index: 5; }
+.obj--type     { right: 2%;  top: 8%;   width: min(23%, 300px); z-index: 3; }
+.obj--path     { right: 19%; top: 21%;  width: min(30%, 400px); z-index: 4; }
+.obj--quote    { left: 5%;   top: 28%;  width: min(42%, 545px); z-index: 6; }
+.obj--detail   { left: 0;    top: 46%;  width: min(23%, 300px); z-index: 8; }
+.obj--band     { left: 21%;  top: 49%;  width: min(41%, 530px); z-index: 7; }
+.obj--palette  { right: 4%;  top: 45%;  width: min(27%, 350px); z-index: 5; }
+.obj--hand     { right: 2%;  top: 63%;  width: min(31%, 400px); z-index: 9; }
+.obj--colophon { left: 2%;   top: 64%;  width: min(30%, 385px); z-index: 10; }
+.obj--slip     { left: 35%;  top: 74%;  width: min(20%, 255px); z-index: 11; }
+
+.obj--terrace .obj__expand img { height: min(46vh, 420px); }
+.obj--path    .obj__expand img { height: min(38vh, 340px); }
+.obj--detail  .obj__expand img { height: min(28vh, 250px); }
+.obj--band    .obj__expand img { height: min(19vh, 175px); }
+/* a narrow crop of the harbour, not the whole plate again */
+.obj--detail  .obj__expand img { object-fit: cover; object-position: 22% 72%; }
+
+/* ── type specimen ────────────────────────────────────── */
+.specimen {
+  background: var(--ochre);
+  color: var(--ink-warm);
+  padding: 34px 32px 30px;
+}
+.specimen__aa {
+  font-family: var(--serif);
+  font-size: clamp(72px, 8vw, 118px);
+  line-height: .82;
+}
+.specimen__set {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 21px;
+  margin-top: 12px;
+}
+.specimen__word {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(40px, 4.4vw, 62px);
+  line-height: 1;
+  margin: 18px 0 14px;
+}
+.specimen__meta {
+  font-family: var(--sans);
+  font-size: 11px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  opacity: .72;
+}
+
+/* ── quote ────────────────────────────────────────────── */
+.quote {
+  position: relative;
+  overflow: hidden;
+  background: var(--parchment);
+  padding: clamp(34px, 4vw, 54px);
+  margin: 0;
+}
+.quote p {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(30px, 3.6vw, 52px);
+  line-height: 1.12;
+  letter-spacing: -.03em;
+  margin: 0;
+}
+.quote cite {
+  display: block;
+  margin-top: 26px;
+  font-family: var(--sans);
+  font-style: normal;
+  font-size: 11.5px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+/* a light wipe travels across once, on first entry — never on re-entry */
+.quote__wipe {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 0;
+  background: rgba(255, 255, 255, .3);
+  pointer-events: none;
+}
+.obj--quote .obj__inner .quote__wipe { animation: wipe 1.05s var(--ease-settle) .5s both; }
+@keyframes wipe {
+  0%   { width: 0; }
+  60%  { width: 100%; }
+  100% { width: 100%; opacity: 0; }
+}
+
+/* ── palette ──────────────────────────────────────────── */
+.palette { background: var(--paper); padding: 26px 26px 22px; }
+.palette__label { color: var(--ink-soft); }
+.palette__strip {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  margin: 18px 0 16px;
+  height: 92px;
+}
+.palette__strip li { flex: 1; }
+.palette__cap { font-size: 14px; }
+
+/* ── glyph specimen ───────────────────────────────────── */
+.glyph { background: var(--stone); color: var(--ink-warm); padding: 18px 22px 16px; }
+.glyph__mark {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(64px, 7vw, 104px);
+  line-height: .86;
+}
+.glyph__meta {
+  font-family: var(--sans);
+  font-size: 10px;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  margin: 8px 0 0;
+  opacity: .74;
+}
+
+/* ── a caption slip ───────────────────────────────────── */
+.slip { background: var(--snow-warm); padding: 20px 22px; }
+.slip p {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 19px;
+  line-height: 1.26;
+  margin: 0;
+  color: var(--ink-warm);
+}
+
+/* ── colophon ─────────────────────────────────────────── */
+.colophon {
+  background: var(--slate-ink);
+  color: var(--paper);
+  padding: 28px 30px 30px;
+}
+.colophon__label { color: rgba(251, 246, 236, .62); margin-bottom: 14px; }
+.colophon__text {
+  font-family: var(--serif);
+  font-size: 18px;
+  line-height: 1.42;
+  margin: 0;
+}
+.colophon__text em { font-style: italic; }
+
+/* ── hand ─────────────────────────────────────────────── */
+.hand { background: var(--snow-warm); padding: 20px 20px 18px; }
+.hand__box {
+  border: 1px dashed rgba(63, 54, 42, .42);
+  min-height: 200px;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(24px, 2.4vw, 34px);
+  line-height: 1.12;
+  color: var(--ink-warm);
+  margin-bottom: 14px;
+}
+
+/* ── lightbox — expands from the object's own position ──── */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: grid;
+  place-items: center;
+  padding: clamp(24px, 5vw, 70px);
+  background: rgba(19, 30, 38, .88);
+  cursor: zoom-out;
+}
+.lightbox__img { max-width: min(94vw, 1200px); max-height: 86vh; object-fit: contain; }
+.lightbox__close {
+  position: absolute;
+  top: 22px;
+  right: 26px;
+  color: var(--paper);
+  font-family: var(--sans);
+  font-size: 14px;
+  letter-spacing: .06em;
+}
+
+/* ── responsive ───────────────────────────────────────────
+   Objects flow instead of overlapping, but keep their rotations, their varied
+   widths and their offsets — mobile keeps the personality. */
+@media (max-width: 900px) {
+  .notes__head { grid-template-columns: 1fr; align-items: start; }
+  .notes__note { padding-bottom: 0; }
+
+  .notes__surface {
+    height: auto;
+    min-height: 0;
+    margin-top: 44px;
+    display: flex;
+    flex-direction: column;
+    gap: 44px;
+  }
+  .obj {
+    position: relative;
+    left: auto; right: auto; top: auto;
+    width: auto !important;
+    transform: none;
+  }
+  .obj--terrace { width: 92% !important; align-self: flex-start; }
+  .obj--type    { width: 66% !important; align-self: flex-end; }
+  .obj--quote   { width: 96% !important; align-self: flex-start; }
+  .obj--path    { width: 76% !important; align-self: flex-end; }
+  .obj--palette { width: 84% !important; align-self: flex-start; }
+  .obj--detail  { width: 62% !important; align-self: flex-start; }
+  .obj--hand    { width: 72% !important; align-self: flex-end; }
+  .obj--colophon { width: 88% !important; align-self: flex-start; }
+  .obj--glyph   { width: 42% !important; align-self: flex-end; }
+  .obj--band    { width: 94% !important; align-self: flex-start; }
+  .obj--slip    { width: 56% !important; align-self: flex-end; }
+  .obj--band    .obj__expand img { height: 16vh; }
+
+  .obj--terrace .obj__expand img { height: 34vh; }
+  .obj--path    .obj__expand img { height: 28vh; }
+  .obj--detail  .obj__expand img { height: 24vh; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .obj { transform: none; }
+  .quote__wipe { display: none; }
+}

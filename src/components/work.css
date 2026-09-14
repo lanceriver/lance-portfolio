@@ -1,0 +1,276 @@
+.work { position: relative; padding-bottom: clamp(80px, 12vh, 160px); }
+
+.work__head {
+  padding: clamp(60px, 8vh, 120px) 0 clamp(70px, 10vh, 140px);
+  display: grid;
+  gap: 22px;
+}
+.work__head .eyebrow { color: var(--ink-soft); }
+.work__title { max-width: 12ch; }
+.work__title em { font-style: italic; }
+
+/* shared scene furniture */
+.scene { position: relative; }
+.scene__pin {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+}
+.scene__num {
+  position: absolute;
+  font-size: clamp(180px, 26vw, 420px);
+  z-index: 0;
+}
+.scene__disc { color: var(--ink-soft); margin-bottom: 14px; }
+.scene__name {
+  margin: 0;
+  /* Project names get their own scale, smaller than a section heading — the
+     approved prototype sets them at clamp(52px, 6vw, 90px). Georgia is wider
+     than the face this was first drawn in, and at section-heading size
+     "Fieldguide" overflowed its column. */
+  font-size: clamp(46px, 6vw, 90px);
+  line-height: .92;
+  letter-spacing: -.05em;
+}
+.scene__tag {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(19px, 1.7vw, 26px);
+  color: var(--ochre-deep);
+  margin-top: 10px;
+}
+.scene__blurb { margin-top: 20px; }
+.scene__link {
+  display: inline-block;
+  margin-top: 26px;
+  font-family: var(--sans);
+  font-weight: 500;
+  font-size: 13.5px;
+  letter-spacing: .06em;
+  border-bottom: 1px solid currentColor;
+  padding-bottom: 3px;
+  transition: color .28s var(--ease-settle);
+}
+.scene__link:hover { color: var(--rust); }
+
+/* ── I · ARRIVAL ──────────────────────────────────────────
+   The plate dominates. The copy is a caption hung below-left, not a column. */
+.scene--arrival {
+  padding: clamp(40px, 6vh, 90px) 0 clamp(120px, 18vh, 240px);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  justify-items: end;
+}
+.scene__num--i { left: -.06em; top: -.1em; }
+
+.scene--arrival .scene__plate {
+  width: min(74vw, 1080px);
+  margin-right: clamp(20px, 4vw, 72px);
+  will-change: transform;
+}
+.scene--arrival .scene__plate img { height: min(64vh, 620px); }
+/* the printed caption sits at the far end of the strip, clear of the block
+   that hangs over the sheet's other corner */
+.scene--arrival .plate-sheet__cap { text-align: right; }
+
+.scene__caption-block {
+  justify-self: start;
+  width: min(42ch, 88vw);
+  margin-left: clamp(20px, 4vw, 72px);
+  margin-top: -132px;             /* hangs over the sheet's bottom-left corner */
+  position: relative;
+  z-index: 2;
+  background: var(--page-ground);
+  padding: 34px 42px 36px 0;
+}
+
+/* ── II · APERTURE ────────────────────────────────────────
+   A slot widens across the title. Mechanical — no springs, no overshoot. */
+.scene--aperture { height: 260vh; }
+.scene--aperture .scene__pin {
+  --slot: 41;                     /* half-width inset, in % */
+  display: grid;
+  grid-template-rows: 1fr auto;
+  align-items: center;
+}
+.scene__num--ii { right: -.20em; bottom: -.18em; opacity: .04; }
+
+.aperture { position: relative; display: grid; place-items: center; height: 100%; }
+
+.aperture__title {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 57%;
+  transform: translateY(-50%);
+  text-align: center;
+  font-size: clamp(64px, 13vw, 230px);
+  line-height: .9;
+  letter-spacing: -.05em;
+  margin: 0;
+  white-space: nowrap;
+  color: var(--ink);
+  z-index: 1;
+}
+
+.aperture__slot {
+  position: absolute;
+  inset: 0;                       /* identical box to .aperture, so the two
+                                     copies of the title register exactly */
+  clip-path: inset(12% calc(var(--slot) * 1%));
+  z-index: 2;
+}
+.aperture__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+/* the same title again, over the plate, clipped to the slot */
+.aperture__title--lit { color: var(--paper); z-index: 3; }
+
+.aperture__meta {
+  display: grid;
+  grid-template-columns: minmax(0, .62fr) minmax(0, 1fr) auto;
+  gap: clamp(24px, 4vw, 64px);
+  align-items: end;
+  width: var(--shell);
+  margin-inline: auto;
+  padding-bottom: clamp(34px, 6vh, 70px);
+  position: relative;
+  z-index: 4;
+}
+.aperture__meta .scene__disc { margin: 0; }
+.aperture__meta .scene__blurb { margin: 0; }
+.aperture__meta .scene__link { margin: 0; white-space: nowrap; }
+
+/* ── III · HORIZONTAL ─────────────────────────────────────
+   A change of axis. The rail passes behind the fixed head. */
+.scene--horizontal { height: 300vh; }
+.scene--horizontal .scene__pin { display: grid; align-content: center; }
+.scene__num--iii { left: -.05em; top: 4vh; }
+
+.rail__head {
+  position: absolute;
+  z-index: 3;
+  left: clamp(20px, 4vw, 72px);
+  top: 50%;
+  transform: translateY(-50%);
+  width: min(34ch, 42vw);
+  padding: 30px 40px 32px 0;
+  background: linear-gradient(90deg,
+    var(--page-ground) 0%,
+    var(--page-ground) 88%,
+    color-mix(in srgb, var(--page-ground) 0%, transparent) 100%);
+}
+.rail__head .scene__num { position: absolute; top: -.36em; left: -.06em; }
+
+.rail {
+  display: flex;
+  gap: clamp(24px, 3.4vw, 60px);
+  padding-left: min(46vw, 620px);
+  padding-right: clamp(20px, 4vw, 72px);
+  will-change: transform;
+}
+.rail__window { flex: 0 0 auto; width: clamp(240px, 26vw, 400px); }
+.rail__crop {
+  display: block;
+  width: 100%;
+  height: min(62vh, 600px);
+  background-size: auto 122%;     /* crop harder so each window is its own place */
+  background-repeat: no-repeat;
+}
+
+/* ── IV · REST ────────────────────────────────────────────
+   Almost nothing moves. The space is the design. */
+.scene--rest {
+  position: relative;
+  padding: clamp(140px, 24vh, 300px) 0 clamp(160px, 26vh, 340px);
+  min-height: 118vh;            /* travel for the drift, and more air — which
+                                   is what this beat wants anyway */
+  display: grid;
+  align-content: center;
+  overflow: hidden;
+}
+.scene__num--iv {
+  left: -.08em;
+  top: 50%;
+  transform: translateY(-46%);
+  font-size: clamp(240px, 34vw, 560px);
+}
+.rest__inner {
+  width: var(--shell);
+  margin-inline: auto;
+  display: grid;
+  grid-template-columns: minmax(0, .78fr) minmax(0, 1fr);
+  gap: clamp(40px, 7vw, 120px);
+  align-items: center;
+  position: relative;
+  z-index: 1;
+}
+.rest__copy { grid-column: 1; padding-left: clamp(40px, 9vw, 150px); }
+.rest__plate-drift { grid-column: 2; justify-self: end; will-change: transform; }
+.rest__plate { width: min(30vw, 420px); will-change: transform; }
+.rest__plate img { height: min(34vh, 320px); }
+
+/* ── responsive ───────────────────────────────────────────
+   Mobile simplifies the long pins and the horizontal travel, and keeps the
+   plates, the numerals and the asymmetry. */
+@media (max-width: 900px) {
+  .scene--arrival { padding-bottom: clamp(80px, 12vh, 140px); }
+  .scene--arrival .scene__plate { width: calc(100% - 40px); margin-right: 20px; }
+  .scene--arrival .scene__plate img { height: 46vh; }
+  .scene__caption-block { width: auto; margin-right: 20px; margin-top: -40px; padding-right: 20px; }
+
+  .scene--aperture { height: auto; }
+  .scene--aperture .scene__pin { position: relative; height: auto; padding: 70px 0; --slot: 6; }
+  .aperture { height: 62vh; }
+  .aperture__title { font-size: clamp(48px, 15vw, 96px); }
+  .aperture__meta { grid-template-columns: 1fr; gap: 18px; padding-top: 34px; }
+
+  .scene--horizontal { height: auto; }
+  .scene--horizontal .scene__pin { position: relative; height: auto; padding: 70px 0; }
+  .rail__head {
+    position: relative;
+    left: auto;
+    top: auto;
+    transform: none;
+    width: auto;
+    padding: 0 20px 34px;
+    background: none;
+  }
+  .rail__head .scene__num { position: absolute; top: -.3em; left: 10px; font-size: 200px; }
+  .rail {
+    transform: none !important;
+    padding-left: 20px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+  .rail__window { width: 74vw; scroll-snap-align: center; }
+  .rail__crop { height: 44vh; }
+
+  .scene--rest { padding: clamp(90px, 14vh, 160px) 0; }
+  .rest__inner { grid-template-columns: 1fr; gap: 44px; }
+  .rest__copy { grid-column: 1; padding-left: 0; }
+  .rest__plate-drift { grid-column: 1; justify-self: start; transform: none !important; }
+  .rest__plate { width: min(62vw, 340px); }
+  .scene--rest { min-height: 0; }
+  .scene__num--iv { font-size: 300px; opacity: .04; }
+}
+
+/* ── reduced motion ───────────────────────────────────────
+   Pinned scenes become static compositions in document order. Nothing is lost. */
+@media (prefers-reduced-motion: reduce) {
+  .scene--rest { min-height: 0; }
+  .scene__num--iv, .rest__plate-drift, .rest__copy { transform: none !important; }
+  .scene--aperture, .scene--horizontal { height: auto; }
+  .scene--aperture .scene__pin,
+  .scene--horizontal .scene__pin { position: relative; height: auto; padding: 80px 0; }
+  .scene--aperture .scene__pin { --slot: 8; }
+  .aperture { height: 58vh; }
+  .rail { transform: none !important; overflow-x: auto; padding-left: clamp(20px, 4vw, 72px); }
+  .rail__head { position: relative; left: auto; top: auto; transform: none; width: auto; background: none; margin-bottom: 32px; }
+}

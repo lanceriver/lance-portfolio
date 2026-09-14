@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Opus — transition proof</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,200..700;1,9..144,200..700&family=Archivo:wdth,wght@62..125,400..600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --snow-shadow:#B3C0D8;
+  --snow-drift:#D7DBE0;
+  --snow-lit:#F0EAE0;
+  --paper:#FBF6EC;
+  --azure:#2F8CE2;
+  --slate-deep:#2A5F86;
+  --ink:#1B2A33;
+  --ink-soft:#5C6B73;
+  --ease-settle:cubic-bezier(.16,.84,.24,1);
+}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--snow-lit);
+  color:var(--ink);
+  font-family:Archivo,system-ui,sans-serif;
+  overflow-x:hidden;
+}
+.disp{font-family:Fraunces,"Iowan Old Style",Georgia,serif;font-variation-settings:"opsz" 144,"SOFT" 20,"WONK" 0;font-weight:300}
+.eyebrow{font-family:Archivo;font-variation-settings:"wdth" 92;font-weight:500;font-size:12px;letter-spacing:.18em;text-transform:uppercase}
+
+/* ══════════ A · HERO DISSOLVE ══════════ */
+.hero-wrap{height:180vh;position:relative}
+.hero{position:sticky;top:0;height:100vh;overflow:hidden;background:#0D7EE6}
+.hero-plate{
+  position:absolute;inset:0;
+  background:url('../../public/plates/alpine-village.webp') center/cover no-repeat;
+}
+/* legibility gradient — only where type sits */
+.hero-shade{position:absolute;inset:0;background:linear-gradient(90deg,rgba(7,12,15,.46),rgba(7,12,15,.10) 46%,rgba(7,12,15,0) 72%);pointer-events:none}
+/* THE DISSOLVE: painted snow -> page ground, matched hue */
+.snowfield{
+  position:absolute;left:0;right:0;bottom:0;height:44vh;pointer-events:none;
+  opacity:var(--fade,0);
+  background:linear-gradient(to bottom,
+    rgba(179,192,216,0)   0%,
+    rgba(179,192,216,.10) 26%,
+    rgba(179,192,216,.42) 52%,
+    rgba(179,192,216,.82) 74%,
+    #B3C0D8               90%,
+    #B3C0D8               100%);
+}
+/* grain kills the last trace of a band */
+.grain{
+  position:absolute;left:0;right:0;bottom:0;height:44vh;pointer-events:none;mix-blend-mode:overlay;
+  opacity:calc(var(--fade,0) * .5);
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/></filter><rect width='140' height='140' filter='url(%23n)' opacity='.45'/></svg>");
+}
+.hero-copy{position:absolute;z-index:6;left:max(24px,calc((100vw - 1440px)/2 + 24px));bottom:12vh;color:var(--paper)}
+.hero-copy .eyebrow{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.hero-copy .eyebrow::before{content:"";width:38px;height:1px;background:currentColor}
+.hero-copy h1{font-size:clamp(72px,10vw,168px);line-height:.82;letter-spacing:-.055em;font-style:italic;font-weight:300}
+.hero-copy p{font-family:Fraunces;font-variation-settings:"opsz" 24;font-size:clamp(19px,1.6vw,26px);margin-top:24px;max-width:24ch}
+
+/* ══════════ THE WARM-UP ══════════ */
+.crossing{
+  height:170vh;position:relative;
+  background:var(--warm,#B3C0D8);
+  display:flex;align-items:center;
+}
+.crossing .inner{width:min(1440px,100% - 48px);margin:auto}
+.crossing h2{font-size:clamp(44px,6vw,104px);line-height:.9;letter-spacing:-.045em;font-style:italic}
+.crossing .note{margin-top:28px;color:var(--ink-soft);max-width:44ch;font-size:17px;line-height:1.58}
+
+/* ══════════ B · BACK COVER JOIN ══════════ */
+.pre-cover{height:80vh;background:var(--slate-deep);color:var(--paper);display:flex;align-items:center}
+.pre-cover .inner{width:min(1440px,100% - 48px);margin:auto}
+.pre-cover h2{font-size:clamp(40px,5vw,88px);line-height:.9;letter-spacing:-.045em;font-style:italic}
+
+/* the bridge: slate -> exact sampled sky. No rectangle: the page BECOMES the colour. */
+.sky-bridge{height:70vh;background:linear-gradient(to bottom,var(--slate-deep) 0%,#2C6FA8 34%,#2F8CE2 82%,#2F8CE2 100%)}
+
+.cover-wrap{height:230vh;position:relative;background:var(--azure)}
+.cover{position:sticky;top:0;height:100vh;overflow:hidden;background:var(--azure)}
+.cover-plate{
+  position:absolute;inset:0;
+  background:url('../../public/plates/coastal-road.webp') center/cover no-repeat;
+  opacity:var(--reveal,0);
+  transform:scale(var(--scale,1.14));
+  transform-origin:center 18%;
+  will-change:transform,opacity;
+}
+.cover-copy{
+  position:absolute;z-index:5;left:max(24px,calc((100vw - 1440px)/2 + 24px));
+  top:50%;transform:translateY(-50%);color:var(--paper);max-width:30ch;
+  opacity:var(--copy,0);
+}
+.cover-copy h2{font-size:clamp(52px,7vw,124px);line-height:.86;letter-spacing:-.05em;font-weight:300}
+.cover-copy .mail{font-family:Fraunces;font-variation-settings:"opsz" 24;font-size:22px;margin-top:26px}
+.cover-copy .links{display:flex;gap:22px;margin-top:20px;font-size:14px}
+.cover-copy .links a{color:inherit;text-decoration:none;border-bottom:1px solid rgba(251,246,236,.4);padding-bottom:2px}
+
+/* readout */
+.hud{position:fixed;right:12px;bottom:12px;z-index:99;background:rgba(27,42,51,.86);color:#F0EAE0;font:11px/1.5 ui-monospace,monospace;padding:8px 10px;white-space:pre}
+.tail{height:40vh;background:var(--azure)}
+</style>
+</head>
+<body>
+
+<!-- ═════ A ═════ -->
+<section class="hero-wrap" id="heroWrap">
+  <div class="hero" id="hero">
+    <div class="hero-plate"></div>
+    <div class="hero-shade"></div>
+    <div class="snowfield" id="snowfield"></div>
+    <div class="grain" id="grain"></div>
+    <div class="hero-copy">
+      <div class="eyebrow">Software Engineer · Sydney</div>
+      <h1 class="disp">Lance<br>Rivera</h1>
+      <p>I build thoughtful digital experiences.</p>
+    </div>
+  </div>
+</section>
+
+<section class="crossing" id="crossing">
+  <div class="inner">
+    <div class="eyebrow" style="color:var(--ink-soft)">Proof A · hero dissolve</div>
+    <h2 class="disp">The page begins<br>as snow in shadow.</h2>
+    <p class="note">The alpine painting's last pixel row is <strong>#B3C0D8</strong> — cool blue-grey. This ground is that exact colour, and it warms to #F0EAE0 across this section. No hue boundary is crossed at the join, so there is nothing for the eye to catch.</p>
+  </div>
+</section>
+
+<!-- ═════ B ═════ -->
+<section class="pre-cover">
+  <div class="inner">
+    <div class="eyebrow" style="opacity:.6">Proof B · back cover join</div>
+    <h2 class="disp">Writing ends here.</h2>
+  </div>
+</section>
+<div class="sky-bridge"></div>
+
+<section class="cover-wrap" id="coverWrap">
+  <div class="cover" id="cover">
+    <div class="cover-plate" id="coverPlate"></div>
+    <div class="cover-copy" id="coverCopy">
+      <h2 class="disp">Thanks for<br>stopping by.</h2>
+      <div class="mail">hello@lancerivera.dev</div>
+      <div class="links"><a href="#">GitHub</a><a href="#">LinkedIn</a><a href="#">Résumé</a></div>
+    </div>
+  </div>
+</section>
+<div class="tail"></div>
+
+<div class="hud" id="hud"></div>
+
+<script>
+(() => {
+  const clamp=(v,a,b)=>Math.min(Math.max(v,a),b);
+  const lerp=(a,b,t)=>a+(b-a)*t;
+  const hexToRgb=h=>[parseInt(h.slice(1,3),16),parseInt(h.slice(3,5),16),parseInt(h.slice(5,7),16)];
+  const SHADOW=hexToRgb('#B3C0D8'), DRIFT=hexToRgb('#D7DBE0'), LIT=hexToRgb('#F0EAE0');
+  const mixRGB=(a,b,t)=>`rgb(${Math.round(lerp(a[0],b[0],t))},${Math.round(lerp(a[1],b[1],t))},${Math.round(lerp(a[2],b[2],t))})`;
+
+  const heroWrap=document.getElementById('heroWrap');
+  const hero=document.getElementById('hero');
+  const crossing=document.getElementById('crossing');
+  const coverWrap=document.getElementById('coverWrap');
+  const plate=document.getElementById('coverPlate');
+  const copy=document.getElementById('coverCopy');
+  const hud=document.getElementById('hud');
+
+  function update(){
+    // — A: hero dissolve. Completes at hp .86, well before the pin releases at 1.0 —
+    const hRange=heroWrap.offsetHeight-innerHeight;
+    const hp=clamp(-heroWrap.getBoundingClientRect().top/Math.max(1,hRange),0,1);
+    const fade=clamp((hp-.42)/.44,0,1);
+    hero.style.setProperty('--fade',fade.toFixed(4));
+
+    // — the warm-up: shadow -> drift -> lit across the crossing —
+    const cr=crossing.getBoundingClientRect();
+    const cRange=crossing.offsetHeight;
+    const wp=clamp((innerHeight*.55-cr.top)/cRange,0,1);
+    const warm = wp<.5 ? mixRGB(SHADOW,DRIFT,wp/.5) : mixRGB(DRIFT,LIT,(wp-.5)/.5);
+    crossing.style.setProperty('--warm',warm);
+    document.body.style.background = wp>=1 ? 'rgb(240,234,224)' : warm;
+
+    // — B: back cover. Painting materialises over a ground that is already its own sky —
+    const vRange=coverWrap.offsetHeight-innerHeight;
+    const vp=clamp(-coverWrap.getBoundingClientRect().top/Math.max(1,vRange),0,1);
+    const reveal=clamp(vp/.52,0,1);
+    const scale=lerp(1.14,1.0,clamp(vp/.78,0,1));
+    plate.style.setProperty('--reveal',reveal.toFixed(4));
+    plate.style.setProperty('--scale',scale.toFixed(4));
+    copy.style.setProperty('--copy',clamp((vp-.34)/.26,0,1).toFixed(4));
+
+    hud.textContent=`hero  ${hp.toFixed(2)}  fade ${fade.toFixed(2)}\nwarm  ${wp.toFixed(2)}  ${warm}\ncover ${vp.toFixed(2)}  rev ${reveal.toFixed(2)} sc ${scale.toFixed(3)}`;
+  }
+  addEventListener('scroll',update,{passive:true});
+  addEventListener('resize',update);
+  update();
+})();
+</script>
+</body>
+</html>

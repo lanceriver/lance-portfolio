@@ -1,0 +1,190 @@
+/* One article. A reading page, not a scene — the only page here that is not
+   the book. DECISIONS D44. */
+
+.post {
+  /* The page ground is normally driven by the Crossing, which does not exist on
+     this route, so it would sit at its cold starting value forever. Resolve it
+     statically to the warm ground the rest of the book settles on. */
+  background: var(--snow-lit);
+  min-height: 100vh;
+  padding-bottom: clamp(90px, 14vh, 160px);
+}
+
+/* A reading page is not the book's page. The 1440 shell is right for plates and
+   scenes and wrong for prose: it left a 735px column of text stranded in 1325px
+   of ground, which reads as a layout that ran out rather than one that stopped.
+   Everything here — masthead, head, plate, body — uses the narrower measure, so
+   the article is a column of a designed width rather than the left-hand third
+   of a wide one. DECISIONS D46. */
+.post .shell { width: min(1040px, 100% - 2 * clamp(20px, 4vw, 72px)); }
+
+/* ── masthead ─────────────────────────────────────────────
+   Not the book's fixed nav. It scrolls away like the top of any page, which is
+   the correct behaviour for something you are meant to read rather than
+   traverse, and it says plainly that you have stepped outside. */
+.post__masthead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 30px 0 0;
+  color: var(--ink);
+}
+.post__brand {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 27px;
+  letter-spacing: -.06em;
+}
+.post__masthead .post__back { font-family: var(--sans); font-size: 13px; letter-spacing: .02em; }
+
+/* ── head ─────────────────────────────────────────────────
+   Title hard against the shell's left edge; the body is indented past it and
+   the pull quotes hang back to meet it. That is the whole grid. */
+.post__head { padding-top: clamp(54px, 9vh, 104px); }
+.post__meta { color: var(--ink-soft); margin-bottom: 22px; }
+.post__title {
+  margin: 0;
+  max-width: 17ch;
+  font-size: clamp(40px, 5.1vw, 78px);
+  line-height: .98;
+  letter-spacing: -.035em;
+  text-wrap: balance;
+}
+.post__standfirst {
+  font-family: var(--serif);
+  font-size: clamp(19px, 1.5vw, 23px);
+  line-height: 1.42;
+  color: var(--ink-soft);
+  max-width: 42ch;
+  margin-top: 26px;
+}
+
+/* ── the plate ────────────────────────────────────────────
+   Plate stock, as everywhere else on this site: the image sits on cream with a
+   caption, rather than bleeding to the edges. Full-bleed here would make it a
+   third painting-with-type-over-it, which the Hero and the Back Cover have
+   already spent. */
+.post__plate { margin: clamp(46px, 7vh, 88px) auto 0; }
+.post__plate img {
+  display: block;
+  width: 100%;
+  height: auto;
+  background: var(--paper);
+  padding: 14px;
+  box-shadow: 0 18px 44px rgba(27, 42, 51, .13);
+}
+.post__plate figcaption {
+  margin-top: 14px;
+  text-align: right;
+  color: var(--ink-soft);
+}
+
+/* ── body ─────────────────────────────────────────────────
+   A real measure. `.body` elsewhere is capped at 34ch because it sets short
+   notes beside pictures; a column you read for six minutes needs roughly twice
+   that or the eye loses the line. */
+.post__body {
+  margin-top: clamp(52px, 8vh, 96px);
+  --indent: clamp(0px, 4.4vw, 64px);
+  padding-left: var(--indent);
+}
+/* 66ch measured out at 87-89 characters a line, well past the 60-75 that is
+   comfortable — `ch` is the width of a zero, which in Georgia is much wider
+   than the average letter, so the figure flatters itself. 53ch lands at ~72. */
+.post__body > * { max-width: 53ch; }
+.post__body p {
+  font-family: var(--serif);
+  /* up from 18px: at this measure the old size was both small and long-lined,
+     which is the combination that makes a reader's eye lose its place */
+  font-size: clamp(19px, 1.45vw, 21px);
+  line-height: 1.66;
+  color: var(--ink-warm);
+  margin-top: 1.15em;
+}
+.post__body > p:first-child { margin-top: 0; }
+
+.post__h2 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(24px, 2.1vw, 33px);
+  line-height: 1.14;
+  letter-spacing: -.02em;
+  color: var(--ink);
+  margin-top: 2.1em;
+}
+
+/* Hangs back to the shell edge, out of the column — the one place the reading
+   rhythm is allowed to break. Ochre as punctuation, never as a fill. */
+/* The display size lives on the blockquote, not on the paragraph inside it.
+   That is not tidiness: `ch` resolves against the element's OWN font-size, so
+   with the size on the child this element measured its width in 17px units and
+   came out at 355px however large a number was written here. Same trap as the
+   Back Cover's copy in D19 — twice now, so it is worth naming: if a width is in
+   `ch`, check which font-size that element is actually running at. */
+.post__quote {
+  margin: 2.2em 0 2.2em calc(-1 * var(--indent));
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(23px, 2.3vw, 35px);
+  max-width: 28ch;
+}
+.post__quote::before {
+  content: "";
+  display: block;
+  width: 38px;
+  height: 2px;
+  background: var(--ochre);
+  margin-bottom: 22px;
+}
+.post__quote p {
+  font: inherit;
+  line-height: 1.24;
+  letter-spacing: -.02em;
+  color: var(--ink);
+  margin: 0;
+  max-width: none;
+}
+
+/* ── foot ─────────────────────────────────────────────────  */
+.post__foot {
+  margin-top: clamp(64px, 10vh, 120px);
+  padding-top: 28px;
+  border-top: 1px solid rgba(27, 42, 51, .14);
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+.post__back { color: var(--ink-soft); }
+.post__back:hover { color: var(--ink); }
+.post__next { display: grid; gap: 8px; text-align: right; margin-left: auto; max-width: 34ch; }
+.post__next-label { color: var(--ink-soft); }
+.post__next .subhead { color: var(--ink); font-style: italic; }
+.post__next:hover .subhead { color: var(--ochre-deep); }
+
+/* ── entrance ─────────────────────────────────────────────
+   Only the head and the plate. The body never animates: an article is nothing
+   but reading, and MOTION_DIRECTION §8 forbids making a reader wait for it. */
+@keyframes postRise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@keyframes postLift { from { opacity: 0; transform: translateY(30px) scale(.985); } to { opacity: 1; transform: none; } }
+
+.post__head > * { opacity: 0; animation: postRise .62s var(--ease-settle) forwards; }
+.post__head > :nth-child(1) { animation-delay: .04s; }
+.post__head > :nth-child(2) { animation-delay: .11s; }
+.post__head > :nth-child(3) { animation-delay: .2s; }
+.post__plate { opacity: 0; animation: postLift .78s var(--ease-settle) .26s forwards; }
+
+.post--still .post__head > *,
+.post--still .post__plate { opacity: 1; animation: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .post__head > *, .post__plate { opacity: 1; animation: none; }
+}
+
+@media (max-width: 900px) {
+  .post__body { --indent: 0px; }
+  .post__quote { margin-left: 0; }
+  .post__foot { gap: 26px; }
+  .post__next { text-align: left; margin-left: 0; }
+}
