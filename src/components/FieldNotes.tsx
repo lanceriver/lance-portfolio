@@ -287,7 +287,7 @@ export function FieldNotes() {
                 { type: 'spring', stiffness: o.stiffness, damping: o.damping, mass: 1.05, delay: o.delay },
                 reduced
               )}
-              whileHover={reduced ? undefined : { rotate: 0, y: -10, transition: { type: 'spring', stiffness: 300, damping: 26 } }}
+              whileHover={reduced ? undefined : { rotate: 0, y: -14, scale: 1.02, transition: { type: 'spring', stiffness: 300, damping: 26 } }}
             >
               <ObjectBody o={o} onOpen={() => (o.kind === 'print' || o.kind === 'detail' || o.kind === 'band') && setOpen(o)} />
             </motion.div>

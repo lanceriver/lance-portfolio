@@ -32,7 +32,8 @@
 
 .notes__head {
   position: relative;
-  z-index: 10;                     /* every object passes BEHIND the title */
+  z-index: 50;                     /* every object passes BEHIND the title,
+                                      including one lifted to the top of the pile */
   display: grid;
   grid-template-columns: minmax(0, 1.1fr) minmax(0, .52fr);
   gap: clamp(30px, 5vw, 80px);
@@ -69,6 +70,27 @@
 
 @media (hover: hover) and (pointer: fine) {
   .obj__inner { cursor: pointer; }
+
+  /* ── picked off the pile ──────────────────────────────
+     Lifting a print without raising it in the stack just slid it further under
+     whatever was lying on top — which is also what was burying the Zhangjiajie
+     caption. A hand that picks a photograph off a table puts it on top of the
+     table, so the raise is instantaneous: z-index has no business easing.
+
+     Leaving is the part that needs care. Reverting the z-index on mouseout
+     drops the print behind its neighbour while it is still travelling back
+     down, which reads as it falling THROUGH the card. Delaying the revert by
+     the length of the drop keeps it on top until it has landed. */
+  .obj { transition: z-index 0s linear .34s; }
+  .obj:hover { z-index: 40; transition-delay: 0s; }
+
+  /* and it casts further, because it is further from the table */
+  .obj .plate-sheet { transition: box-shadow .34s var(--ease-settle); }
+  .obj:hover .plate-sheet {
+    box-shadow:
+      0 3px 7px rgba(27, 42, 51, .05),
+      0 34px 66px -16px rgba(27, 42, 51, .26);
+  }
 }
 
 .obj__print { position: relative; }
