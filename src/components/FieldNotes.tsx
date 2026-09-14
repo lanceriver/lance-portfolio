@@ -46,9 +46,9 @@ const OBJECTS: Obj[] = [
     delay: 0,
     stiffness: 130,
     damping: 17,
-    src: '/plates/lake-terrace-1200.webp',
-    alt: 'A painted café terrace above a lake, striped awning and geraniums.',
-    caption: 'Colour, borrowed',
+    src: '/plates/zhangjiajie-1200.webp',
+    alt: 'Sandstone pillars in mist at Zhangjiajie, seen from a viewing platform.',
+    caption: 'Zhangjiajie · May 2026',
   },
   {
     id: 'type',
