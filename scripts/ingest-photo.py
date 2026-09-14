@@ -45,6 +45,9 @@ for src in args:
     exif = im.getexif()
     had_gps = 0x8825 in exif
     orient = exif.get(0x0112, 1)
+    # Read the date before stripping it: the caption wants "where and when", and
+    # the "when" is sitting right here rather than in anyone's memory.
+    shot = exif.get(0x0132) or exif.get_ifd(0x8769).get(0x9003)
     im = ImageOps.exif_transpose(im).convert('RGB')   # rotation becomes pixels
 
     OUT.mkdir(parents=True, exist_ok=True)
@@ -60,6 +63,11 @@ for src in args:
     print(f'\n{p.name}  ->  {name}')
     print(f'  orientation tag {orient}' + ('  (rotation baked in)' if orient != 1 else '  (already upright)'))
     print('  GPS ' + ('FOUND and stripped' if had_gps else 'not present'))
+    if shot:
+        y, mo, d = shot.split(' ')[0].split(':')
+        month = ['January','February','March','April','May','June','July',
+                 'August','September','October','November','December'][int(mo) - 1]
+        print(f'  shot {int(d)} {month} {y}   <- the "when" for the caption')
     for f, (w, h), b in written:
         print(f'  {f.name:<34} {w}x{h:<6} {b/1024:6.0f} KB')
     print(f'\n  palette:  python3 scripts/sample-palette.py {OUT}/{name}-1200.webp')

@@ -68,6 +68,10 @@ def describe(rgb, lab):
     # tone comes from Lab lightness, not HSV value: by value a saturated cobalt
     # reads as "pale", which is both wrong and useless on a swatch label
     L = lab[0]
+    # At the extremes hue is noise: a near-black pixel returned "burnt ochre"
+    # off a hue angle computed from three values within 3 of each other.
+    if L < 12:  return 'near-black'
+    if L > 96:  return 'near-white'
     tone = 'deep' if L < 40 else ('pale' if L > 78 else 'mid')
     if sat < .13:
         return f'{tone} neutral'
