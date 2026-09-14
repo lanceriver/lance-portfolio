@@ -21,7 +21,7 @@ type Enter = { x?: number; y?: number; rotate?: number; scale?: number }
 
 type Obj = {
   id: string
-  kind: 'print' | 'type' | 'quote' | 'palette' | 'hand' | 'detail' | 'colophon' | 'band' | 'glyph' | 'slip'
+  kind: 'print' | 'type' | 'quote' | 'palette' | 'hand' | 'detail' | 'colophon' | 'band' | 'glyph' | 'slip' | 'turntable'
   className: string
   depth: number            // cursor-drift multiplier
   rest: number             // resting rotation, degrees
@@ -120,6 +120,17 @@ const OBJECTS: Obj[] = [
     src: '/plates/alpine-village-1200.webp',
     alt: 'A wide crop of the alpine high street plate, taken as a panoramic band.',
     caption: 'A long look down the street',
+  },
+  {
+    id: 'turntable',
+    kind: 'turntable',
+    className: 'obj obj--turntable',
+    depth: 1.4,
+    rest: 1.4,
+    from: { x: 96, y: 54, rotate: 6.5, scale: 0.9 },
+    delay: 0.5,
+    stiffness: 140,
+    damping: 18,
   },
   {
     id: 'slip',
@@ -323,7 +334,62 @@ export function FieldNotes() {
   )
 }
 
+/**
+ * PROTOTYPE DATA — stands in for the Spotify `currently-playing` response until
+ * the function that fetches it exists. The shape is deliberately the shape the
+ * real endpoint will return, including the case that happens most of the time:
+ * nothing is playing, and the object falls back to the last track instead of
+ * going blank. DECISIONS D48.
+ */
+const NOW_PLAYING = {
+  playing: true,
+  title: 'Harvest Moon',
+  artist: 'Neil Young',
+  art: '/plates/lake-terrace-800.webp',   // TODO: album art from the API
+}
+
+/**
+ * The turntable. A painted object, not a rendering: flat fills, one soft sheen,
+ * no 3D and no engine — the page's whole argument is that the paintings and the
+ * page are the same object, and a rendered deck would be the one imported thing
+ * on it. DESIGN_DIRECTION §7 rejects "WebGL with no purpose"; this is what the
+ * idea looks like when it obeys that.
+ *
+ * The record turns at a true 33⅓ rpm and ONLY while something is playing. That
+ * is the whole reason it escapes MOTION_DIRECTION §8's ban on things that never
+ * settle: the rotation is a status, not decoration. When the music stops the
+ * record stops and the arm returns to its rest.
+ */
+function Turntable() {
+  const { playing, title, artist, art } = NOW_PLAYING
+  return (
+    <figure className="turntable" data-playing={playing || undefined}>
+      <div className="turntable__deck">
+        <div className="turntable__platter">
+          <div className="turntable__record">
+            <span className="turntable__label" style={{ backgroundImage: `url(${art})` }} />
+            <span className="turntable__spindle" />
+          </div>
+        </div>
+        <div className="turntable__arm">
+          <span className="turntable__pivot" />
+          <span className="turntable__wand" />
+        </div>
+      </div>
+      <figcaption className="turntable__cap">
+        <span className="turntable__status">
+          {playing ? 'On the turntable' : 'Last played'}
+        </span>
+        <span className="turntable__title">{title}</span>
+        <span className="turntable__artist">{artist}</span>
+      </figcaption>
+    </figure>
+  )
+}
+
 function ObjectBody({ o, onOpen }: { o: Obj; onOpen: () => void }) {
+  if (o.kind === 'turntable') return <Turntable />
+
   if (o.kind === 'print') {
     return (
       <figure className="plate-sheet obj__print">

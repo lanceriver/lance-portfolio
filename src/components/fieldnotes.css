@@ -52,8 +52,8 @@
   position: relative;
   width: var(--shell);
   margin: clamp(18px, 2.6vh, 36px) auto 0;   /* the title clears the first print entirely */
-  height: 108vh;
-  min-height: 1075px;
+  height: 120vh;
+  min-height: 1270px;
 }
 
 .obj {
@@ -87,7 +87,8 @@
 .obj--palette  { right: 4%;  top: 45%;  width: min(27%, 350px); z-index: 5; }
 .obj--hand     { right: 2%;  top: 63%;  width: min(31%, 400px); z-index: 9; }
 .obj--colophon { left: 2%;   top: 64%;  width: min(30%, 385px); z-index: 10; }
-.obj--slip     { left: 35%;  top: 74%;  width: min(20%, 255px); z-index: 11; }
+.obj--slip     { left: 10%;  top: 86%;  width: min(20%, 255px); z-index: 11; }
+.obj--turntable{ left: 37%;  top: 65%;  width: min(23%, 290px); z-index: 12; }
 
 .obj--terrace .obj__expand img { height: min(46vh, 420px); }
 .obj--path    .obj__expand img { height: min(38vh, 340px); }
@@ -307,4 +308,123 @@
 @media (prefers-reduced-motion: reduce) {
   .obj { transform: none; }
   .quote__wipe { display: none; }
+}
+
+/* ── the turntable ────────────────────────────────────────
+   Painted, flat, no engine. A light wood plinth so it sits with the rest of the
+   desk rather than shouting, the darkest ink on the page for the disc, and one
+   soft sheen across it — which is how a painting says "vinyl" without a single
+   specular highlight. DECISIONS D48. */
+.turntable { margin: 0; background: var(--stone); padding: 20px 20px 18px; }
+
+.turntable__deck { position: relative; aspect-ratio: 1 / 1; }
+
+.turntable__platter {
+  position: absolute;
+  inset: 6%;
+  border-radius: 50% !important;   /* with the snowflake, the site's only circles */
+  background: var(--parchment);
+  box-shadow: inset 0 0 0 1px rgba(27, 42, 51, .10);
+}
+
+.turntable__record {
+  position: absolute;
+  inset: 4%;
+  border-radius: 50% !important;
+  background:
+    /* the sheen: one soft band of light, not a gloss */
+    linear-gradient(118deg, rgba(251, 246, 236, 0) 34%, rgba(251, 246, 236, .10) 47%,
+                             rgba(251, 246, 236, 0) 60%),
+    /* grooves */
+    repeating-radial-gradient(circle at 50% 50%,
+      var(--ink) 0 3px, #243640 3px 6px),
+    var(--ink);
+}
+
+.turntable__label {
+  position: absolute;
+  inset: 33%;
+  border-radius: 50% !important;
+  background-size: cover;
+  background-position: center;
+  box-shadow: 0 0 0 1px rgba(27, 42, 51, .3);
+}
+
+.turntable__spindle {
+  position: absolute;
+  inset: 48%;
+  border-radius: 50% !important;
+  background: var(--stone);
+}
+
+/* 33⅓ rpm is 1.8s a turn — the real number, and slow enough to read as calm.
+   It runs ONLY while something is playing. */
+@keyframes platterSpin { to { transform: rotate(360deg); } }
+.turntable[data-playing] .turntable__record { animation: platterSpin 1.8s linear infinite; }
+
+/* ── the arm ──────────────────────────────────────────────
+   Pivot near the top-right corner, wand long enough to reach mid-radius.
+   CSS rotation is positive-clockwise in screen coordinates, so a POSITIVE angle
+   swings a downward wand to the LEFT — onto the record. Parked is the small
+   negative angle, out at the rest. */
+.turntable__arm { position: absolute; inset: 0; pointer-events: none; }
+.turntable__pivot {
+  position: absolute;
+  right: 6%;
+  top: 8%;
+  width: 9%;
+  aspect-ratio: 1;
+  border-radius: 50% !important;
+  background: var(--ink-soft);
+}
+.turntable__wand {
+  position: absolute;
+  right: calc(10.5% - 2px);          /* the pivot's centre */
+  top: 12%;
+  width: 4px;
+  height: 46%;
+  background: var(--ink-soft);
+  transform-origin: 50% 0;
+  transform: rotate(-10deg);         /* at the rest, clear of the disc */
+  transition: transform .8s var(--ease-settle);
+}
+.turntable__wand::after {            /* headshell */
+  content: "";
+  position: absolute;
+  left: -4px;
+  bottom: -2px;
+  width: 12px;
+  height: 14px;
+  background: var(--ink-soft);
+}
+/* dropped onto the groove */
+.turntable[data-playing] .turntable__wand { transform: rotate(26deg); }
+
+/* ── caption ──────────────────────────────────────────── */
+.turntable__cap { display: grid; gap: 3px; margin-top: 16px; }
+.turntable__status {
+  font-family: var(--sans);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-bottom: 4px;
+}
+.turntable__title {
+  font-family: var(--serif);
+  font-size: 19px;
+  line-height: 1.2;
+  color: var(--ink);
+}
+.turntable__artist {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 16px;
+  color: var(--ink-warm);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .turntable[data-playing] .turntable__record { animation: none; }
+  .turntable__wand { transition: none; }
 }
