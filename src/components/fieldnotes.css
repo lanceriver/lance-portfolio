@@ -71,20 +71,12 @@
 @media (hover: hover) and (pointer: fine) {
   .obj__inner { cursor: pointer; }
 
-  /* ── picked off the pile ──────────────────────────────
-     Lifting a print without raising it in the stack just slid it further under
-     whatever was lying on top — which is also what was burying the Zhangjiajie
-     caption. A hand that picks a photograph off a table puts it on top of the
-     table, so the raise is instantaneous: z-index has no business easing.
+  /* The z-order of a lifted object is managed in FieldNotes.tsx — CSS can say
+     "the hovered one is on top" but not "the most recently hovered one is on
+     top", and the difference shows the moment you slide between two prints
+     that overlap. Only the shadow stays here.
 
-     Leaving is the part that needs care. Reverting the z-index on mouseout
-     drops the print behind its neighbour while it is still travelling back
-     down, which reads as it falling THROUGH the card. Delaying the revert by
-     the length of the drop keeps it on top until it has landed. */
-  .obj { transition: z-index 0s linear .34s; }
-  .obj:hover { z-index: 40; transition-delay: 0s; }
-
-  /* and it casts further, because it is further from the table */
+     It casts further because it is further from the table. */
   .obj .plate-sheet { transition: box-shadow .34s var(--ease-settle); }
   .obj:hover .plate-sheet {
     box-shadow:

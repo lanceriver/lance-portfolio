@@ -185,12 +185,69 @@ const OBJECTS: Obj[] = [
 /** Extra hold past a full viewport, so the cover completes before the release. */
 const ASCENT_SLACK = 40
 
+/** Where lifted objects start, above every authored z-index on the desk. */
+const LIFT_BASE = 40
+/** Matches the drop in `whileHover`; the object must not sink early. */
+const DROP_MS = 340
+
+/**
+ * Last one picked up is on top.
+ *
+ * CSS can say "the hovered object is raised" and can delay the drop so nothing
+ * falls through its neighbour on the way down. What it cannot say is "the most
+ * recently hovered object is raised", and the difference shows the moment you
+ * slide from one overlapping print onto another: for the length of that delay
+ * both sit at the same level, and DOM order — not the cursor — decides which is
+ * on top. A counter settles it. Each object picked up goes above everything
+ * picked up before it.
+ *
+ * The counter resets once the desk is idle, so it cannot climb forever, and
+ * every object returns to its authored z-index rather than accumulating a new
+ * stacking order that nobody chose.
+ */
+function useLift() {
+  const raised = useRef(new Set<HTMLElement>())
+  const timers = useRef(new Map<HTMLElement, number>())
+  const next = useRef(LIFT_BASE)
+
+  useEffect(() => () => {
+    timers.current.forEach((id) => clearTimeout(id))
+    timers.current.clear()
+  }, [])
+
+  const cancelDrop = (el: HTMLElement) => {
+    const id = timers.current.get(el)
+    if (id !== undefined) { clearTimeout(id); timers.current.delete(el) }
+  }
+
+  return {
+    onPointerEnter: (e: React.PointerEvent<HTMLElement>) => {
+      const el = e.currentTarget
+      cancelDrop(el)                       // re-entered before it landed
+      next.current += 1
+      el.style.zIndex = String(next.current)
+      raised.current.add(el)
+    },
+    onPointerLeave: (e: React.PointerEvent<HTMLElement>) => {
+      const el = e.currentTarget
+      cancelDrop(el)
+      timers.current.set(el, window.setTimeout(() => {
+        el.style.zIndex = ''               // back to the authored order
+        raised.current.delete(el)
+        timers.current.delete(el)
+        if (raised.current.size === 0) next.current = LIFT_BASE
+      }, DROP_MS))
+    },
+  }
+}
+
 export function FieldNotes() {
   const reduced = useReducedMotion()
   const surfaceRef = useRef<HTMLDivElement>(null)
   const sectionRef = useRef<HTMLElement>(null)
   const shift = useRef(0)
   const [open, setOpen] = useState<Obj | null>(null)
+  const lift = useLift()
 
   /**
    * THE ASCENT — the desk stops and the Writing section climbs over it.
@@ -278,7 +335,7 @@ export function FieldNotes() {
 
       <div className="notes__surface" ref={surfaceRef}>
         {OBJECTS.map((o) => (
-          <div className={o.className} key={o.id} style={{ ['--depth' as string]: o.depth }}>
+          <div className={o.className} key={o.id} style={{ ['--depth' as string]: o.depth }} {...lift}>
             <motion.div
               className="obj__inner"
               {...arrive(
