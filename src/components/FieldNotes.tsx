@@ -185,58 +185,40 @@ const OBJECTS: Obj[] = [
 /** Extra hold past a full viewport, so the cover completes before the release. */
 const ASCENT_SLACK = 40
 
-/** Where lifted objects start, above every authored z-index on the desk. */
+/** Where the pile starts, above every authored z-index on the desk. */
 const LIFT_BASE = 40
-/** Matches the drop in `whileHover`; the object must not sink early. */
-const DROP_MS = 340
 
 /**
- * Last one picked up is on top.
+ * The desk keeps the order you left it in.
  *
- * CSS can say "the hovered object is raised" and can delay the drop so nothing
- * falls through its neighbour on the way down. What it cannot say is "the most
- * recently hovered object is raised", and the difference shows the moment you
- * slide from one overlapping print onto another: for the length of that delay
- * both sit at the same level, and DOM order — not the cursor — decides which is
- * on top. A counter settles it. Each object picked up goes above everything
- * picked up before it.
+ * Not "the hovered object is on top" — that is a spotlight, and it snaps back
+ * the moment you look away. This is a pile of photographs on a table: the one
+ * you last picked up is lying on top of the others, and it stays there after
+ * you have put it down. The object lies flat again — the lift and the
+ * straighten both revert — but its place in the stack is now earned.
  *
- * The counter resets once the desk is idle, so it cannot climb forever, and
- * every object returns to its authored z-index rather than accumulating a new
- * stacking order that nobody chose.
+ * Which also means the caption problem never comes back: once you have touched
+ * the Zhangjiajie print, nothing is covering its date again.
+ *
+ * Implemented as an order rather than an ever-climbing counter, so the numbers
+ * stay small and mean something: index in the pile. Objects never touched keep
+ * the authored z-order they were composed with.
  */
 function useLift() {
-  const raised = useRef(new Set<HTMLElement>())
-  const timers = useRef(new Map<HTMLElement, number>())
-  const next = useRef(LIFT_BASE)
-
-  useEffect(() => () => {
-    timers.current.forEach((id) => clearTimeout(id))
-    timers.current.clear()
-  }, [])
-
-  const cancelDrop = (el: HTMLElement) => {
-    const id = timers.current.get(el)
-    if (id !== undefined) { clearTimeout(id); timers.current.delete(el) }
-  }
+  const pile = useRef<HTMLElement[]>([])
 
   return {
     onPointerEnter: (e: React.PointerEvent<HTMLElement>) => {
       const el = e.currentTarget
-      cancelDrop(el)                       // re-entered before it landed
-      next.current += 1
-      el.style.zIndex = String(next.current)
-      raised.current.add(el)
-    },
-    onPointerLeave: (e: React.PointerEvent<HTMLElement>) => {
-      const el = e.currentTarget
-      cancelDrop(el)
-      timers.current.set(el, window.setTimeout(() => {
-        el.style.zIndex = ''               // back to the authored order
-        raised.current.delete(el)
-        timers.current.delete(el)
-        if (raised.current.size === 0) next.current = LIFT_BASE
-      }, DROP_MS))
+      const p = pile.current
+      const at = p.indexOf(el)
+      // `at !== -1` matters: on an empty pile indexOf is -1 and so is
+      // length - 1, so the guard fired on the very first hover and nothing was
+      // ever added.
+      if (at !== -1 && at === p.length - 1) return   // already on top
+      if (at !== -1) p.splice(at, 1)
+      p.push(el)
+      p.forEach((o, i) => { o.style.zIndex = String(LIFT_BASE + i) })
     },
   }
 }

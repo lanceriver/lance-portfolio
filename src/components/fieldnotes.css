@@ -32,8 +32,9 @@
 
 .notes__head {
   position: relative;
-  z-index: 50;                     /* every object passes BEHIND the title,
-                                      including one lifted to the top of the pile */
+  z-index: 100;                    /* every object passes BEHIND the title —
+                                      100 clears the whole pile, which with
+                                      twelve objects tops out at 51 */
   display: grid;
   grid-template-columns: minmax(0, 1.1fr) minmax(0, .52fr);
   gap: clamp(30px, 5vw, 80px);
