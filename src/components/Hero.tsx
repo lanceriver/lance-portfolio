@@ -48,11 +48,13 @@ export function Hero() {
     // Slow start, decisive finish — keeps the painting readable and shortens
     // the veiled band. DECISIONS D17.
     const fade = range(p, 0.44, 0.88)
-    hero.style.setProperty('--fade', fade.toFixed(4))
-
     const out = range(p, 0.52, 0.84)
-    copy.style.opacity = String(1 - out)
-    copy.style.transform = `translate3d(0, ${-24 * out}px, 0)`
+
+    return () => {
+      hero.style.setProperty('--fade', fade.toFixed(4))
+      copy.style.opacity = String(1 - out)
+      copy.style.transform = `translate3d(0, ${-24 * out}px, 0)`
+    }
   }, !reduced)
 
   return (

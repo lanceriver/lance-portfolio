@@ -35,11 +35,17 @@ export function BackCover() {
     const travel = wrap.offsetHeight - innerHeight
     const t = clamp(-wrap.getBoundingClientRect().top / Math.max(1, travel))
 
-    // the feather closes as the plate's top edge climbs out of view
-    scene.style.setProperty('--feather', `${lerp(22, 0, range(t, 0, 0.55)).toFixed(2)}vh`)
-    // a gentle uniform settle — inside the stated scale range, never a zoom
-    scene.style.setProperty('--plate-scale', lerp(1.06, 1, range(t, 0, 0.72)).toFixed(4))
-    scene.style.setProperty('--copy-in', range(t, 0.34, 0.62).toFixed(3))
+    const feather = `${lerp(22, 0, range(t, 0, 0.55)).toFixed(2)}vh`
+    const scale = lerp(1.06, 1, range(t, 0, 0.72)).toFixed(4)
+    const copyIn = range(t, 0.34, 0.62).toFixed(3)
+
+    return () => {
+      // the feather closes as the plate's top edge climbs out of view
+      scene.style.setProperty('--feather', feather)
+      // a gentle uniform settle — inside the stated scale range, never a zoom
+      scene.style.setProperty('--plate-scale', scale)
+      scene.style.setProperty('--copy-in', copyIn)
+    }
   }, !reduced)
 
   return (

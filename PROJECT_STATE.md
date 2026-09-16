@@ -4,7 +4,7 @@
 
 **Project:** Lance Rivera portfolio — independent Claude interpretation
 **Location:** `/Users/lance/Documents/Projects/lance-portfolio-claude`
-**Last updated:** 2026-09-11 — review rounds 1–6 applied (D27–D44); Writing posts now routed and pre-rendered; awaiting a real-browser motion pass
+**Last updated:** 2026-09-16 — review rounds 1–8 applied (D27–D50); posts routed and pre-rendered, first travel photograph on the desk, ascent back on CSS sticky. Under version control on branch `turntable-prototype`; awaiting a real-browser motion pass
 
 ---
 

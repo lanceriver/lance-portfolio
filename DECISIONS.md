@@ -770,3 +770,135 @@ rules are doing different jobs and the comments say so.
 
 Verified across 560 / 588 / 900 / 1300 / 1440: zero height change on every row
 in both states, and at 1440 all four title blocks measure 81px.
+
+## D49 — the palette is derived, not chosen
+*2026-09-14 · Opus*
+
+Lance is replacing the demo prints with photographs from his own travels, and
+asked what else would personalise the desk. The first answer was the object
+already sitting there: the swatch strip says *"Sampled from the plates"* and
+*"Every colour on this site was lifted from a painting."* That was true, and it
+was done by eye. Once the prints are his photographs it has to be true again,
+and by then nobody will remember which seven colours were picked or why.
+
+`scripts/sample-palette.py` derives them. Quantise, then select by coverage with
+a perceptual-distance floor in Lab, so the strip gets the colours the image is
+made of rather than seven versions of the same blue. Two things make the output
+worth reading rather than just correct:
+
+- **Share is re-attributed.** Every quantiser bucket is assigned to its nearest
+  pick, so the percentage reported is the proportion of the image a swatch
+  actually speaks for. The raw bucket count answers a question nobody asked —
+  it read 2-4% per swatch when the honest figures are 4-25%.
+- **Names come from the site's own vocabulary.** Where a sampled colour is
+  within ΔE 14 of an existing token it is called by that token's name; only a
+  genuinely new colour gets a generated description. The first pass generated
+  three swatches called "Mid Azure", which is no use as a label.
+
+Run against the alpine plate it returns snow-lit, snow shadow, ochre, cobalt,
+slate, umber, terracotta — the hand-authored list, rediscovered. So D2's claim
+now has a measurement behind it instead of a memory.
+
+The last column reports the nearest existing token, which is informative and
+nothing more.
+
+**Correction, same day.** I wrote here that agreement with the painted palette
+was "the question to ask of every photograph that goes on the desk", and then
+started applying it — reading a photograph Lance liked and advising against it
+on the grounds that its greens and greys did not match the paintings. He stopped
+that: *"why does it matter whether the pics match the colours, the point is that
+i want it to have my favourite pictures from my trips."*
+
+He is right, and the error is worth recording because it is a specific way to be
+wrong: I built a measuring tool and then let it start making decisions. The
+swatch strip is **derived**. It describes whatever is on the desk; it does not
+get a vote on what goes there. Field Notes is the personal section, the pictures
+are the point, and the only thing that follows from a change of pictures is that
+the strip is re-run.
+
+The site's own tokens are unaffected — those are chosen, they are used for type,
+rules, the ridge and the slate ground, and no photograph touches them.
+
+Two bugs of mine, both caught by reading the output rather than the code: a
+format string that passed a tuple where three integers were wanted, and tone
+buckets taken from HSV *value* instead of Lab lightness — by which measure a
+saturated cobalt is "pale", which is both wrong and useless on a swatch.
+
+`swatches` moved to `data.ts` with the rest of the content, so replacing it when
+the photographs arrive is a one-file edit.
+
+## D50 — the ascent goes back to `position: sticky`
+*2026-09-16 · Opus*
+
+Lance: *"the page is glitching and jerking back and forth even when i scroll
+slowly."* Then, after a round of optimisation: *"its still jerky."*
+
+The second message is the important one, because the first sent me the wrong way.
+
+**What I did first, and why it was not enough.** Reading the scroll loop turned
+up three real defects and I fixed all of them: the driver's own comment claimed
+reads and writes were batched and they were not, so eight callbacks each
+measured and then drew in sequence and the browser was forced to lay the page
+out again up to eight times a frame — with `elementsFromPoint` running fifth,
+after four writes. Field Notes was transformed every frame with no compositor
+layer, because I had removed `will-change` reasoning that a permanent layer for
+a section that size was too much texture to hold, which was true and still the
+wrong conclusion. And the ascent stored full precision while applying
+`toFixed(1)`, so its "unchanged, skip" test never fired and it rewrote the
+transform every frame while sitting perfectly still.
+
+All three were worth fixing. None of them was the cause.
+
+**The actual cause is the approach.** Scrolling is handled on the compositor
+thread. A transform computed from the scroll position is applied on the main
+thread, a frame later. So the held section lags the page by one frame and
+jitters against everything around it — on every scroll, at every speed, no
+matter how cheap the callback is. Making the work smaller cannot fix a
+synchronisation problem; it only makes a late frame slightly less late.
+
+`position: sticky` is resolved by the compositor and has nothing to lag.
+
+**Which is what D42 chose against, for a reason that has now expired.** The
+transform was picked because sticky could not be verified in the tooling
+browser, which does not recompute sticky offsets while being driven — every
+reading of it, including a synthetic control built next to the real thing, was
+indistinguishable from broken. D42's own note said to revisit it if a real
+browser proved otherwise. A real browser has now proved otherwise, twice, in
+the form of Lance scrolling the page.
+
+The travel comes from a spacer inside the wrapper rather than padding on it,
+because a sticky box may be shifted only as far as its containing block allows
+and that is the CONTENT box — the detail that made the first sticky attempt look
+like it had failed on its own terms.
+
+Measured after: spacer 940px at a 900px viewport, Writing's margin `-940px`
+cancelling it exactly, Writing still sitting at Field Notes' foot, so layout and
+document height are unchanged. The FieldNotes driver is deleted, which also
+takes one callback out of the scroll loop.
+
+Whether it is smooth is still Lance's call — this environment cannot run the
+thing it is being asked to judge, which is the entire reason this took three
+attempts.
+
+**Two more of mine, worth naming.** The token that carries the ascent distance
+silently failed to apply: I asserted on every other edit in that change and not
+that one, so the replacement matched nothing and said nothing. Assert on every
+edit, not most of them.
+
+And then I shipped a version that did not pin at all. *"you got rid of the whole
+animation bro."*
+
+`bottom: 0` is the obvious way to say "hold when the foot reaches the floor",
+and it does nothing for a box taller than the viewport — a sticky box is never
+shifted by a bottom inset in that case. Field Notes is ~1900px against a ~780px
+viewport. Expressed as `top: viewportHeight - ownHeight` it holds perfectly:
+measured, the foot sits at the viewport floor for all 821px of the ascent while
+the ridge climbs 663 → -158, then releases.
+
+The failure is not that I got the inset wrong; it is what I checked before
+committing. I verified that the section computed as `position: sticky`, that the
+spacer supplied 940px of travel, that Writing's negative margin cancelled it to
+the pixel, and that the document had not grown — every precondition, all green,
+and not once did I ask whether the foot actually stayed where it was supposed
+to. Preconditions are not the behaviour. The one assertion worth making was the
+one the reader would notice.

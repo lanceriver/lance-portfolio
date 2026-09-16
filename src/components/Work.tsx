@@ -98,7 +98,7 @@ function SceneAperture() {
     const t = clamp(-el.getBoundingClientRect().top / Math.max(1, travel))
     // slot half-width, 9% → 42% of the frame. Linear: bound to the hand, not eased.
     const open = range(t, 0.12, 0.78)
-    scene.style.setProperty('--slot', String(41 - 32 * open))
+    return () => scene.style.setProperty('--slot', String(41 - 32 * open))
   }, !reduced)
 
   return (
@@ -148,7 +148,7 @@ function SceneHorizontal() {
     const t = clamp(-el.getBoundingClientRect().top / Math.max(1, travel))
     const distance = Math.max(0, rail.scrollWidth - innerWidth)
     const eased = range(t, 0.08, 0.92)
-    rail.style.transform = `translate3d(${-distance * eased}px, 0, 0)`
+    return () => { rail.style.transform = `translate3d(${-distance * eased}px, 0, 0)` }
   }, !reduced)
 
   // three windows onto the same plate — different regions of one continuous scene
@@ -211,9 +211,12 @@ function SceneRest() {
     const r = el.getBoundingClientRect()
     const t = clamp((innerHeight - r.top) / (innerHeight + r.height))
     // three rates, all slow. The numeral is the slowest thing in the section.
-    numRef.current.style.transform = `translate3d(0, ${(0.5 - t) * 130}px, 0)`
-    plateRef.current.style.transform = `translate3d(0, ${(0.5 - t) * 62}px, 0)`
-    copyRef.current.style.transform = `translate3d(0, ${(0.5 - t) * 26}px, 0)`
+    const num = numRef.current, plate = plateRef.current, copy = copyRef.current
+    return () => {
+      num.style.transform = `translate3d(0, ${(0.5 - t) * 130}px, 0)`
+      plate.style.transform = `translate3d(0, ${(0.5 - t) * 62}px, 0)`
+      copy.style.transform = `translate3d(0, ${(0.5 - t) * 26}px, 0)`
+    }
   }, !reduced)
 
   return (

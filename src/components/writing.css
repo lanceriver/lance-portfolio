@@ -1,11 +1,14 @@
 /* Writing — the slate ground, the one dark section on the page. */
 .writing {
   position: relative;
-  /* climbs over the held Field Notes — see `.notes-pin`. The z-index is what
-     makes it a cover rather than a neighbour: Field Notes is transformed during
-     the ascent, which makes it a stacking context of its own, and this has to
-     win against it. */
+  /* Climbs over the held Field Notes — see `.notes-pin`. The negative margin
+     cancels the ascent spacer, so the layout is exactly where it would be
+     without the hold and the document does not grow; the spacer's only job is
+     to give the sticky box room to travel. The z-index makes this a cover
+     rather than a neighbour: a sticky Field Notes is a stacking context of its
+     own, and this has to win against it. */
   z-index: 2;
+  margin-top: calc(-1 * var(--ascent));
   background: var(--slate-deep);
   color: var(--paper);
   padding: clamp(120px, 18vh, 220px) 0 clamp(130px, 20vh, 240px);

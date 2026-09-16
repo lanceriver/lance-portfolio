@@ -4,18 +4,36 @@ import { useEffect, useRef } from 'react'
  * One scroll loop for the whole page.
  *
  * Every scroll-linked section registers a callback here rather than adding its
- * own listener. Callbacks run at most once per frame, and they run in
- * registration order so reads and writes stay batched together instead of
- * interleaving into layout thrash. MOTION_DIRECTION §5.
+ * own listener, and callbacks run at most once per frame. MOTION_DIRECTION §5.
+ *
+ * READS AND WRITES ARE SEPARATED, and this is the whole point rather than a
+ * tidiness preference. A callback measures, then returns a closure that draws.
+ * All the measuring happens first, then all the drawing.
+ *
+ * The previous version claimed to batch them and did not: eight callbacks each
+ * measured and then drew, in sequence, so every draw invalidated layout for the
+ * next measurement and the browser was forced to lay the page out again — up to
+ * eight synchronous reflows per frame. With the heaviest read of the lot
+ * (`elementsFromPoint`, in the nav) running fifth, after four writes, the cost
+ * landed hardest exactly where the page is busiest. It scrolled in jerks.
+ *
+ * A callback that returns nothing still works and simply draws during the read
+ * phase; that is correct for anything which only touches React state.
  */
-type Driver = () => void
+type Writer = () => void
+type Driver = () => Writer | void
 
 const drivers = new Set<Driver>()
 let frame = 0
 
 function run() {
   frame = 0
-  for (const d of drivers) d()
+  const writes: Writer[] = []
+  for (const d of drivers) {
+    const w = d()
+    if (w) writes.push(w)
+  }
+  for (const w of writes) w()
 }
 
 function schedule() {

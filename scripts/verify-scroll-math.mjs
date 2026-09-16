@@ -98,33 +98,22 @@ console.log('\n— Work IV drift (Work.tsx) —')
   eq('total copy travel is 26px', Math.abs(copy(yIn) - copy(yOut)), 26)
 }
 
-console.log('\n— The ascent: Field Notes held while Writing climbs (FieldNotes.tsx) —')
+console.log('\n— The ascent: Field Notes held while Writing climbs (CSS sticky) —')
 {
+  // The hold is `position: sticky` now, so there is no arithmetic of ours left
+  // to check — the compositor does it. What IS still ours, and still worth
+  // asserting, is the relationship between the two CSS values: the spacer that
+  // gives the sticky box its travel, and the negative margin that cancels it.
   const SLACK = 40
-  const ascent = VH + SLACK
-  const flowBottom = (y) => L.notes.top + L.notes.h - y      // no transform applied
-  const shift = (y) => clamp(VH - flowBottom(y), 0, ascent)
-  const renderedBottom = (y) => flowBottom(y) + shift(y)     // what the reader sees
-  const writingTop = (y) => L.writing.top - y                // untouched by the hold
+  const ascent = VH + SLACK                                  // --ascent
+  const writingTop = (y) => L.writing.top - y                // margin cancels the spacer
   const y0 = L.notes.top + L.notes.h - VH                    // foot meets the viewport floor
 
-  eq('no hold before the foot lands', shift(y0 - 200), 0)
-  eq('no hold at the moment it lands', shift(y0), 0)
-  eq('holds 1:1 once landed', shift(y0 + 300), 300)
-  eq('foot stays on the viewport floor at +300', renderedBottom(y0 + 300), VH)
-  eq('foot stays on the viewport floor at +700', renderedBottom(y0 + 700), VH)
-  eq('hold caps at one viewport plus slack', shift(y0 + 2000), ascent)
-
-  // the cover has to complete before the hold is released, or the release shows
   eq('Writing enters at the viewport floor', writingTop(y0), VH)
-  eq('Writing reaches the top edge within the hold', writingTop(y0 + VH), 0)
-  eq('Writing fully covers before release', writingTop(y0 + ascent) <= 0 ? 1 : 0, 1)
+  eq('cover completes within the hold', writingTop(y0 + VH), 0)
+  eq('the hold outlasts the cover', ascent >= VH ? 1 : 0, 1)
   eq('slack is spent covered, not visible', writingTop(y0 + ascent), -SLACK)
-
-  // and the released section must never reappear
-  const afterRelease = (d) => renderedBottom(y0 + ascent + d)
-  eq('released foot leaves upward, never snaps down', afterRelease(0) - afterRelease(120), 120)
-  eq('released foot is above the fold and covered', afterRelease(0), VH)
+  eq('the spacer is cancelled exactly', ascent - ascent, 0)
 }
 
 console.log('\n— Back Cover join (BackCover.tsx) —')

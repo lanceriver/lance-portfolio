@@ -1,8 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
+import { swatches } from '../data'
 import { useReducedMotion } from '../hooks/useReducedMotion'
-import { useScrollDriver } from '../hooks/useScrollDriver'
-import { clamp } from '../lib/math'
 import { arrive } from '../lib/enter'
 import './fieldnotes.css'
 
@@ -21,7 +20,7 @@ type Enter = { x?: number; y?: number; rotate?: number; scale?: number }
 
 type Obj = {
   id: string
-  kind: 'print' | 'type' | 'quote' | 'palette' | 'hand' | 'detail' | 'colophon' | 'band' | 'glyph' | 'slip'
+  kind: 'print' | 'type' | 'quote' | 'palette' | 'hand' | 'detail' | 'colophon' | 'band' | 'glyph' | 'slip' | 'turntable'
   className: string
   depth: number            // cursor-drift multiplier
   rest: number             // resting rotation, degrees
@@ -45,9 +44,9 @@ const OBJECTS: Obj[] = [
     delay: 0,
     stiffness: 130,
     damping: 17,
-    src: '/plates/lake-terrace-1200.webp',
-    alt: 'A painted café terrace above a lake, striped awning and geraniums.',
-    caption: 'Colour, borrowed',
+    src: '/plates/zhangjiajie-1200.webp',
+    alt: 'Sandstone pillars in mist at Zhangjiajie, seen from a viewing platform.',
+    caption: 'Zhangjiajie · May 2026',
   },
   {
     id: 'type',
@@ -122,6 +121,17 @@ const OBJECTS: Obj[] = [
     caption: 'A long look down the street',
   },
   {
+    id: 'turntable',
+    kind: 'turntable',
+    className: 'obj obj--turntable',
+    depth: 1.4,
+    rest: 1.4,
+    from: { x: 96, y: 54, rotate: 6.5, scale: 0.9 },
+    delay: 0.5,
+    stiffness: 140,
+    damping: 18,
+  },
+  {
     id: 'slip',
     kind: 'slip',
     className: 'obj obj--slip',
@@ -170,51 +180,83 @@ const OBJECTS: Obj[] = [
   },
 ]
 
-const SWATCHES = [
-  { hex: '#0D7EE6', name: 'Zenith' },
-  { hex: '#2F8CE2', name: 'Azure' },
-  { hex: '#B3C0D8', name: 'Snow shadow' },
-  { hex: '#F0EAE0', name: 'Snow, lit' },
-  { hex: '#C79969', name: 'Ochre' },
-  { hex: '#8C3F3E', name: 'Rust' },
-  { hex: '#656B59', name: 'Olive' },
-]
+/** Where the pile starts, above every authored z-index on the desk. */
+const LIFT_BASE = 40
 
-/** Extra hold past a full viewport, so the cover completes before the release. */
-const ASCENT_SLACK = 40
+/**
+ * The desk keeps the order you left it in.
+ *
+ * Not "the hovered object is on top" — that is a spotlight, and it snaps back
+ * the moment you look away. This is a pile of photographs on a table: the one
+ * you last picked up is lying on top of the others, and it stays there after
+ * you have put it down. The object lies flat again — the lift and the
+ * straighten both revert — but its place in the stack is now earned.
+ *
+ * Which also means the caption problem never comes back: once you have touched
+ * the Zhangjiajie print, nothing is covering its date again.
+ *
+ * Implemented as an order rather than an ever-climbing counter, so the numbers
+ * stay small and mean something: index in the pile. Objects never touched keep
+ * the authored z-order they were composed with.
+ */
+function useLift() {
+  const pile = useRef<HTMLElement[]>([])
+
+  return {
+    onPointerEnter: (e: React.PointerEvent<HTMLElement>) => {
+      const el = e.currentTarget
+      const p = pile.current
+      const at = p.indexOf(el)
+      // `at !== -1` matters: on an empty pile indexOf is -1 and so is
+      // length - 1, so the guard fired on the very first hover and nothing was
+      // ever added.
+      if (at !== -1 && at === p.length - 1) return   // already on top
+      if (at !== -1) p.splice(at, 1)
+      p.push(el)
+      p.forEach((o, i) => { o.style.zIndex = String(LIFT_BASE + i) })
+    },
+  }
+}
 
 export function FieldNotes() {
   const reduced = useReducedMotion()
   const surfaceRef = useRef<HTMLDivElement>(null)
-  const sectionRef = useRef<HTMLElement>(null)
-  const shift = useRef(0)
   const [open, setOpen] = useState<Obj | null>(null)
+  const sectionRef = useRef<HTMLElement>(null)
+  const lift = useLift()
 
   /**
-   * THE ASCENT — the desk stops and the Writing section climbs over it.
+   * The pin has to be a NEGATIVE `top`, not `bottom: 0`.
    *
-   * Once this section's foot reaches the bottom of the viewport it is pushed
-   * back down by exactly as much as the page has scrolled, so it holds still
-   * while the slate rises and covers it. Held for one viewport plus a little,
-   * which is the distance the Writing section needs to reach the top edge —
-   * after that the hold is released, but by then it is behind a solid section
-   * and nothing can be seen to snap.
+   * `bottom: 0` is the obvious way to say "hold when the foot reaches the
+   * floor", and it silently does nothing here: a sticky box taller than the
+   * viewport is never shifted by a bottom inset. This section is ~1900px
+   * against a ~780px viewport. It computed as `position: sticky`, it had its
+   * travel, every geometry check passed — and it simply scrolled away, which is
+   * exactly how it reached Lance.
    *
-   * `rect.bottom` already includes the shift we applied last frame, so it is
-   * subtracted back out before measuring; reading the flow position off the
-   * element's own offsets instead would break the moment anything above it
-   * became a positioned ancestor. DECISIONS D42.
+   * `top: viewportHeight - ownHeight` says the same thing in the form the
+   * engine acts on: stick once the top would rise past that line, which is the
+   * moment the foot would rise past the floor.
+   *
+   * That needs the height, so it is measured rather than declared — but only on
+   * mount and on resize. Nothing here is coupled to scroll, which is the whole
+   * point: the compositor keeps doing the holding. DECISIONS D50.
    */
-  useScrollDriver(() => {
+  useEffect(() => {
     const el = sectionRef.current
-    if (!el) return
-    const flowBottom = el.getBoundingClientRect().bottom - shift.current
-    const ascent = innerHeight + ASCENT_SLACK
-    const next = clamp(innerHeight - flowBottom, 0, ascent)
-    if (next === shift.current) return
-    shift.current = next
-    el.style.transform = next ? `translate3d(0, ${next.toFixed(1)}px, 0)` : ''
-  }, !reduced)
+    if (!el || reduced) return
+    const place = () => { el.style.top = `${innerHeight - el.offsetHeight}px` }
+    place()
+    const ro = new ResizeObserver(place)
+    ro.observe(el)
+    addEventListener('resize', place)
+    return () => {
+      ro.disconnect()
+      removeEventListener('resize', place)
+      el.style.top = ''
+    }
+  }, [reduced])
 
   // Cursor drift — barely noticeable by design. Pointer-fine only.
   useEffect(() => {
@@ -276,7 +318,7 @@ export function FieldNotes() {
 
       <div className="notes__surface" ref={surfaceRef}>
         {OBJECTS.map((o) => (
-          <div className={o.className} key={o.id} style={{ ['--depth' as string]: o.depth }}>
+          <div className={o.className} key={o.id} style={{ ['--depth' as string]: o.depth }} {...lift}>
             <motion.div
               className="obj__inner"
               {...arrive(
@@ -285,7 +327,7 @@ export function FieldNotes() {
                 { type: 'spring', stiffness: o.stiffness, damping: o.damping, mass: 1.05, delay: o.delay },
                 reduced
               )}
-              whileHover={reduced ? undefined : { rotate: 0, y: -10, transition: { type: 'spring', stiffness: 300, damping: 26 } }}
+              whileHover={reduced ? undefined : { rotate: 0, y: -14, scale: 1.02, transition: { type: 'spring', stiffness: 300, damping: 26 } }}
             >
               <ObjectBody o={o} onOpen={() => (o.kind === 'print' || o.kind === 'detail' || o.kind === 'band') && setOpen(o)} />
             </motion.div>
@@ -294,6 +336,13 @@ export function FieldNotes() {
       </div>
 
       </section>
+
+      {/* The ascent. An empty block, and the only thing holding the desk still:
+          a sticky box can travel no further than its containing block, so this
+          spacer's height IS the length of the hold. Writing pulls itself back
+          up by the same amount, so nothing in the layout moves and the document
+          does not grow. DECISIONS D50. */}
+      <div className="notes-pin__ascent" aria-hidden="true" />
 
       {/* Outside `.notes`, deliberately. Pinning makes that section a stacking
           context, which would trap this fixed overlay's z-index inside it and
@@ -323,7 +372,62 @@ export function FieldNotes() {
   )
 }
 
+/**
+ * PROTOTYPE DATA — stands in for the Spotify `currently-playing` response until
+ * the function that fetches it exists. The shape is deliberately the shape the
+ * real endpoint will return, including the case that happens most of the time:
+ * nothing is playing, and the object falls back to the last track instead of
+ * going blank. DECISIONS D48.
+ */
+const NOW_PLAYING = {
+  playing: true,
+  title: 'Harvest Moon',
+  artist: 'Neil Young',
+  art: '/plates/lake-terrace-800.webp',   // TODO: album art from the API
+}
+
+/**
+ * The turntable. A painted object, not a rendering: flat fills, one soft sheen,
+ * no 3D and no engine — the page's whole argument is that the paintings and the
+ * page are the same object, and a rendered deck would be the one imported thing
+ * on it. DESIGN_DIRECTION §7 rejects "WebGL with no purpose"; this is what the
+ * idea looks like when it obeys that.
+ *
+ * The record turns at a true 33⅓ rpm and ONLY while something is playing. That
+ * is the whole reason it escapes MOTION_DIRECTION §8's ban on things that never
+ * settle: the rotation is a status, not decoration. When the music stops the
+ * record stops and the arm returns to its rest.
+ */
+function Turntable() {
+  const { playing, title, artist, art } = NOW_PLAYING
+  return (
+    <figure className="turntable" data-playing={playing || undefined}>
+      <div className="turntable__deck">
+        <div className="turntable__platter">
+          <div className="turntable__record">
+            <span className="turntable__label" style={{ backgroundImage: `url(${art})` }} />
+            <span className="turntable__spindle" />
+          </div>
+        </div>
+        <div className="turntable__arm">
+          <span className="turntable__pivot" />
+          <span className="turntable__wand" />
+        </div>
+      </div>
+      <figcaption className="turntable__cap">
+        <span className="turntable__status">
+          {playing ? 'On the turntable' : 'Last played'}
+        </span>
+        <span className="turntable__title">{title}</span>
+        <span className="turntable__artist">{artist}</span>
+      </figcaption>
+    </figure>
+  )
+}
+
 function ObjectBody({ o, onOpen }: { o: Obj; onOpen: () => void }) {
+  if (o.kind === 'turntable') return <Turntable />
+
   if (o.kind === 'print') {
     return (
       <figure className="plate-sheet obj__print">
@@ -412,7 +516,7 @@ function ObjectBody({ o, onOpen }: { o: Obj; onOpen: () => void }) {
       <div className="palette">
         <p className="palette__label eyebrow">Sampled from the plates</p>
         <ul className="palette__strip">
-          {SWATCHES.map((s) => (
+          {swatches.map((s) => (
             <li key={s.hex} style={{ background: s.hex }}>
               <span className="vh">{s.name}</span>
             </li>
