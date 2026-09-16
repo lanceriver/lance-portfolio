@@ -49,7 +49,7 @@ export function Crossing() {
       p < 0.5
         ? mixHex('#b3c0d8', '#d7dbe0', p / 0.5)
         : mixHex('#d7dbe0', '#f0eae0', (p - 0.5) / 0.5)
-    document.documentElement.style.setProperty('--page-ground', ground)
+    return () => document.documentElement.style.setProperty('--page-ground', ground)
   }, !reduced)
 
   return (

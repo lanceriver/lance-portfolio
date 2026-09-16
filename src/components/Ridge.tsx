@@ -68,8 +68,10 @@ export function Ridge() {
     // the top: the light crosses the ridge exactly once per pass.
     const p = clamp(1 - el.getBoundingClientRect().bottom / innerHeight)
     const x1 = -BAND + p * (1440 + BAND)
-    g.setAttribute('x1', String(x1.toFixed(1)))
-    g.setAttribute('x2', String((x1 + BAND).toFixed(1)))
+    return () => {
+      g.setAttribute('x1', String(x1.toFixed(1)))
+      g.setAttribute('x2', String((x1 + BAND).toFixed(1)))
+    }
   }, !reduced)
 
   return (

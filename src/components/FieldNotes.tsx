@@ -251,10 +251,24 @@ export function FieldNotes() {
     if (!el) return
     const flowBottom = el.getBoundingClientRect().bottom - shift.current
     const ascent = innerHeight + ASCENT_SLACK
-    const next = clamp(innerHeight - flowBottom, 0, ascent)
+    // Round once and store what is actually applied. Storing full precision
+    // while applying `toFixed(1)` left the two permanently a hair apart, so the
+    // equality below never held and the transform was rewritten every frame
+    // even while the section sat perfectly still.
+    const next = Math.round(clamp(innerHeight - flowBottom, 0, ascent) * 10) / 10
     if (next === shift.current) return
+    const was = shift.current
     shift.current = next
-    el.style.transform = next ? `translate3d(0, ${next.toFixed(1)}px, 0)` : ''
+
+    return () => {
+      // Promote only while the ascent is running. A permanent layer for a
+      // full-width section some 2000px tall with twelve images on it is a lot
+      // of texture to hold for a transition that lasts one viewport — but no
+      // layer at all means repainting every one of those images on every frame
+      // that it moves, which is the other half of why this join stuttered.
+      if ((was === 0) !== (next === 0)) el.style.willChange = next ? 'transform' : ''
+      el.style.transform = next ? `translate3d(0, ${next}px, 0)` : ''
+    }
   }, !reduced)
 
   // Cursor drift — barely noticeable by design. Pointer-fine only.
