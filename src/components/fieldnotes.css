@@ -23,7 +23,12 @@
 
 .notes {
   position: relative;
-  padding: clamp(110px, 16vh, 200px) 0 clamp(120px, 18vh, 220px);
+  /* The bottom padding has to carry the ridge AND leave ground above it. The
+     range is up to 172px tall and sits entirely inside this padding, so the
+     clear space a reader actually sees is (padding - ridge height) plus
+     whatever the lowest object leaves. At 18vh that came to 64px and the
+     mountains crowded the desk. */
+  padding: clamp(110px, 16vh, 200px) 0 clamp(230px, 32vh, 400px);
   /* deliberately no `will-change: transform` — this box is the full width of
      the page and ~1600px tall with eleven images in it, and permanently
      promoting a layer that size costs more than the few frames of the ascent
