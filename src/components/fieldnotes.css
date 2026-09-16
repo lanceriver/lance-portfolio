@@ -29,7 +29,10 @@
 
 .notes {
   position: sticky;
-  bottom: 0;
+  /* The real value is written by FieldNotes.tsx: `100vh - own height`, because
+     a sticky box taller than the viewport is never shifted by a `bottom` inset.
+     This is only the fallback for the frame before that lands. */
+  top: 0;
   /* The bottom padding has to carry the ridge AND leave ground above it. The
      range is up to 172px tall and sits entirely inside this padding, so the
      clear space a reader actually sees is (padding - ridge height) plus

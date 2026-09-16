@@ -880,8 +880,25 @@ Whether it is smooth is still Lance's call — this environment cannot run the
 thing it is being asked to judge, which is the entire reason this took three
 attempts.
 
-**One more of mine, worth naming.** The token that carries the ascent distance
+**Two more of mine, worth naming.** The token that carries the ascent distance
 silently failed to apply: I asserted on every other edit in that change and not
-that one, so the replacement matched nothing and said nothing. The spacer was
-0px and the section pinned for no distance at all. Assert on every edit, not
-most of them.
+that one, so the replacement matched nothing and said nothing. Assert on every
+edit, not most of them.
+
+And then I shipped a version that did not pin at all. *"you got rid of the whole
+animation bro."*
+
+`bottom: 0` is the obvious way to say "hold when the foot reaches the floor",
+and it does nothing for a box taller than the viewport — a sticky box is never
+shifted by a bottom inset in that case. Field Notes is ~1900px against a ~780px
+viewport. Expressed as `top: viewportHeight - ownHeight` it holds perfectly:
+measured, the foot sits at the viewport floor for all 821px of the ascent while
+the ridge climbs 663 → -158, then releases.
+
+The failure is not that I got the inset wrong; it is what I checked before
+committing. I verified that the section computed as `position: sticky`, that the
+spacer supplied 940px of travel, that Writing's negative margin cancelled it to
+the pixel, and that the document had not grown — every precondition, all green,
+and not once did I ask whether the foot actually stayed where it was supposed
+to. Preconditions are not the behaviour. The one assertion worth making was the
+one the reader would notice.

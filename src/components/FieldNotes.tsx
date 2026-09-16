@@ -222,7 +222,41 @@ export function FieldNotes() {
   const reduced = useReducedMotion()
   const surfaceRef = useRef<HTMLDivElement>(null)
   const [open, setOpen] = useState<Obj | null>(null)
+  const sectionRef = useRef<HTMLElement>(null)
   const lift = useLift()
+
+  /**
+   * The pin has to be a NEGATIVE `top`, not `bottom: 0`.
+   *
+   * `bottom: 0` is the obvious way to say "hold when the foot reaches the
+   * floor", and it silently does nothing here: a sticky box taller than the
+   * viewport is never shifted by a bottom inset. This section is ~1900px
+   * against a ~780px viewport. It computed as `position: sticky`, it had its
+   * travel, every geometry check passed — and it simply scrolled away, which is
+   * exactly how it reached Lance.
+   *
+   * `top: viewportHeight - ownHeight` says the same thing in the form the
+   * engine acts on: stick once the top would rise past that line, which is the
+   * moment the foot would rise past the floor.
+   *
+   * That needs the height, so it is measured rather than declared — but only on
+   * mount and on resize. Nothing here is coupled to scroll, which is the whole
+   * point: the compositor keeps doing the holding. DECISIONS D50.
+   */
+  useEffect(() => {
+    const el = sectionRef.current
+    if (!el || reduced) return
+    const place = () => { el.style.top = `${innerHeight - el.offsetHeight}px` }
+    place()
+    const ro = new ResizeObserver(place)
+    ro.observe(el)
+    addEventListener('resize', place)
+    return () => {
+      ro.disconnect()
+      removeEventListener('resize', place)
+      el.style.top = ''
+    }
+  }, [reduced])
 
   // Cursor drift — barely noticeable by design. Pointer-fine only.
   useEffect(() => {
@@ -273,7 +307,7 @@ export function FieldNotes() {
 
   return (
     <div className="notes-pin">
-      <section className="notes" id="notes" data-tone="dark">
+      <section className="notes" id="notes" data-tone="dark" ref={sectionRef}>
       <div className="shell notes__head">
         <p className="eyebrow eyebrow--rule">Field Notes</p>
         <h2 className="display-r notes__title">Things worth<br /><em>coming back to.</em></h2>
