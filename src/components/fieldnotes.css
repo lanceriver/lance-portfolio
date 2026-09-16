@@ -7,32 +7,35 @@
    slide away; it is covered. That is the whole transition — a border between
    two colours is not one. DECISIONS D42.
 
-   The hold is a scroll-driven transform, not `position: sticky`. Sticky would
-   be the obvious tool and is one line, but it is also the one thing this
-   session cannot verify: the browser pane does not recompute sticky offsets
-   while it is being driven, so every reading of it — including a synthetic
-   control built beside the real thing — was indistinguishable from broken. The
-   driver is the mechanism the rest of this site already uses, and its
-   arithmetic is checked in Node by `npm run verify`, which is the only kind of
-   proof available here. See `FieldNotes.tsx`.
+   `position: sticky`, and the second attempt at it. The first used a
+   scroll-driven transform because sticky could not be verified in the tooling
+   browser, which does not recompute sticky offsets while it is being driven —
+   every reading of it, including a synthetic control built beside the real
+   thing, was indistinguishable from broken.
 
-   The transform costs no layout: the page is exactly as tall as it was, and the
-   ascent simply spends the scroll that used to slide two sets of padding past
-   each other. */
+   The transform worked and was still wrong. Scrolling is handled on the
+   compositor; a transform computed from the scroll position is applied on the
+   main thread, one frame later. So the held section lagged the page by a frame
+   and jittered against it — visible on a slow scroll, and not fixable by making
+   the callback cheaper, which is the mistake I made first. Sticky is handled by
+   the compositor and has nothing to lag. DECISIONS D50.
+
+   The travel comes from `.notes-pin__ascent`, a spacer inside the same
+   containing block, because a sticky box may be shifted only as far as its
+   containing block allows. Padding on the wrapper would not do: the containing
+   block is the CONTENT box. */
 .notes-pin { position: relative; }
+.notes-pin__ascent { height: var(--ascent); }
 
 .notes {
-  position: relative;
+  position: sticky;
+  bottom: 0;
   /* The bottom padding has to carry the ridge AND leave ground above it. The
      range is up to 172px tall and sits entirely inside this padding, so the
      clear space a reader actually sees is (padding - ridge height) plus
      whatever the lowest object leaves. At 18vh that came to 64px and the
      mountains crowded the desk. */
   padding: clamp(110px, 16vh, 200px) 0 clamp(230px, 32vh, 400px);
-  /* deliberately no `will-change: transform` — this box is the full width of
-     the page and ~1600px tall with eleven images in it, and permanently
-     promoting a layer that size costs more than the few frames of the ascent
-     save. The driver only touches it while the transition is on screen. */
 }
 
 .notes__head {

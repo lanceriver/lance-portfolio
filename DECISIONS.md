@@ -826,3 +826,62 @@ saturated cobalt is "pale", which is both wrong and useless on a swatch.
 
 `swatches` moved to `data.ts` with the rest of the content, so replacing it when
 the photographs arrive is a one-file edit.
+
+## D50 — the ascent goes back to `position: sticky`
+*2026-09-16 · Opus*
+
+Lance: *"the page is glitching and jerking back and forth even when i scroll
+slowly."* Then, after a round of optimisation: *"its still jerky."*
+
+The second message is the important one, because the first sent me the wrong way.
+
+**What I did first, and why it was not enough.** Reading the scroll loop turned
+up three real defects and I fixed all of them: the driver's own comment claimed
+reads and writes were batched and they were not, so eight callbacks each
+measured and then drew in sequence and the browser was forced to lay the page
+out again up to eight times a frame — with `elementsFromPoint` running fifth,
+after four writes. Field Notes was transformed every frame with no compositor
+layer, because I had removed `will-change` reasoning that a permanent layer for
+a section that size was too much texture to hold, which was true and still the
+wrong conclusion. And the ascent stored full precision while applying
+`toFixed(1)`, so its "unchanged, skip" test never fired and it rewrote the
+transform every frame while sitting perfectly still.
+
+All three were worth fixing. None of them was the cause.
+
+**The actual cause is the approach.** Scrolling is handled on the compositor
+thread. A transform computed from the scroll position is applied on the main
+thread, a frame later. So the held section lags the page by one frame and
+jitters against everything around it — on every scroll, at every speed, no
+matter how cheap the callback is. Making the work smaller cannot fix a
+synchronisation problem; it only makes a late frame slightly less late.
+
+`position: sticky` is resolved by the compositor and has nothing to lag.
+
+**Which is what D42 chose against, for a reason that has now expired.** The
+transform was picked because sticky could not be verified in the tooling
+browser, which does not recompute sticky offsets while being driven — every
+reading of it, including a synthetic control built next to the real thing, was
+indistinguishable from broken. D42's own note said to revisit it if a real
+browser proved otherwise. A real browser has now proved otherwise, twice, in
+the form of Lance scrolling the page.
+
+The travel comes from a spacer inside the wrapper rather than padding on it,
+because a sticky box may be shifted only as far as its containing block allows
+and that is the CONTENT box — the detail that made the first sticky attempt look
+like it had failed on its own terms.
+
+Measured after: spacer 940px at a 900px viewport, Writing's margin `-940px`
+cancelling it exactly, Writing still sitting at Field Notes' foot, so layout and
+document height are unchanged. The FieldNotes driver is deleted, which also
+takes one callback out of the scroll loop.
+
+Whether it is smooth is still Lance's call — this environment cannot run the
+thing it is being asked to judge, which is the entire reason this took three
+attempts.
+
+**One more of mine, worth naming.** The token that carries the ascent distance
+silently failed to apply: I asserted on every other edit in that change and not
+that one, so the replacement matched nothing and said nothing. The spacer was
+0px and the section pinned for no distance at all. Assert on every edit, not
+most of them.

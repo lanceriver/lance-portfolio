@@ -60,4 +60,16 @@
   --shell: min(1440px, 100% - 2 * clamp(20px, 4vw, 72px));
   --nav-h: 84px;
 
+  /* How far Writing climbs over a held Field Notes. One viewport covers the
+     screen exactly; the extra is slack so the pin releases after the cover is
+     complete rather than on the same frame. DECISIONS D42/D50. */
+  --ascent: calc(100vh + 40px);
+}
+
+/* A reader who asked for less motion should not have a section pinned under
+   them. Zero here turns the whole mechanism off in one place: the spacer
+   collapses, the sticky has no travel, and the sections stack normally with the
+   ridge still joining them. */
+@media (prefers-reduced-motion: reduce) {
+  :root { --ascent: 0px; }
 }

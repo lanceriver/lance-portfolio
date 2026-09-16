@@ -2,8 +2,6 @@ import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 import { swatches } from '../data'
 import { useReducedMotion } from '../hooks/useReducedMotion'
-import { useScrollDriver } from '../hooks/useScrollDriver'
-import { clamp } from '../lib/math'
 import { arrive } from '../lib/enter'
 import './fieldnotes.css'
 
@@ -182,9 +180,6 @@ const OBJECTS: Obj[] = [
   },
 ]
 
-/** Extra hold past a full viewport, so the cover completes before the release. */
-const ASCENT_SLACK = 40
-
 /** Where the pile starts, above every authored z-index on the desk. */
 const LIFT_BASE = 40
 
@@ -226,50 +221,8 @@ function useLift() {
 export function FieldNotes() {
   const reduced = useReducedMotion()
   const surfaceRef = useRef<HTMLDivElement>(null)
-  const sectionRef = useRef<HTMLElement>(null)
-  const shift = useRef(0)
   const [open, setOpen] = useState<Obj | null>(null)
   const lift = useLift()
-
-  /**
-   * THE ASCENT — the desk stops and the Writing section climbs over it.
-   *
-   * Once this section's foot reaches the bottom of the viewport it is pushed
-   * back down by exactly as much as the page has scrolled, so it holds still
-   * while the slate rises and covers it. Held for one viewport plus a little,
-   * which is the distance the Writing section needs to reach the top edge —
-   * after that the hold is released, but by then it is behind a solid section
-   * and nothing can be seen to snap.
-   *
-   * `rect.bottom` already includes the shift we applied last frame, so it is
-   * subtracted back out before measuring; reading the flow position off the
-   * element's own offsets instead would break the moment anything above it
-   * became a positioned ancestor. DECISIONS D42.
-   */
-  useScrollDriver(() => {
-    const el = sectionRef.current
-    if (!el) return
-    const flowBottom = el.getBoundingClientRect().bottom - shift.current
-    const ascent = innerHeight + ASCENT_SLACK
-    // Round once and store what is actually applied. Storing full precision
-    // while applying `toFixed(1)` left the two permanently a hair apart, so the
-    // equality below never held and the transform was rewritten every frame
-    // even while the section sat perfectly still.
-    const next = Math.round(clamp(innerHeight - flowBottom, 0, ascent) * 10) / 10
-    if (next === shift.current) return
-    const was = shift.current
-    shift.current = next
-
-    return () => {
-      // Promote only while the ascent is running. A permanent layer for a
-      // full-width section some 2000px tall with twelve images on it is a lot
-      // of texture to hold for a transition that lasts one viewport — but no
-      // layer at all means repainting every one of those images on every frame
-      // that it moves, which is the other half of why this join stuttered.
-      if ((was === 0) !== (next === 0)) el.style.willChange = next ? 'transform' : ''
-      el.style.transform = next ? `translate3d(0, ${next}px, 0)` : ''
-    }
-  }, !reduced)
 
   // Cursor drift — barely noticeable by design. Pointer-fine only.
   useEffect(() => {
@@ -320,7 +273,7 @@ export function FieldNotes() {
 
   return (
     <div className="notes-pin">
-      <section className="notes" id="notes" data-tone="dark" ref={sectionRef}>
+      <section className="notes" id="notes" data-tone="dark">
       <div className="shell notes__head">
         <p className="eyebrow eyebrow--rule">Field Notes</p>
         <h2 className="display-r notes__title">Things worth<br /><em>coming back to.</em></h2>
@@ -349,6 +302,13 @@ export function FieldNotes() {
       </div>
 
       </section>
+
+      {/* The ascent. An empty block, and the only thing holding the desk still:
+          a sticky box can travel no further than its containing block, so this
+          spacer's height IS the length of the hold. Writing pulls itself back
+          up by the same amount, so nothing in the layout moves and the document
+          does not grow. DECISIONS D50. */}
+      <div className="notes-pin__ascent" aria-hidden="true" />
 
       {/* Outside `.notes`, deliberately. Pinning makes that section a stacking
           context, which would trap this fixed overlay's z-index inside it and
