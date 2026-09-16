@@ -4,7 +4,7 @@
 
 **On resume ("Read the project state and continue"):** read `PROJECT_STATE.md` → `DECISIONS.md` → `MOTION_DIRECTION.md` → `DESIGN_DIRECTION.md`, then start at **THE EXACT NEXT ACTION** below. Do not re-plan or redo anything `PROJECT_STATE.md` marks complete unless it is recorded there as failed.
 
-**Last checkpoint:** 2026-09-11 — review rounds 1–4 applied (letter hover D39/D40, ridge join D41, the ascent D42, flock occlusion D43, masthead rule off, post routes D44). Built clean, `npm run verify` 42/42. One phase left.
+**Last checkpoint:** 2026-09-16 — review rounds 1–8 applied (D39–D50). Repo is under git; work is on branch `turntable-prototype`. Built clean, `npm run verify` 42/42. One phase left.
 
 **To run:** `npm run dev` in `/Users/lance/Documents/Projects/lance-portfolio-claude` → `http://localhost:5173`
 **To re-verify the scroll maths after touching any driver:** `npm run verify`
@@ -26,7 +26,7 @@
 2. **Both joins in motion** — the hero dissolve and the back-cover feather were verified as still frames. Confirm they hold while scrolling, at several speeds, and on the way back up.
 3. **Nav tone** across every ground: Hero (cream) → Crossing/Work/Notes (ink) → Writing (cream) → Back Cover (cream). The reference prototype misfired here. The probe now samples at the ink's own height, not the nav's top edge (D41) — check every join, not just the ridge.
 3z. **The post page** (D44). Read one end to end at full size. Is the measure right, is the pull-quote hang doing anything, does the plate want to be larger or smaller? Then: the stack plate flying into the post's hero via `layoutId` was cut because a cross-route shared element could not be verified here — try it, it is the one piece of continuity the route costs you. Article bodies are demo copy and want replacing.
-3a. **The ascent** (Field Notes → Writing, D41/D42) — the one thing on this page that has never been seen moving by anyone but Lance. Is the hold the right length? Does the range read as a landform climbing in front of the desk, or as a shape sliding over it? Does the crest sweep register at normal scroll speed? What does it do on the way back *up*? The hold is a scroll-driven transform because `position: sticky` could not be verified here (D42) — if it behaves correctly in a real browser, sticky is worth revisiting as the simpler implementation.
+3a. **The ascent** (Field Notes → Writing, D41/D42) — the one thing on this page that has never been seen moving by anyone but Lance. Is the hold the right length? Does the range read as a landform climbing in front of the desk, or as a shape sliding over it? Does the crest sweep register at normal scroll speed? What does it do on the way back *up*? The hold is `position: sticky` again as of D50 — the scroll-driven transform jittered in a real browser, which is exactly what D42 said to watch for. Confirm it is smooth, and that the desk still holds still while the range climbs.
 4. **Ground continuity** — the knocked-out panels (`.scene__caption-block`, `.rail__head`) paint `var(--page-ground)`; any seam against the body means the value stopped updating.
 5. **Field Notes entrances** — six objects, six trajectories, irregular timing. If they read as one staggered group, the irregularity is not reading and the delays need re-authoring.
 6. **The Writing stack** — is it fun enough that you cycle the list on purpose? That is the acceptance test, not the spec.
