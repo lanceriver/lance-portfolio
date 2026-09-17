@@ -80,9 +80,9 @@ const OBJECTS: Obj[] = [
     delay: 0.2,
     stiffness: 145,
     damping: 16,
-    src: '/plates/town-at-night-1200.webp',
-    alt: 'A hillside town lit up after dark, tiers of windows and lanterns above floodlit waterfalls.',
-    caption: 'Hunan · May 2026',
+    src: '/plates/furong-1200.webp',
+    alt: 'Furong Ancient Town after dark: tiers of stilt houses lit above the floodlit waterfall it is built over.',
+    caption: 'Furong Ancient Town · May 2026',
   },
   {
     id: 'palette',

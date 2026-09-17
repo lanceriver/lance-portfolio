@@ -910,8 +910,10 @@ until Lance had travel photographs to put there: `hill-path` captioned "A
 different cover", and `coastal-road` captioned "Detail — the harbour". He said
 at the time that they would be replaced with photographs from his trips.
 
-Two arrived — Xi'an (17 May 2026) and a hillside town in Hunan at night (22 May
-2026), same trip as the Zhangjiajie print already on the desk. They take those
+Two arrived — Xi'an (17 May 2026) and Furong Ancient Town after dark (22 May
+2026), same trip as the Zhangjiajie print already on the desk. The Furong
+caption first shipped as the province, "Hunan", because guessing a town name
+under someone's own photograph is not a guess worth making; Lance named it. They take those
 two slots rather than being added beside them. The desk was already carrying
 twelve objects and a density re-tune was outstanding; fourteen would have made
 that worse, and the plate crops were the placeholders by Lance's own account.
