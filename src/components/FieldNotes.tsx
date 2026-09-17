@@ -71,18 +71,18 @@ const OBJECTS: Obj[] = [
     damping: 20,
   },
   {
-    id: 'path',
+    id: 'night',
     kind: 'print',
-    className: 'obj obj--path',
+    className: 'obj obj--night',
     depth: 2.2,
     rest: 3.2,
     from: { x: 90, y: 150, rotate: -5, scale: 0.88 },
     delay: 0.2,
     stiffness: 145,
     damping: 16,
-    src: '/plates/hill-path-1200.webp',
-    alt: 'A painted snowy village path with a walker in a red coat.',
-    caption: 'A different cover',
+    src: '/plates/town-at-night-1200.webp',
+    alt: 'A hillside town lit up after dark, tiers of windows and lanterns above floodlit waterfalls.',
+    caption: 'Hunan · May 2026',
   },
   {
     id: 'palette',
@@ -143,18 +143,18 @@ const OBJECTS: Obj[] = [
     damping: 15,
   },
   {
-    id: 'detail',
+    id: 'army',
     kind: 'detail',
-    className: 'obj obj--detail',
+    className: 'obj obj--army',
     depth: 1.9,
     rest: 2.2,
     from: { x: -96, y: 60, rotate: -6, scale: 0.9 },
     delay: 0.44,
     stiffness: 138,
     damping: 17,
-    src: '/plates/coastal-road-1200.webp',
-    alt: 'A detail from the coast road plate: sailboats moored inside the harbour wall.',
-    caption: 'Detail — the harbour',
+    src: '/plates/terracotta-army-1200.webp',
+    alt: 'Ranks of the Terracotta Army in their excavated pit, every face different.',
+    caption: "Xi'an · May 2026",
   },
   {
     id: 'colophon',
@@ -504,8 +504,8 @@ function ObjectBody({ o, onOpen }: { o: Obj; onOpen: () => void }) {
       <div className="colophon">
         <p className="colophon__label eyebrow">Colophon</p>
         <p className="colophon__text">
-          Set in <em>Georgia</em>. The plates are painted, not photographed — every colour
-          on this site was lifted out of one of them.
+          Set in <em>Georgia</em>. The plates are painted; the photographs are mine. Every
+          colour on this site was lifted out of one of the paintings.
         </p>
       </div>
     )

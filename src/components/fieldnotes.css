@@ -106,9 +106,9 @@
 .obj--terrace  { left: 0;    top: 1%;   width: min(44%, 590px); z-index: 2; }
 .obj--glyph    { left: 47%;  top: 0;    width: min(17%, 220px); z-index: 5; }
 .obj--type     { right: 2%;  top: 8%;   width: min(23%, 300px); z-index: 3; }
-.obj--path     { right: 19%; top: 21%;  width: min(30%, 400px); z-index: 4; }
+.obj--night    { right: 19%; top: 21%;  width: min(30%, 400px); z-index: 4; }
 .obj--quote    { left: 5%;   top: 28%;  width: min(42%, 545px); z-index: 6; }
-.obj--detail   { left: 0;    top: 46%;  width: min(23%, 300px); z-index: 8; }
+.obj--army     { left: 0;    top: 46%;  width: min(23%, 300px); z-index: 8; }
 .obj--band     { left: 21%;  top: 49%;  width: min(41%, 530px); z-index: 7; }
 .obj--palette  { right: 4%;  top: 45%;  width: min(27%, 350px); z-index: 5; }
 .obj--hand     { right: 2%;  top: 63%;  width: min(31%, 400px); z-index: 9; }
@@ -117,11 +117,11 @@
 .obj--turntable{ left: 37%;  top: 65%;  width: min(23%, 290px); z-index: 12; }
 
 .obj--terrace .obj__expand img { height: min(46vh, 420px); }
-.obj--path    .obj__expand img { height: min(38vh, 340px); }
-.obj--detail  .obj__expand img { height: min(28vh, 250px); }
+.obj--night   .obj__expand img { height: min(38vh, 340px); }
+.obj--army    .obj__expand img { height: min(28vh, 250px); }
 .obj--band    .obj__expand img { height: min(19vh, 175px); }
-/* a narrow crop of the harbour, not the whole plate again */
-.obj--detail  .obj__expand img { object-fit: cover; object-position: 22% 72%; }
+/* the crop holds the massed ranks, not the pit wall behind them */
+.obj--army    .obj__expand img { object-fit: cover; object-position: 38% 42%; }
 
 /* ── type specimen ────────────────────────────────────── */
 .specimen {
@@ -316,9 +316,9 @@
   .obj--terrace { width: 92% !important; align-self: flex-start; }
   .obj--type    { width: 66% !important; align-self: flex-end; }
   .obj--quote   { width: 96% !important; align-self: flex-start; }
-  .obj--path    { width: 76% !important; align-self: flex-end; }
+  .obj--night   { width: 76% !important; align-self: flex-end; }
   .obj--palette { width: 84% !important; align-self: flex-start; }
-  .obj--detail  { width: 62% !important; align-self: flex-start; }
+  .obj--army    { width: 62% !important; align-self: flex-start; }
   .obj--hand    { width: 72% !important; align-self: flex-end; }
   .obj--colophon { width: 88% !important; align-self: flex-start; }
   .obj--glyph   { width: 42% !important; align-self: flex-end; }
@@ -327,8 +327,8 @@
   .obj--band    .obj__expand img { height: 16vh; }
 
   .obj--terrace .obj__expand img { height: 34vh; }
-  .obj--path    .obj__expand img { height: 28vh; }
-  .obj--detail  .obj__expand img { height: 24vh; }
+  .obj--night   .obj__expand img { height: 28vh; }
+  .obj--army    .obj__expand img { height: 24vh; }
 }
 
 @media (prefers-reduced-motion: reduce) {

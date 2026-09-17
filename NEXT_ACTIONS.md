@@ -4,7 +4,7 @@
 
 **On resume ("Read the project state and continue"):** read `PROJECT_STATE.md` → `DECISIONS.md` → `MOTION_DIRECTION.md` → `DESIGN_DIRECTION.md`, then start at **THE EXACT NEXT ACTION** below. Do not re-plan or redo anything `PROJECT_STATE.md` marks complete unless it is recorded there as failed.
 
-**Last checkpoint:** 2026-09-16 — review rounds 1–8 applied (D39–D50); the ascent confirmed smooth by Lance in a real browser. Work is on local branch `turntable-prototype`, **15 commits ahead of `main` and pushed nowhere — there is no git remote.** Built clean, `npm run verify` 35/35.
+**Last checkpoint:** 2026-09-17 — three travel photographs now on the Field Notes desk (D51); the desk is due its density pass. Previously: 2026-09-16 — review rounds 1–8 applied (D39–D50); the ascent confirmed smooth by Lance in a real browser. Work is on local branch `turntable-prototype`, **15 commits ahead of `main` and pushed nowhere — there is no git remote.** Built clean, `npm run verify` 35/35.
 
 **To run:** `npm run dev` in `/Users/lance/Documents/Projects/lance-portfolio-claude` → `http://localhost:5173`
 **To re-verify the scroll maths after touching any driver:** `npm run verify`
