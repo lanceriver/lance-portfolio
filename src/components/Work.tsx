@@ -168,7 +168,7 @@ function SceneRest() {
       copy.style.transform = `translate3d(0, ${(0.5 - t) * 26}px, 0)`
       screens.forEach((child, i) => {
         if (mobile) child.style.transform = ''
-        else child.style.transform = `translate3d(0, ${(0.5 - t) * DRIFT[i]}px, 0)`
+        else child.style.transform = `translate3d(0, ${(0.5 - t) * DRIFT[i % DRIFT.length]}px, 0)`
       })
     }
   }, !reduced)

@@ -191,20 +191,21 @@
 .rest__detail { max-width: 52ch; }
 .rest__detail .scene__points { margin-top: 0; }
 
-/* The app's own screens — the picture this scene has instead of a plate. A
-   staggered row from the copy's margin to the shell's edge: the asymmetry of
-   the scene, carried on, and square to the page. */
+/* The app's own screens — the picture this scene has instead of a plate.
+   Staggered rows of three from the copy's margin to the shell's edge: the
+   asymmetry of the scene, carried on, and square to the page. */
 .rest__screens {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: flex-start;
-  gap: clamp(24px, 3vw, 56px);
+  gap: clamp(56px, 9vh, 104px) clamp(24px, 3vw, 56px);
   padding-left: clamp(40px, 9vw, 150px);
 }
 .rest__screen { width: min(24vw, 340px); flex: none; }
 .rest__screen img { height: auto; }
-.rest__screen:nth-child(2) { margin-top: clamp(56px, 10vh, 120px); }
-.rest__screen:nth-child(3) { margin-top: clamp(20px, 3.5vh, 44px); }
+.rest__screen:nth-child(3n+2) { margin-top: clamp(56px, 10vh, 120px); }
+.rest__screen:nth-child(3n+3) { margin-top: clamp(20px, 3.5vh, 44px); }
 
 @media (min-width: 901px) {
   .rest__screen { will-change: transform; }
@@ -242,6 +243,7 @@
   /* A row you swipe, bled to the screen edges, each figure snapping to the
      margin. Contained: the row scrolls, the page never widens. */
   .rest__screens {
+    flex-wrap: nowrap;
     justify-content: flex-start;
     gap: 16px;
     margin: 0 -20px;

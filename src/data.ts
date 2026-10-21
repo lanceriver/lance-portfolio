@@ -20,8 +20,8 @@ export type Plate = {
   href?: string
   repo?: string
   status?: string
-  /** App screens, shown as figures beneath the plate. Real captures, cropped
-      below the status bar; `src` is the 480w file, `src2x` the 960w. */
+  /** App screens, shown as figures beneath the plate. Real captures, from the
+      phone or the Simulator with a seeded diary, cropped below the status bar; `src` is the 480w file, `src2x` the 960w. */
   screens?: Screen[]
 }
 
@@ -80,16 +80,34 @@ export const projects: Plate[] = [
         caption: 'The wardrobe',
       },
       {
+        src: '/worn/worn-with-480.webp',
+        src2x: '/worn/worn-with-960.webp',
+        alt: 'Worn’s lookbook: today’s fit, a white tee and charcoal trousers, with the pieces it was worn with beneath, then earlier fits from October.',
+        caption: 'Worn with',
+      },
+      {
         src: '/worn/tonight-480.webp',
         src2x: '/worn/tonight-960.webp',
         alt: 'Worn’s outfit builder, built for tonight at 16°: a grey Harrington jacket, white camp shirt, black Derby shoes and dark jeans, with loved and another buttons.',
         caption: 'Built for tonight',
       },
       {
+        src: '/worn/piece-480.webp',
+        src2x: '/worn/piece-960.webp',
+        alt: 'A single piece in Worn: a sage camp shirt on a hanger, worn once, at $89 a wear, with the fits it appears in.',
+        caption: 'One piece',
+      },
+      {
         src: '/worn/numbers-480.webp',
         src2x: '/worn/numbers-960.webp',
         alt: 'Worn’s numbers screen, “bought, worn, forgotten”: four pieces each worn only once, from 72 pieces and 37 fits.',
         caption: 'The numbers',
+      },
+      {
+        src: '/worn/share-480.webp',
+        src2x: '/worn/share-960.webp',
+        alt: 'Worn’s share card for a fit called “first warm morning”: the photo, a casual tag, a note about coffee and the ferry, and what each piece cost — charcoal trousers $120, white tee $35, white court sneakers $160.',
+        caption: 'Shared',
       },
     ],
   },
