@@ -60,7 +60,7 @@ export function Crossing() {
           I build things<br />that feel like <em>somewhere.</em>
         </h2>
         <p className="body crossing__note">
-          Lance Rivera — software engineer. What follows is a short book of work: four plates,
+          Lance Rivera, software engineer. What follows is a short book of work: three plates,
           each with room around it, and a few things from the side of the desk.
         </p>
       </div>

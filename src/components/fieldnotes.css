@@ -45,7 +45,7 @@
   position: relative;
   z-index: 100;                    /* every object passes BEHIND the title —
                                       100 clears the whole pile, which with
-                                      twelve objects tops out at 51 */
+                                      ten objects tops out at 49 */
   display: grid;
   grid-template-columns: minmax(0, 1.1fr) minmax(0, .52fr);
   gap: clamp(30px, 5vw, 80px);
@@ -102,16 +102,14 @@
 .obj__expand img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
 /* Placement — authored, not generated. Overlaps are intentional and the
-   z-order is deliberate: prints pass behind the quote, the palette sits on top. */
+   z-order is deliberate: prints pass behind the palette and colophon. */
 .obj--terrace  { left: 0;    top: 1%;   width: min(44%, 590px); z-index: 2; }
 .obj--glyph    { left: 47%;  top: 0;    width: min(17%, 220px); z-index: 5; }
 .obj--type     { right: 2%;  top: 8%;   width: min(23%, 300px); z-index: 3; }
 .obj--night    { right: 19%; top: 21%;  width: min(30%, 400px); z-index: 4; }
-.obj--quote    { left: 5%;   top: 28%;  width: min(42%, 545px); z-index: 6; }
 .obj--army     { left: 0;    top: 46%;  width: min(23%, 300px); z-index: 8; }
 .obj--band     { left: 21%;  top: 49%;  width: min(41%, 530px); z-index: 7; }
 .obj--palette  { right: 4%;  top: 45%;  width: min(27%, 350px); z-index: 5; }
-.obj--hand     { right: 2%;  top: 63%;  width: min(31%, 400px); z-index: 9; }
 .obj--colophon { left: 2%;   top: 64%;  width: min(30%, 385px); z-index: 10; }
 .obj--slip     { left: 10%;  top: 86%;  width: min(20%, 255px); z-index: 11; }
 .obj--turntable{ left: 37%;  top: 65%;  width: min(23%, 290px); z-index: 12; }
@@ -153,48 +151,6 @@
   letter-spacing: .1em;
   text-transform: uppercase;
   opacity: .72;
-}
-
-/* ── quote ────────────────────────────────────────────── */
-.quote {
-  position: relative;
-  overflow: hidden;
-  background: var(--parchment);
-  padding: clamp(34px, 4vw, 54px);
-  margin: 0;
-}
-.quote p {
-  font-family: var(--serif);
-  font-style: italic;
-  font-weight: 400;
-  font-size: clamp(30px, 3.6vw, 52px);
-  line-height: 1.12;
-  letter-spacing: -.03em;
-  margin: 0;
-}
-.quote cite {
-  display: block;
-  margin-top: 26px;
-  font-family: var(--sans);
-  font-style: normal;
-  font-size: 11.5px;
-  letter-spacing: .14em;
-  text-transform: uppercase;
-  color: var(--ink-soft);
-}
-/* a light wipe travels across once, on first entry — never on re-entry */
-.quote__wipe {
-  position: absolute;
-  inset: 0 auto 0 0;
-  width: 0;
-  background: rgba(255, 255, 255, .3);
-  pointer-events: none;
-}
-.obj--quote .obj__inner .quote__wipe { animation: wipe 1.05s var(--ease-settle) .5s both; }
-@keyframes wipe {
-  0%   { width: 0; }
-  60%  { width: 100%; }
-  100% { width: 100%; opacity: 0; }
 }
 
 /* ── palette ──────────────────────────────────────────── */
@@ -254,23 +210,7 @@
 }
 .colophon__text em { font-style: italic; }
 
-/* ── hand ─────────────────────────────────────────────── */
-.hand { background: var(--snow-warm); padding: 20px 20px 18px; }
-.hand__box {
-  border: 1px dashed rgba(63, 54, 42, .42);
-  min-height: 200px;
-  display: grid;
-  place-items: center;
-  text-align: center;
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: clamp(24px, 2.4vw, 34px);
-  line-height: 1.12;
-  color: var(--ink-warm);
-  margin-bottom: 14px;
-}
-
-/* ── lightbox — expands from the object's own position ──── */
+/* Lightbox for the remaining prints. */
 .lightbox {
   position: fixed;
   inset: 0;
@@ -292,9 +232,7 @@
   letter-spacing: .06em;
 }
 
-/* ── responsive ───────────────────────────────────────────
-   Objects flow instead of overlapping, but keep their rotations, their varied
-   widths and their offsets — mobile keeps the personality. */
+/* Responsive desk: objects flow instead of overlap. */
 @media (max-width: 900px) {
   .notes__head { grid-template-columns: 1fr; align-items: start; }
   .notes__note { padding-bottom: 0; }
@@ -315,11 +253,9 @@
   }
   .obj--terrace { width: 92% !important; align-self: flex-start; }
   .obj--type    { width: 66% !important; align-self: flex-end; }
-  .obj--quote   { width: 96% !important; align-self: flex-start; }
   .obj--night   { width: 76% !important; align-self: flex-end; }
   .obj--palette { width: 84% !important; align-self: flex-start; }
   .obj--army    { width: 62% !important; align-self: flex-start; }
-  .obj--hand    { width: 72% !important; align-self: flex-end; }
   .obj--colophon { width: 88% !important; align-self: flex-start; }
   .obj--glyph   { width: 42% !important; align-self: flex-end; }
   .obj--band    { width: 94% !important; align-self: flex-start; }
@@ -333,7 +269,6 @@
 
 @media (prefers-reduced-motion: reduce) {
   .obj { transform: none; }
-  .quote__wipe { display: none; }
 }
 
 /* ── the turntable ────────────────────────────────────────
