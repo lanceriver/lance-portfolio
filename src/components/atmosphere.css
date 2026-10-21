@@ -3,14 +3,12 @@
 .atmosphere { position: absolute; inset: 0; pointer-events: none; }
 
 .snow  { position: absolute; inset: 0; z-index: 4; overflow: hidden; }
-/* The flock passes BEHIND the village.
+/* The flock passes BEHIND the pillars and pines.
    The mask is the painting's own skyline, derived from its pixels rather than
-   traced by hand: sky and snow are background, anything else 8-connected to the
-   left or right edge of the frame is built fabric. That connectivity rule is
-   what keeps the dark rock on the mountain face out of it — it is an island in
-   the snow and never reaches an edge — so the birds pass in front of the
-   mountains, as a distant bird does, and behind the roofs, the conifers and the
-   church spire, as a distant bird also does. `cover / center` matches
+   traced by hand: open sky and cloud are background, anything else 8-connected to the
+   left or right edge of the frame is foreground. That connectivity rule keeps
+   isolated mid-distance pillars in the mist out of it, so birds may pass in
+   front of them and behind the pillars and pines at the frame edges. `cover / center` matches
    `.hero__plate` exactly, so the two crop identically at every aspect ratio.
    The painting itself is untouched: one image, still, no layers. DECISIONS D43. */
 .birds {
@@ -18,8 +16,8 @@
   inset: 0;
   z-index: 5;
   overflow: hidden;
-  -webkit-mask: url('/plates/alpine-skyline-mask.png') center / cover no-repeat;
-  mask: url('/plates/alpine-skyline-mask.png') center / cover no-repeat;
+  -webkit-mask: url('/plates/zhangjiajie-skyline-mask.png') center / cover no-repeat;
+  mask: url('/plates/zhangjiajie-skyline-mask.png') center / cover no-repeat;
 }
 
 .flake {

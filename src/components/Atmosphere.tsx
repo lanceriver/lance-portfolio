@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react'
 import './atmosphere.css'
 
 /**
- * The Hero's two approved atmospheres — snowfall and one simple bird flock.
+ * The Hero's atmosphere: snowfall is paused for Zhangjiajie; the bird flock stays active.
  *
  * Both run off a single requestAnimationFrame loop, which is the only rAF on the
  * page (MOTION_DIRECTION §5). It pauses when the Hero leaves the viewport and
@@ -10,8 +10,6 @@ import './atmosphere.css'
  *
  * Nothing here touches the painting. DECISIONS D5.
  */
-
-const FLAKES = 70
 
 /** Loose, roughly stable offsets. Not a flocking simulation — a drawn formation. */
 const FORMATION = [
@@ -24,7 +22,6 @@ const FORMATION = [
   { x: -262, y: -4, s: 0.68 },
 ]
 
-type Flake = { el: HTMLSpanElement; x: number; y: number; vy: number; drift: number; phase: number; size: number }
 type Bird = {
   el: HTMLDivElement
   left: SVGGElement
@@ -51,7 +48,10 @@ export function Atmosphere({ reduced }: { reduced: boolean }) {
     let w = innerWidth
     let h = innerHeight
 
-    // ── snowfall ───────────────────────────────────────────
+    // TODO: re-enable when the hero has a mist treatment designed for Zhangjiajie (snow is wrong for this plate)
+    /*
+    const FLAKES = 70
+    type Flake = { el: HTMLSpanElement; x: number; y: number; vy: number; drift: number; phase: number; size: number }
     const flakes: Flake[] = []
     for (let i = 0; i < FLAKES; i++) {
       const el = document.createElement('span')
@@ -69,6 +69,7 @@ export function Atmosphere({ reduced }: { reduced: boolean }) {
         size,
       })
     }
+    */
 
     // ── the flock ──────────────────────────────────────────
     const birds: Bird[] = FORMATION.map((pos) => {
@@ -105,6 +106,8 @@ export function Atmosphere({ reduced }: { reduced: boolean }) {
       const dt = Math.min(0.05, (now - last) / 1000)
       last = now
 
+      // TODO: re-enable when the hero has a mist treatment designed for Zhangjiajie (snow is wrong for this plate)
+      /*
       for (const f of flakes) {
         f.y += f.vy * dt
         f.phase += dt * 0.6
@@ -115,6 +118,7 @@ export function Atmosphere({ reduced }: { reduced: boolean }) {
         }
         f.el.style.transform = `translate3d(${x}px, ${f.y}px, 0)`
       }
+      */
 
       flockX += speed * dt
       // reset only once the entire flock has left the viewport
@@ -170,6 +174,7 @@ export function Atmosphere({ reduced }: { reduced: boolean }) {
 
   return (
     <div ref={hostRef} className="atmosphere" aria-hidden="true">
+      {/* TODO: re-enable when the hero has a mist treatment designed for Zhangjiajie (snow is wrong for this plate) */}
       <div ref={snowRef} className="snow" />
       <div ref={birdsRef} className="birds" />
     </div>
