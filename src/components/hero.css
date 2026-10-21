@@ -15,14 +15,15 @@
   position: absolute;
   inset: 0;
   z-index: 0;
-  background: url('/plates/alpine-village.webp') center / cover no-repeat;
+  background: url('/plates/zhangjiajie-pillars.webp') center / cover no-repeat;
+  background-image: -webkit-image-set(url('/plates/zhangjiajie-pillars.webp') 1x, url('/plates/zhangjiajie-pillars-2x.webp') 2x);
+  background-image: image-set(url('/plates/zhangjiajie-pillars.webp') 1x, url('/plates/zhangjiajie-pillars-2x.webp') 2x);
 }
 
 /* Legibility only where the type actually sits.
    An ellipse anchored at the bottom-left darkens exactly the region under the
-   name and leaves the rest of the painting alone — a full-width wash would dull
-   the whole picture, and the picture is the identity. The second, very light
-   pass keeps the nav legible against the bright roofline. */
+   name and leaves the rest of the painting alone. The second, very light pass
+   keeps the nav legible against the bright cloud and sky. */
 .hero__shade {
   position: absolute;
   inset: 0;
@@ -37,9 +38,8 @@
     linear-gradient(180deg, rgba(6, 11, 15, .15) 0%, rgba(6, 11, 15, 0) 14%);
 }
 
-/* THE DISSOLVE — the foreground snow becomes the page.
-   Resolves to #B3C0D8, the painting's exact last row, so the eye crosses no
-   temperature boundary at the join. */
+/* THE DISSOLVE — the foreground cloud sea becomes the page.
+   Resolves to the plate's sampled bottom-edge cloud colour. */
 .hero__dissolve {
   position: absolute;
   left: 0;
@@ -50,12 +50,12 @@
   opacity: var(--fade);
   background: linear-gradient(
     to bottom,
-    rgba(179, 192, 216, 0) 0%,
-    rgba(179, 192, 216, .06) 30%,
-    rgba(179, 192, 216, .30) 56%,
-    rgba(179, 192, 216, .72) 78%,
-    #b3c0d8 92%,
-    #b3c0d8 100%
+    rgba(241, 231, 213, 0) 0%,
+    rgba(241, 231, 213, .06) 30%,
+    rgba(241, 231, 213, .30) 56%,
+    rgba(241, 231, 213, .72) 78%,
+    #f1e7d5 92%,
+    #f1e7d5 100%
   );
 }
 
@@ -81,8 +81,8 @@
   color: var(--paper);
   will-change: transform, opacity;
   /* The type carries its own legibility so the scrim does not have to dim the
-     painting. A wide soft shadow lifts cream off snow without reading as a
-     shadow; the tight one holds the thin strokes of the italic. */
+     painting. A wide soft shadow lifts cream off the cloud sea without reading
+     as a shadow; the tight one holds the thin strokes of the italic. */
   text-shadow:
     0 2px 28px rgba(5, 14, 24, .55),
     0 1px 4px rgba(5, 14, 24, .34);
@@ -90,7 +90,7 @@
 
 /* Small type needs a tight dark halo, not the headline's wide soft bloom —
    a 28px spread does nothing for 11px caps. */
-/* 11px caps over a sunlit yellow façade need a genuine outline, not a hint of
+/* 11px caps over bright cloud and sky need a genuine outline, not a hint of
    one. At this size a dense halo reads as crispness, never as a drop shadow —
    which is why it can be this strong while the painting stays untouched. */
 .hero__eyebrow,

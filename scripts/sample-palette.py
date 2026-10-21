@@ -26,7 +26,7 @@ from PIL import Image
 PROPER = {
     'cobalt': 'Cobalt', 'azure': 'Azure', 'azure-soft': 'Azure, soft',
     'slate': 'Slate', 'slate-deep': 'Slate, deep', 'slate-ink': 'Slate ink',
-    'snow-shadow': 'Snow shadow', 'snow-drift': 'Snow drift',
+    'hero-exit': 'Hero exit', 'snow-drift': 'Snow drift',
     'snow-lit': 'Snow, lit', 'snow-warm': 'Snow, warm', 'paper': 'Paper',
     'ink': 'Ink', 'ink-warm': 'Ink, warm', 'ink-soft': 'Ink, soft',
     'parchment': 'Parchment', 'stone': 'Stone', 'ochre': 'Ochre',
@@ -37,7 +37,7 @@ PROPER = {
 TOKENS = {
     'cobalt': '#0d7ee6', 'azure': '#2f8ce2', 'azure-soft': '#4087c3',
     'slate': '#3e79ad', 'slate-deep': '#2a5f86', 'slate-ink': '#28475b',
-    'snow-shadow': '#b3c0d8', 'snow-drift': '#d7dbe0', 'snow-lit': '#f0eae0',
+    'hero-exit': '#f1e7d5', 'snow-drift': '#d7dbe0', 'snow-lit': '#f0eae0',
     'snow-warm': '#f6f0e6', 'paper': '#fbf6ec',
     'ink': '#1b2a33', 'ink-warm': '#3f362a', 'ink-soft': '#5c6b73',
     'parchment': '#ded3c0', 'stone': '#d5c0a5', 'ochre': '#c79969',

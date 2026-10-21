@@ -1,10 +1,10 @@
 /* ─────────────────────────────────────────────────────────────
-   Tokens. Every colour here was sampled from the four plates.
+   Tokens. Every colour here was sampled from the plates.
    See DESIGN_DIRECTION.md §2. Do not invent hues — sample instead.
    ───────────────────────────────────────────────────────────── */
 :root {
   /* grounds */
-  --snow-shadow: #b3c0d8;  /* alpine plate, exact last row — the hero's exit ground */
+  --hero-exit: #f1e7d5;  /* zhangjiajie plate, median of the cloud sea along the bottom edge; the hero's exit ground */
   --snow-drift:  #d7dbe0;
   --snow-lit:    #f0eae0;  /* primary page ground */
   --snow-warm:   #f6f0e6;
@@ -43,7 +43,7 @@
   --olive:       #656b59;
 
   /* the live page ground, driven by scroll during the Crossing */
-  --page-ground: var(--snow-shadow);
+  --page-ground: var(--hero-exit);
 
   /* type — the approved prototype's stacks, verbatim. No webfont is loaded:
      Georgia ships everywhere, and Inter resolves to the system UI font when it
