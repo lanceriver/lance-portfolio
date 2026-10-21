@@ -19,7 +19,12 @@ export type Plate = {
   href?: string
   repo?: string
   status?: string
+  /** App screens, shown as figures beneath the plate. Real captures, cropped
+      below the status bar; `src` is the 480w file, `src2x` the 960w. */
+  screens?: Screen[]
 }
+
+export type Screen = { src: string; src2x: string; alt: string; caption: string }
 
 export const projects: Plate[] = [
   {
@@ -66,6 +71,26 @@ export const projects: Plate[] = [
     alt: 'A painted snowy village path, a walker in a red coat, a church spire and a frozen lake.',
     plateLabel: 'Plate III',
     caption: 'The path down to the village',
+    screens: [
+      {
+        src: '/worn/wardrobe-480.webp',
+        src2x: '/worn/wardrobe-960.webp',
+        alt: 'Worn’s wardrobe screen: outerwear and tops hanging on rails — a black jacket, a brown parka, a camel overcoat, a white tee and a striped camp shirt.',
+        caption: 'The wardrobe',
+      },
+      {
+        src: '/worn/tonight-480.webp',
+        src2x: '/worn/tonight-960.webp',
+        alt: 'Worn’s outfit builder, built for tonight at 16°: a grey Harrington jacket, white camp shirt, black Derby shoes and dark jeans, with loved and another buttons.',
+        caption: 'Built for tonight',
+      },
+      {
+        src: '/worn/numbers-480.webp',
+        src2x: '/worn/numbers-960.webp',
+        alt: 'Worn’s numbers screen, “bought, worn, forgotten”: four pieces each worn only once, from 72 pieces and 37 fits.',
+        caption: 'The numbers',
+      },
+    ],
   },
 ]
 

@@ -1,6 +1,6 @@
 import { useRef } from 'react'
 import { motion } from 'motion/react'
-import { projects } from '../data'
+import { projects, type Screen } from '../data'
 import { useScrollDriver } from '../hooks/useScrollDriver'
 import { useReducedMotion } from '../hooks/useReducedMotion'
 import { clamp, range } from '../lib/math'
@@ -191,7 +191,46 @@ function SceneRest() {
             <PlateCaption label={p.plateLabel} text={p.caption} />
           </motion.figure>
         </div>
+
+        {p.screens && <Screens screens={p.screens} reduced={reduced} />}
       </div>
     </article>
+  )
+}
+
+/* The app itself, beneath the plate. The painting introduces the project; these
+   are what it actually looks like. Figures rather than plates: a plate book
+   prints its photographs as numbered figures on the same stock, square to the
+   page like every Work plate, so they keep the rule a collage would break.
+   They rise in one after another and then hold still — the scene's drift
+   stays with the plate and the copy. On a phone they become a row you swipe.
+   DECISIONS D54. */
+function Screens({ screens, reduced }: { screens: Screen[]; reduced: boolean }) {
+  return (
+    <div className="rest__screens" role="list" aria-label="Screens from Worn">
+      {screens.map((s, i) => (
+        <motion.figure
+          key={s.src}
+          role="listitem"
+          className="rest__screen plate-sheet"
+          initial={reduced ? false : { y: 56, opacity: 0 }}
+          whileInView={{ y: 0, opacity: 1 }}
+          viewport={{ once: true, amount: 0.25 }}
+          transition={{ type: 'spring', stiffness: 120, damping: 20, mass: 1, delay: reduced ? 0 : i * 0.12 }}
+        >
+          <img
+            src={s.src}
+            srcSet={`${s.src} 480w, ${s.src2x} 960w`}
+            sizes="(max-width: 900px) 62vw, 240px"
+            alt={s.alt}
+            width={480}
+            height={969}
+            loading="lazy"
+            decoding="async"
+          />
+          <PlateCaption label={`Fig. ${i + 1}`} text={s.caption} />
+        </motion.figure>
+      ))}
+    </div>
   )
 }

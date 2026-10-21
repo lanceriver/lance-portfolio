@@ -1000,3 +1000,29 @@ halo rather than a scrim.
 **Touch targets.** Everything tappable on a phone is now at least 44px
 (MOTION_DIRECTION §6), grown invisibly around the word where the word itself is
 small, so nothing moves.
+
+## D54 — Worn shows the app, as figures beneath its plate
+
+Worn was the most interesting project on the page and the only one with nothing
+to look at: a painting, two sentences and "In progress". Three real screens from
+Lance's phone now sit beneath Plate III — the wardrobe, the outfit builder's
+"built for tonight", and the numbers.
+
+**Figures, not plates.** §1 says the illustrations are destinations rather than
+product screenshots, and that still holds: the painting stays and still
+introduces the project. A plate book prints its photographs as numbered figures
+on the same stock, so the screens are `Fig. 1–3` with a plate-cap caption,
+on the paper sheet, square to the page like every Work plate (§5: a collage
+tilts, a Work scene does not).
+
+**Composition.** A staggered row under the plate, right-aligned so the scene's
+numeral keeps the left. They rise in one after another (≤56px, so inside the
+phone limit as well) and then hold still; the drift stays with the plate and
+the copy, so there is no third rate to read. On a phone they become a row you
+swipe, bled to the screen edges with each figure snapping to the margin and
+the next one showing at the edge. The row scrolls; the page does not widen.
+
+**The images.** Cropped below the iOS status bar (clock, battery, Dynamic
+Island), the app's own tab bar kept. WebP at 480w and 960w, 20–66KB each, lazy
+loaded. The lookbook screen was left out on purpose: it is a mirror photo of
+Lance in his room, and that is his call to publish, not a default.

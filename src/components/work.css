@@ -178,6 +178,7 @@
   display: grid;
   grid-template-columns: minmax(0, .78fr) minmax(0, 1fr);
   gap: clamp(40px, 7vw, 120px);
+  row-gap: clamp(28px, 5vh, 56px);   /* the screens sit close under the plate */
   align-items: center;
   position: relative;
   z-index: 1;
@@ -186,6 +187,20 @@
 .rest__plate-drift { grid-column: 2; justify-self: end; will-change: transform; }
 .rest__plate { width: min(30vw, 420px); will-change: transform; }
 .rest__plate img { height: min(34vh, 320px); }
+
+/* The app's own screens, as figures beneath the plate. A staggered row —
+   the asymmetry of the scene, carried on — and square to the page. */
+.rest__screens {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+  gap: clamp(22px, 2.6vw, 44px);
+}
+.rest__screen { width: min(15vw, 236px); flex: none; }
+.rest__screen img { height: auto; }
+.rest__screen:nth-child(2) { margin-top: clamp(40px, 7vh, 84px); }
+.rest__screen:nth-child(3) { margin-top: clamp(14px, 2.5vh, 30px); }
 
 /* ── responsive ───────────────────────────────────────────
    Mobile simplifies the long pin and keeps the
@@ -209,6 +224,22 @@
   .rest__plate { width: min(62vw, 340px); }
   .scene--rest { min-height: 0; }
   .scene__num--iii { font-size: 300px; opacity: .04; }
+
+  /* A row you swipe, bled to the screen edges, each figure snapping to the
+     margin. Contained: the row scrolls, the page never widens. */
+  .rest__screens {
+    justify-content: flex-start;
+    gap: 16px;
+    margin: 0 -20px;
+    padding: 6px 20px 26px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: 20px;
+    scrollbar-width: none;
+  }
+  .rest__screens::-webkit-scrollbar { display: none; }
+  .rest__screen { width: 62vw; max-width: 280px; scroll-snap-align: start; }
+  .rest__screen:nth-child(n) { margin-top: 0; }
 }
 
 /* ── reduced motion ───────────────────────────────────────
