@@ -63,10 +63,10 @@ export function BackCover() {
   return (
     <section className="cover" id="contact" data-tone="light" data-rule="off">
       {/* the page becomes the plate's own sky — one colour, no gradient stack */}
-      <div className="cover__bridge" aria-hidden="true" />
+      <div className="cover__bridge" aria-hidden="true" data-tint-top="azure" data-tint-bottom="slate-deep" />
 
       <div className="cover__wrap" ref={wrapRef}>
-        <div className="cover__scene" ref={sceneRef}>
+        <div className="cover__scene" ref={sceneRef} data-tint-top="azure" data-tint-bottom="stone">
           <div
             className="cover__plate"
             role="img"

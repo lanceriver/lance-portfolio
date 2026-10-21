@@ -6,7 +6,8 @@
   height: 100vh;
   overflow: hidden;
   isolation: isolate;
-  background: var(--cobalt);
+  /* No ground on the sticky box itself: Safari 26 tints its toolbars from a
+     sticky element's background (D55). The plate carries the cobalt instead. */
   --fade: 0;
 }
 
@@ -16,6 +17,7 @@
   inset: 0;
   z-index: 0;
   background: url('/plates/zhangjiajie-pillars.webp') center / cover no-repeat;
+  background-color: var(--cobalt);   /* the sky, before the plate has loaded */
   background-image: -webkit-image-set(url('/plates/zhangjiajie-pillars.webp') 1x, url('/plates/zhangjiajie-pillars-2x.webp') 2x);
   background-image: image-set(url('/plates/zhangjiajie-pillars.webp') 1x, url('/plates/zhangjiajie-pillars-2x.webp') 2x);
 }

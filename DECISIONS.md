@@ -1037,3 +1037,26 @@ to publish, not a default.
 **The points** are written from the app's own spec, and are careful about one
 thing: they say the garments are cut out *on the phone*, not that nothing ever
 leaves it, because the opt-in cloud restore can send a cutout to the backend.
+
+## D55 — Safari's toolbars take the ground under them
+
+Lance, on iOS Safari: the address bar and bottom toolbar stayed blue down the
+whole cream page. Safari 26 ignores `theme-color` and tints both bars from
+fixed or sticky elements touching the top and bottom edges (near-full width,
+at least ~3px tall), falling back to the body. The hero (`.hero`, cobalt) and
+the back cover (`.cover__scene`, azure) are full-width sticky scenes with solid
+grounds, so Safari took their blue and did not let it go.
+
+**Fixed:** the sticky boxes carry no ground of their own. The hero's cobalt
+moves to `.hero__plate`, where it was only ever the sky before the image loads;
+the back cover's azure was already on `.cover` beneath it. Nothing on screen
+changes. Then two 3px strips, fixed to the top and bottom edges, give Safari
+the right answer: each takes the ground of whatever lies under it, named by
+`data-tint` / `data-tint-top` / `data-tint-bottom` on the section (a token),
+falling back to the page ground — sky and cloud over the hero, the page through
+Work and Field Notes, slate over Writing, sky and stone over the back cover,
+the contents page's own snow while it is open. They are iOS-only, sit where the
+toolbar meets the page, and in the bar's own colour they read as part of it.
+
+Not a scrim and not a ground behind the nav (D38, §6.7): nothing is laid over
+the work. Verified in emulation only — the tint itself needs a real iPhone.

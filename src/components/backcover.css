@@ -24,7 +24,8 @@
   top: 0;
   height: 100vh;
   overflow: hidden;
-  background: var(--azure);
+  /* no ground of its own — `.cover` is azure beneath it, and Safari 26 would
+     tint its toolbars from a sticky box's background (D55) */
   isolation: isolate;
 }
 
