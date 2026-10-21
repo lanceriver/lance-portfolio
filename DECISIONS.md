@@ -1062,8 +1062,14 @@ azure on `.cover` beneath its sticky scene. At rest the page has no coloured
 fixed or sticky element at all; the contents page and the lightbox are mounted
 only while open, and tinting the bars to match them is right.
 
-The bars are therefore one colour, the page's cream, including over the hero
-sky and the slate Writing section. Making them follow the section would rely
-on Safari re-reading the root as it changes, which nobody has documented. Get
-the predictable version onto a real iPhone first; revisit only if the cream
-over the hero reads wrong there.
+**Cream everywhere, guaranteed.** Lance chose one colour for the bars, the
+page's cream, over the hero sky and the slate Writing section included. A
+root ground alone leaves Safari free to sample the top of the page at load.
+So two fixed bands, 12px, at the top and bottom edges, carry `--snow-lit` at
+`opacity: 0`: Safari is reported to read a fixed element's background even
+when it is invisible, and nothing else can see them. They sit in
+`index.html`, outside React, so the post pages carry them too. Measured: the
+page renders the same with them and without (a maximum difference of 1/255
+on a few pixels, from compositing), and hit-testing passes straight through.
+If a future Safari stops reading invisible elements, the root ground is
+still cream underneath.
