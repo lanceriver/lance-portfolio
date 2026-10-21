@@ -472,7 +472,7 @@ function ObjectBody({ o, onOpen }: { o: Obj; onOpen: () => void }) {
       <div className="colophon">
         <p className="colophon__label eyebrow">Colophon</p>
         <p className="colophon__text">
-          Set in <em>Georgia</em>. The plates are AI-generated paintings; the photographs are mine. Every
+          Set in <em>Georgia</em>. The photographs are mine. Every
           colour on this site was lifted out of one of the paintings.
         </p>
       </div>

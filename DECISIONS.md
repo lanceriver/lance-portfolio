@@ -945,6 +945,6 @@ been outstanding since the twelfth object, not a defect of this change.
 
 ## D52: Real content replaces demo content
 
-The Work section now presents three real projects: Pool Safety Solutions, Airtable Clone, and Worn. The horizontal rail scene has been removed. Writing contains two real posts, with their source prose retained. Contact links point to Lance's real email, GitHub, LinkedIn, and résumé. The résumé PDF has its phone number removed by redaction. The Field Notes colophon identifies the plates as AI-generated paintings.
+The Work section now presents three real projects: Pool Safety Solutions, Airtable Clone, and Worn. The horizontal rail scene has been removed. Writing contains two real posts, with their source prose retained. Contact links point to Lance's real email, GitHub, LinkedIn, and résumé. The résumé PDF has its phone number removed by redaction. The colophon no longer claims the plates are painted; it makes no claim about how they were made.
 
 The Work section employer project description stays at résumé level. It includes no code, screenshots, client names, or security-incident wording.
