@@ -1,6 +1,6 @@
 import { useRef } from 'react'
 import { motion } from 'motion/react'
-import { projects } from '../data'
+import { projects, type Screen } from '../data'
 import { useScrollDriver } from '../hooks/useScrollDriver'
 import { useReducedMotion } from '../hooks/useReducedMotion'
 import { clamp, range } from '../lib/math'
@@ -26,7 +26,7 @@ export function Work() {
 
 /** The plate-book caption: the plate number in condensed caps, the descriptor
     in italic beneath it — the way an illustrated travel book actually sets it. */
-function PlateCaption({ label, text }: { label: string; text: string }) {
+function PlateCaption({ label, text }: { label?: string; text?: string }) {
   return (
     <figcaption className="plate-sheet__cap plate-cap">
       <span className="plate-cap__label">{label}</span>
@@ -137,28 +137,28 @@ function SceneAperture() {
 
    This scene first had only a one-shot entrance spring while the other two
    ran on continuous scroll-linked motion, so it read as a page that had stopped
-   rather than one holding its breath. It now drifts: the numeral, the plate and
-   the copy all travel, very slowly and at different rates, for as long as you
-   are inside it. Nothing overshoots, nothing is clever — it simply breathes.
-   DECISIONS D35. */
+   rather than one holding its breath. It drifts: the numeral and the copy
+   travel, very slowly and at different rates, for as long as you are inside
+   it. Nothing overshoots, nothing is clever — it simply breathes. DECISIONS D35.
+
+   It has no painted plate. Worn is the one project with a product to show, so
+   its screens are the picture. DECISIONS D54. */
 function SceneRest() {
   const p = projects[2]
   const reduced = useReducedMotion()
   const ref = useRef<HTMLElement>(null)
   const numRef = useRef<HTMLSpanElement>(null)
-  const plateRef = useRef<HTMLDivElement>(null)
   const copyRef = useRef<HTMLDivElement>(null)
 
   useScrollDriver(() => {
     const el = ref.current
-    if (!el || !numRef.current || !plateRef.current || !copyRef.current) return
+    if (!el || !numRef.current || !copyRef.current) return
     const r = el.getBoundingClientRect()
     const t = clamp((innerHeight - r.top) / (innerHeight + r.height))
-    // three rates, all slow. The numeral is the slowest thing in the section.
-    const num = numRef.current, plate = plateRef.current, copy = copyRef.current
+    // two rates, both slow. The numeral is the slowest thing in the section.
+    const num = numRef.current, copy = copyRef.current
     return () => {
       num.style.transform = `translate3d(0, ${(0.5 - t) * 130}px, 0)`
-      plate.style.transform = `translate3d(0, ${(0.5 - t) * 62}px, 0)`
       copy.style.transform = `translate3d(0, ${(0.5 - t) * 26}px, 0)`
     }
   }, !reduced)
@@ -168,30 +168,58 @@ function SceneRest() {
       <span className="numeral scene__num scene__num--iii" aria-hidden="true" ref={numRef}>{p.numeral}</span>
 
       <div className="rest__inner">
+        {/* two columns on a wide screen — the introduction, then the detail
+            beside it — so the copy is a band above the screens, not a tower */}
         <div className="rest__copy" ref={copyRef}>
-          <p className="scene__disc eyebrow">{p.discipline}</p>
-          <h3 className="display-r scene__name">{p.name}</h3>
-          <p className="scene__tag">{p.tagline}</p>
-          <p className="body scene__blurb">{p.blurb}</p>
-          {p.points && <ul className="body scene__points">{p.points.map((point) => <li key={point}>{point}</li>)}</ul>}
-          {projectMeta(p)}
+          <div className="rest__lead">
+            <p className="scene__disc eyebrow">{p.discipline}</p>
+            <h3 className="display-r scene__name">{p.name}</h3>
+            <p className="scene__tag">{p.tagline}</p>
+            <p className="body scene__blurb">{p.blurb}</p>
+          </div>
+          <div className="rest__detail">
+            {p.points && <ul className="body scene__points">{p.points.map((point) => <li key={point}>{point}</li>)}</ul>}
+            {projectMeta(p)}
+          </div>
         </div>
 
-        {/* drift on the wrapper, the arrival on the sheet — so the two
-            transforms never fight for the same property */}
-        <div className="rest__plate-drift" ref={plateRef}>
-          <motion.figure
-            className="rest__plate plate-sheet"
-            initial={reduced ? false : { y: 44, rotate: 1.8, scale: 0.96 }}
-            whileInView={{ y: 0, rotate: 0, scale: 1 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ type: 'spring', stiffness: 120, damping: 20, mass: 1 }}
-          >
-            <img src={p.srcSmall} alt={p.alt} width={1200} height={675} />
-            <PlateCaption label={p.plateLabel} text={p.caption} />
-          </motion.figure>
-        </div>
+        {p.screens && <Screens screens={p.screens} reduced={reduced} />}
       </div>
     </article>
+  )
+}
+
+/* The app itself. Figures rather than plates: a plate book prints its
+   photographs as numbered figures on the same stock, square to the page like
+   every Work plate, so they keep the rule a collage would break. They rise in
+   one after another and then hold still — the scene's drift stays with the
+   numeral and the copy. On a phone they become a row you swipe. DECISIONS D54. */
+function Screens({ screens, reduced }: { screens: Screen[]; reduced: boolean }) {
+  return (
+    <div className="rest__screens" role="list" aria-label="Screens from Worn">
+      {screens.map((s, i) => (
+        <motion.figure
+          key={s.src}
+          role="listitem"
+          className="rest__screen plate-sheet"
+          initial={reduced ? false : { y: 56, opacity: 0 }}
+          whileInView={{ y: 0, opacity: 1 }}
+          viewport={{ once: true, amount: 0.25 }}
+          transition={{ type: 'spring', stiffness: 120, damping: 20, mass: 1, delay: reduced ? 0 : i * 0.12 }}
+        >
+          <img
+            src={s.src}
+            srcSet={`${s.src} 480w, ${s.src2x} 960w`}
+            sizes="(max-width: 900px) 62vw, 340px"
+            alt={s.alt}
+            width={480}
+            height={969}
+            loading="lazy"
+            decoding="async"
+          />
+          <PlateCaption label={`Fig. ${i + 1}`} text={s.caption} />
+        </motion.figure>
+      ))}
+    </div>
   )
 }

@@ -176,16 +176,34 @@
   width: var(--shell);
   margin-inline: auto;
   display: grid;
-  grid-template-columns: minmax(0, .78fr) minmax(0, 1fr);
-  gap: clamp(40px, 7vw, 120px);
-  align-items: center;
+  grid-template-columns: minmax(0, 1fr);
+  row-gap: clamp(48px, 8vh, 96px);
   position: relative;
   z-index: 1;
 }
-.rest__copy { grid-column: 1; padding-left: clamp(40px, 9vw, 150px); }
-.rest__plate-drift { grid-column: 2; justify-self: end; will-change: transform; }
-.rest__plate { width: min(30vw, 420px); will-change: transform; }
-.rest__plate img { height: min(34vh, 320px); }
+.rest__copy {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(40px, 6vw, 110px);
+  align-items: end;
+  padding-left: clamp(40px, 9vw, 150px);
+}
+.rest__detail .scene__points { margin-top: 0; }
+
+/* The app's own screens — the picture this scene has instead of a plate. A
+   staggered row from the copy's margin to the shell's edge: the asymmetry of
+   the scene, carried on, and square to the page. */
+.rest__screens {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: clamp(24px, 3vw, 56px);
+  padding-left: clamp(40px, 9vw, 150px);
+}
+.rest__screen { width: min(24vw, 340px); flex: none; }
+.rest__screen img { height: auto; }
+.rest__screen:nth-child(2) { margin-top: clamp(56px, 10vh, 120px); }
+.rest__screen:nth-child(3) { margin-top: clamp(20px, 3.5vh, 44px); }
 
 /* ── responsive ───────────────────────────────────────────
    Mobile simplifies the long pin and keeps the
@@ -203,19 +221,34 @@
   .aperture__meta { grid-template-columns: 1fr; gap: 18px; padding-top: 34px; }
 
   .scene--rest { padding: clamp(90px, 14vh, 160px) 0; }
-  .rest__inner { grid-template-columns: 1fr; gap: 44px; }
-  .rest__copy { grid-column: 1; padding-left: 0; }
-  .rest__plate-drift { grid-column: 1; justify-self: start; transform: none !important; }
-  .rest__plate { width: min(62vw, 340px); }
+  .rest__inner { row-gap: 40px; }
+  .rest__copy { padding-left: 0; grid-template-columns: 1fr; gap: 0; }
+  .rest__detail .scene__points { margin-top: 16px; }
   .scene--rest { min-height: 0; }
   .scene__num--iii { font-size: 300px; opacity: .04; }
+
+  /* A row you swipe, bled to the screen edges, each figure snapping to the
+     margin. Contained: the row scrolls, the page never widens. */
+  .rest__screens {
+    justify-content: flex-start;
+    gap: 16px;
+    margin: 0 -20px;
+    padding: 6px 20px 26px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: 20px;
+    scrollbar-width: none;
+  }
+  .rest__screens::-webkit-scrollbar { display: none; }
+  .rest__screen { width: 62vw; max-width: 280px; scroll-snap-align: start; }
+  .rest__screen:nth-child(n) { margin-top: 0; }
 }
 
 /* ── reduced motion ───────────────────────────────────────
    Pinned scenes become static compositions in document order. Nothing is lost. */
 @media (prefers-reduced-motion: reduce) {
   .scene--rest { min-height: 0; }
-  .scene__num--iii, .rest__plate-drift, .rest__copy { transform: none !important; }
+  .scene__num--iii, .rest__copy { transform: none !important; }
   .scene--aperture { height: auto; }
   .scene--aperture .scene__pin { position: relative; height: auto; padding: 80px 0; --slot: 8; }
   .aperture { height: 58vh; }

@@ -1000,3 +1000,40 @@ halo rather than a scrim.
 **Touch targets.** Everything tappable on a phone is now at least 44px
 (MOTION_DIRECTION §6), grown invisibly around the word where the word itself is
 small, so nothing moves.
+
+## D54 — Worn shows the app, and loses its plate
+
+Worn was the most interesting project on the page and the only one with nothing
+to look at: a painting, two sentences and "In progress". It now shows three real
+screens from Lance's phone — the wardrobe, the outfit builder's "built for
+tonight", and the numbers — and three points on what it does.
+
+**No plate.** The first pass kept Plate III and set the screens beneath it at
+236px. Lance found them too small and the painting redundant, and he is right:
+Worn is the one project with a product to show, so the product is the picture.
+§1 still holds for the other two scenes, where the paintings are destinations.
+The `hill-path` plate files stay in `public/plates/` for later use; nothing
+references them.
+
+**Figures.** A plate book prints its photographs as numbered figures on the
+same stock, so the screens are `Fig. 1–3` with a plate-cap caption, on the paper
+sheet, square to the page like every Work plate (§5: a collage tilts, a Work
+scene does not).
+
+**Composition.** The copy is a band, not a tower: introduction left, the three
+points and status right, bottom-aligned. Beneath it the figures run from the
+copy's margin to the shell's edge at up to 340px, staggered. They rise in one
+after another (≤56px, inside the phone limit too) and hold still; the scene's
+drift stays with the numeral and the copy. On a phone the copy stacks and the
+figures become a row you swipe, bled to the screen edges, each snapping to the
+margin with the next one showing at the edge. The row scrolls; the page does
+not widen.
+
+**The images.** Cropped below the iOS status bar, the app's own tab bar kept.
+WebP at 480w and 960w, 20–66KB each, lazy loaded. The lookbook screen was left
+out on purpose: it is a mirror photo of Lance in his room, and that is his call
+to publish, not a default.
+
+**The points** are written from the app's own spec, and are careful about one
+thing: they say the garments are cut out *on the phone*, not that nothing ever
+leaves it, because the opt-in cloud restore can send a cutout to the backend.
