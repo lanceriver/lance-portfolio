@@ -7,7 +7,7 @@ import { clamp, range } from '../lib/math'
 import './work.css'
 
 // Screens sit at three different depths.
-const DRIFT = [72, 24, 46]
+const DRIFT = [160, 40, 100]
 
 /**
  * Selected Work: three scenes with three compositional logics.
