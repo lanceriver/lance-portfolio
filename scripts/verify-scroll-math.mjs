@@ -70,17 +70,7 @@ console.log('\n— Work II aperture (Work.tsx) —')
   if (sec.h <= VH) { fail++; console.log(' FAIL aperture section must be taller than the viewport to pin') } else pass++
 }
 
-console.log('\n— Work III rail (Work.tsx) —')
-{
-  const railW = 2244, iw = 1280
-  const distance = Math.max(0, railW - iw)
-  const x = (t) => -distance * range(t, 0.08, 0.92)
-  eq('rail starts home', x(0), 0)
-  eq('rail travels its full overflow', x(0.92), -distance)
-  eq('rail holds at the end', x(1), -distance)
-}
-
-console.log('\n— Work IV drift (Work.tsx) —')
+console.log('\nWork III drift (Work.tsx)')
 {
   const sec = { top: 0, h: 1.18 * VH }
   const t = (y) => clamp((VH - (sec.top - y)) / (VH + sec.h))
