@@ -156,6 +156,8 @@
   .writing__note { padding-bottom: 0; }
   .writing__layout { grid-template-columns: 1fr; gap: 36px; }
   .stack { position: relative; top: auto; height: 46vh; margin: 0 14px 0; }
+  /* A sheet still flying in must never widen the page — see `.notes`. */
+  .writing { overflow-x: clip; }
 }
 
 @media (prefers-reduced-motion: reduce) {

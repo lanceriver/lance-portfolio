@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 import { swatches } from '../data'
 import { useReducedMotion } from '../hooks/useReducedMotion'
-import { arrive } from '../lib/enter'
+import { arrive, clampTravel, isPhone } from '../lib/enter'
 import './fieldnotes.css'
 
 /**
@@ -202,6 +202,7 @@ export function FieldNotes() {
   const [open, setOpen] = useState<Obj | null>(null)
   const sectionRef = useRef<HTMLElement>(null)
   const lift = useLift()
+  const [phone] = useState(isPhone)
 
   /**
    * The pin has to be a NEGATIVE `top`, not `bottom: 0`.
@@ -300,7 +301,9 @@ export function FieldNotes() {
             <motion.div
               className="obj__inner"
               {...arrive(
-                { ...o.from, opacity: 0 },
+                phone
+                  ? { ...o.from, x: clampTravel(o.from.x), y: clampTravel(o.from.y), opacity: 0 }
+                  : { ...o.from, opacity: 0 },
                 { x: 0, y: 0, rotate: o.rest, scale: 1, opacity: 1 },
                 { type: 'spring', stiffness: o.stiffness, damping: o.damping, mass: 1.05, delay: o.delay },
                 reduced

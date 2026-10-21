@@ -948,3 +948,55 @@ been outstanding since the twelfth object, not a defect of this change.
 The Work section now presents three real projects: Pool Safety Solutions, Airtable Clone, and Worn. The horizontal rail scene has been removed. Writing contains two real posts, with their source prose retained. Contact links point to Lance's real email, GitHub, LinkedIn, and résumé. The résumé PDF has its phone number removed by redaction. The colophon no longer claims the plates are painted; it makes no claim about how they were made.
 
 The Work section employer project description stays at résumé level. It includes no code, screenshots, client names, or security-incident wording.
+
+## D53 — The phone gets a contents page, not a hamburger
+
+Lance, on his phone: he could pinch out and scroll the page sideways, only `Work`
+showed in the nav, and his name sat too low. One cause behind the first two, and
+two smaller ones behind the rest.
+
+**The sideways scroll.** Field Notes objects and the first Writing sheet sit at
+their entrance offsets until they arrive — up to 168px — so at first layout the
+type specimen and the stack's top sheet hung 110–130px past the right edge of a
+390px screen. iOS Safari sizes the page to whatever is on it at first layout, so
+the page became ~510px wide, and the fixed nav stretched with it, which is what
+pushed `Writing` and `Contact` off screen. `overflow-x: clip` on `body` did not
+stop it: Safari still lets a reader pinch out to the content. Fixed at both
+ends: entrance travel on a phone is clamped to the 60px MOTION_DIRECTION §2
+always allowed, and `.notes` and `.writing` clip horizontally below 900px.
+`clip`, not `hidden`, so neither becomes a scroll container and both sticky
+holds are untouched. Measured: 390px wide at first layout and at every 300px
+of scroll, down from 501.
+
+**The nav.** Five words do not fit beside `LR` at 390px, and two of them had
+simply been hidden. Below 720px the row gives way to a menu mark, which opens the List of Plates overlay with the rest of the book beneath it: the
+chapters (About, Notes, Writing, Contact), then the address and links. The mark is a
+hamburger drawn as two hairlines — the eyebrow's rule, the lower one shorter
+and hung right — so it is the pattern a reader recognises in the site's own
+line. It was briefly the word `Contents`; Lance preferred the icon, and it is
+announced as "Menu". It reuses D34's overlay rather than adding a drawer, so the
+phone's menu is the book's own front matter. Desktop is unchanged: `Work` still
+opens the plates alone.
+
+The nav also tucks away while a phone reader scrolls down and returns the moment
+they scroll up. Without a ground behind it (§6.7 rules out pill, glass and blob,
+and D38 rules out a scrim) its ink sat on top of every heading it passed. Tucking
+removes the collision instead of covering it. It never tucks while it holds
+keyboard focus (`:focus-visible`, not `:focus-within`, or the button that
+closed the Contents page would hold it down for good).
+
+**The hero on a phone.** `100vh` on iOS Safari is the screen with the toolbars
+collapsed, so with them showing the hero's foot — and the name anchored to it —
+sat under the toolbar. The hero is `100svh` below 900px, the copy anchors at
+`21svh` from the foot instead of `12vh`, and the name scales to `min(27vw, 128px)`
+so it fills the measure instead of half of it. The scrim's core follows it up.
+This moves §6.1's "bottom-left" up to the lower-middle on phones only.
+
+**The back cover on a phone.** It crops to the middle of the plate — village,
+beach, boats — and the open sea the copy was composed over is not in frame. The
+copy moves up into the sky, and its small lines take the Hero eyebrow's tight
+halo rather than a scrim.
+
+**Touch targets.** Everything tappable on a phone is now at least 44px
+(MOTION_DIRECTION §6), grown invisibly around the word where the word itself is
+small, so nothing moves.

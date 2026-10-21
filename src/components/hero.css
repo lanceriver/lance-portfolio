@@ -215,8 +215,25 @@
 
 @media (max-width: 900px) {
   .hero-wrap { height: 150vh; }
-  .hero__copy { left: 20px; right: 20px; bottom: 12vh; }
+  /* `svh`, not `vh`: on iOS Safari 100vh is the screen with the toolbars
+     collapsed, so with them showing the bottom of the hero — and the name
+     anchored to it — sat under the toolbar, a good 80px lower than composed. */
+  .hero { height: 100svh; }
+  .hero__copy { left: 20px; right: 20px; bottom: 21svh; }
+  /* The name fills the measure on a phone: 80px left it at half the width. */
+  .hero__name { font-size: min(27vw, 128px); }
   .hero__lede { max-width: 22ch; }
+  /* the scrim's dark core follows the type up */
+  .hero__shade {
+    background:
+      radial-gradient(130% 70% at 0% 62%,
+        rgba(6, 11, 15, .50) 0%,
+        rgba(6, 11, 15, .36) 27%,
+        rgba(6, 11, 15, .21) 46%,
+        rgba(6, 11, 15, .07) 65%,
+        rgba(6, 11, 15, 0) 79%),
+      linear-gradient(180deg, rgba(6, 11, 15, .15) 0%, rgba(6, 11, 15, 0) 14%);
+  }
 }
 
 /* Reduced motion: the composition arrives complete, nothing animates. */

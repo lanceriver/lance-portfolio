@@ -234,6 +234,11 @@
 
 /* Responsive desk: objects flow instead of overlap. */
 @media (max-width: 900px) {
+  /* The tilted objects' corners, and anything still waiting to arrive, must
+     never widen the page — iOS Safari lets a reader pinch out to reach them.
+     `clip` rather than `hidden`: it makes no scroll container, so the sticky
+     hold on this section is untouched. */
+  .notes { overflow-x: clip; }
   .notes__head { grid-template-columns: 1fr; align-items: start; }
   .notes__note { padding-bottom: 0; }
 

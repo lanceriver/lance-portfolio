@@ -26,3 +26,18 @@ export function arrive(
   if (reduced || SETTLED) return { initial: false as const, animate: to }
   return { initial: from, whileInView: to, viewport, transition }
 }
+
+/**
+ * Entrance travel on a phone. MOTION_DIRECTION §2: nothing translates more than
+ * 60px on mobile. The authored offsets reach 168px, and before an object has
+ * arrived it sits at that offset, so on a 390px screen objects started well
+ * past the right edge. iOS Safari sizes the page to whatever is on it at first
+ * layout, so a reader could pinch out and scroll sideways from the first frame.
+ */
+const PHONE_TRAVEL = 60
+
+export const isPhone = () =>
+  typeof matchMedia === 'function' && matchMedia('(max-width: 900px)').matches
+
+export const clampTravel = (v: number | undefined) =>
+  v === undefined ? v : Math.max(-PHONE_TRAVEL, Math.min(PHONE_TRAVEL, v))

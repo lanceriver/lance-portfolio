@@ -74,8 +74,58 @@
   .nav__links button:hover::after { transform: scaleX(1); }
 }
 
+/* The phone's single trigger. Hidden until there is no room for the row. */
+.nav__menu { display: none; }
+
 @media (max-width: 720px) {
-  .nav__links { gap: 14px; font-size: 12.5px; }
-  .nav__links li:nth-child(2),
-  .nav__links li:nth-child(3) { display: none; }
+  .nav { transition: color .3s var(--ease-settle), transform .42s var(--ease-settle); }
+  /* Tucked above the viewport while the reader scrolls down. Never while a
+     keyboard user is in it — they must be able to see where focus is. Not
+     `:focus-within`: closing the menu hands focus back to its trigger, and a
+     tap-focused button would then hold the nav down for good. */
+  .nav--tucked:not(:has(:focus-visible)) { transform: translateY(-100%); }
+
+  .nav__links { display: none; }
+  /* a 44px target around a 24px mark, without moving the mark off the margin */
+  .nav__menu {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-end;
+    width: 44px;
+    height: 44px;
+    margin-right: -2px;
+  }
+  /* Two hairlines — the eyebrow's rule, twice. Square ends, no radius; the
+     lower one is shorter and hung right, the site's asymmetry in miniature. */
+  .nav__burger {
+    position: relative;
+    display: block;
+    width: 24px;
+    height: 10px;
+  }
+  .nav__burger::before,
+  .nav__burger::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    height: 1.5px;
+    background: currentColor;
+  }
+  .nav__burger::before { top: 0; width: 24px; }
+  .nav__burger::after { bottom: 0; width: 16px; }
+  /* over a painting the lines need the same lift the words get from their
+     text-shadow; a shadow on the mark, never a filter on the plate */
+  .nav--light .nav__burger::before,
+  .nav--light .nav__burger::after { box-shadow: 0 1px 8px rgba(8, 26, 44, .55); }
+
+  .nav__brand {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+@media (max-width: 720px) and (prefers-reduced-motion: reduce) {
+  .nav { transition: color .3s var(--ease-settle); }
 }

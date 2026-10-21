@@ -35,3 +35,12 @@ export function Link({ to, shouldNavigate, onClick, ...rest }: Props) {
 
   return <a href={to} onClick={handle} {...rest} />
 }
+
+type Contact = { label: string; href: string; external?: boolean; download?: string }
+
+/** One of the contact links — shared by the Back Cover and the Contents page. */
+export function ContactLink({ link, className }: { link: Contact; className?: string }) {
+  return link.external
+    ? <a className={className} href={link.href} target="_blank" rel="noopener noreferrer">{link.label}</a>
+    : <a className={className} href={link.href} download={link.download}>{link.label}</a>
+}

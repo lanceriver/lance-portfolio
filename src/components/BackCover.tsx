@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { getVisitCount } from '../lib/visits'
+import { contactLinks, email } from '../data'
+import { ContactLink } from './Link'
 import { useScrollDriver } from '../hooks/useScrollDriver'
 import { useReducedMotion } from '../hooks/useReducedMotion'
 import { clamp, lerp, range } from '../lib/math'
@@ -78,11 +80,11 @@ export function BackCover() {
             <p className="cover__lede">
               For work, projects, or a good conversation about either.
             </p>
-            <a className="cover__mail" href="mailto:lanceriver@gmail.com">lanceriver@gmail.com</a>
+            <a className="cover__mail" href={`mailto:${email}`}>{email}</a>
             <ul className="cover__links">
-              <li><a href="https://github.com/lanceriver" target="_blank" rel="noopener noreferrer">GitHub</a></li>
-              <li><a href="https://www.linkedin.com/in/lance-rivera" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
-              <li><a href="/lance-rivera-resume.pdf" download="Lance-Rivera-Resume.pdf">Résumé</a></li>
+              {contactLinks.map((l) => (
+                <li key={l.label}><ContactLink link={l} /></li>
+              ))}
             </ul>
             <p className="caption cover__visits">{visitCount === null ? null : `Visitor No. ${visitCount.toLocaleString('en-AU')}`}</p>
           </div>
