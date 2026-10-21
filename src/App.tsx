@@ -1,7 +1,6 @@
 import { useCallback, useLayoutEffect, useRef, useState } from 'react'
 import { Nav, type IndexMode } from './components/Nav'
 import { PlateIndex } from './components/PlateIndex'
-import { ToolbarTint } from './components/ToolbarTint'
 import { Hero } from './components/Hero'
 import { Crossing } from './components/Crossing'
 import { Work } from './components/Work'
@@ -98,7 +97,6 @@ export function App() {
     <>
       <Nav onOpenIndex={setIndex} />
       <PlateIndex open={index} onClose={closeIndex} />
-      <ToolbarTint />
       <main>
         {show('hero') && <Hero />}
         {show('crossing') && <Crossing />}

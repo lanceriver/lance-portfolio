@@ -2,7 +2,6 @@ import { useEffect, useRef } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 import { contactLinks, email, navLinks, projects } from '../data'
 import { useReducedMotion } from '../hooks/useReducedMotion'
-import { refreshScrollDrivers } from '../hooks/useScrollDriver'
 import { ContactLink } from './Link'
 import type { IndexMode } from './Nav'
 import './plateindex.css'
@@ -50,15 +49,11 @@ export function PlateIndex({ open, onClose }: { open: IndexMode | null; onClose:
     const prevOverflow = document.body.style.overflow
     document.body.style.overflow = 'hidden'
     panelRef.current?.querySelector<HTMLElement>('button')?.focus()
-    // Opening and closing do not scroll, so nudge the toolbar tint (D55) —
-    // on close, once the fade-out has taken the page off the screen.
-    refreshScrollDrivers()
 
     return () => {
       removeEventListener('keydown', onKey)
       document.body.style.overflow = prevOverflow
       restoreTo.current?.focus?.()
-      setTimeout(refreshScrollDrivers, 340)
     }
   }, [open, onClose])
 
@@ -86,7 +81,6 @@ export function PlateIndex({ open, onClose }: { open: IndexMode | null; onClose:
       {open && (
         <motion.div
           className={`plateindex${contents ? ' plateindex--contents' : ''}`}
-          data-tint="snow-lit"
           role="dialog"
           aria-modal="true"
           aria-label={contents ? 'Contents' : 'List of plates'}

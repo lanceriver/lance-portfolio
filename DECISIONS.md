@@ -1038,25 +1038,32 @@ to publish, not a default.
 thing: they say the garments are cut out *on the phone*, not that nothing ever
 leaves it, because the opt-in cloud restore can send a cutout to the backend.
 
-## D55 — Safari's toolbars take the ground under them
+## D55 — Safari's toolbars take the root ground
 
 Lance, on iOS Safari: the address bar and bottom toolbar stayed blue down the
-whole cream page. Safari 26 ignores `theme-color` and tints both bars from
-fixed or sticky elements touching the top and bottom edges (near-full width,
-at least ~3px tall), falling back to the body. The hero (`.hero`, cobalt) and
-the back cover (`.cover__scene`, azure) are full-width sticky scenes with solid
-grounds, so Safari took their blue and did not let it go.
+whole cream page. Safari 26 ignores `theme-color`. Per the developers who have
+reverse-engineered it (nothing from Apple), it tints both bars from fixed or
+sticky elements at the viewport edges that carry a background colour — read
+even at `opacity: 0` — and otherwise from the root (`html`/`body`) background.
+`html` had none; only `body` was cream, so Safari fell back to sampling the
+top of the page at load, which is the hero's blue sky.
 
-**Fixed:** the sticky boxes carry no ground of their own. The hero's cobalt
-moves to `.hero__plate`, where it was only ever the sky before the image loads;
-the back cover's azure was already on `.cover` beneath it. Nothing on screen
-changes. Then two 3px strips, fixed to the top and bottom edges, give Safari
-the right answer: each takes the ground of whatever lies under it, named by
-`data-tint` / `data-tint-top` / `data-tint-bottom` on the section (a token),
-falling back to the page ground — sky and cloud over the hero, the page through
-Work and Field Notes, slate over Writing, sky and stone over the back cover,
-the contents page's own snow while it is open. They are iOS-only, sit where the
-toolbar meets the page, and in the bar's own colour they read as part of it.
+**First attempt, reverted.** Two 3px fixed strips at the edges, coloured by
+section. They did not drive the tint — community reports put the working
+height nearer 11–12px — and they showed as visible bands. Lance: "ugly".
+Anything thin and fixed at the edge is either too small to count or big
+enough to see; the approach was wrong, not the numbers.
 
-Not a scrim and not a ground behind the nav (D38, §6.7): nothing is laid over
-the work. Verified in emulation only — the tint itself needs a real iPhone.
+**What stands.** `html` carries the page ground explicitly — the same value as
+`body`, so nothing on screen changes; only the overscroll and the bars see it.
+And no fixed or sticky box has a ground of its own: the hero's cobalt lives on
+`.hero__plate` (it only ever showed before the image loads), the back cover's
+azure on `.cover` beneath its sticky scene. At rest the page has no coloured
+fixed or sticky element at all; the contents page and the lightbox are mounted
+only while open, and tinting the bars to match them is right.
+
+The bars are therefore one colour, the page's cream, including over the hero
+sky and the slate Writing section. Making them follow the section would rely
+on Safari re-reading the root as it changes, which nobody has documented. Get
+the predictable version onto a real iPhone first; revisit only if the cream
+over the hero reads wrong there.
