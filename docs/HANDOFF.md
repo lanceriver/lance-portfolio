@@ -1,67 +1,71 @@
-# Handoff — lance-portfolio, live site + next build round
+# Handoff — lance-portfolio, Worn screens + old-site retirement
 
 _Last updated 2026-10-22. One living file — rewrite, don't append._
 
 ## TL;DR
-- `main` at `8f92aef`, level with `origin/main`. No open PRs, one worktree (this checkout). Repo `lanceriver/lance-portfolio` is **public**.
-- **Live at https://lanceriver.com** (AWS stack `lance-portfolio`, us-east-1). Every merge to `main` deploys via `.github/workflows/deploy.yml`; last deploy run 39605694781 succeeded and all runbook checks passed (200/301/404, headers, CORS, counter).
-- Last observed: `npm run build` clean, `npm run verify` 34/34, `pytest infra/tests` 5/5, CI green on PR #6.
-- Untracked here (not committed, leave unless Lance says): `.impeccable/` (critiques), `docs/daily-priorities.md`, `assets-source/Sandstone Pillars and Mountain Pavilion.png` (byte-identical to committed `assets-source/zhangjiajie-pillars.png`; safe to delete with Lance's OK).
-- **Next:** mobile layout (no horizontal scroll, ever). Then personal photos/interests, Spotify turntable, real product screenshots.
+- On `main` at `fb5ba9c`, level with `origin/main` (pushing this handoff commit is left to Lance). No open PRs. One worktree: this checkout.
+- **Live at https://lanceriver.com.** Deploy run 39695048694 for PR #12 passed (test and deploy). The live site serves `share/worn-with/piece-960.webp` (200), and its JS bundle contains the new screens.
+- Last observed: `npm run build` clean, `npm run verify` 34/34 (on the PR #12 branch before merge).
+- **Next:** a mobile bug Lance reported in the Worn screens (below). It isn't reproduced yet.
+- Untracked files, not created this session, so leave them unless Lance says otherwise: `.impeccable/`, `docs/daily-priorities.md`, `assets-source/Sandstone Pillars and Mountain Pavilion.png` (identical to the committed `zhangjiajie-pillars.png`), and **`assets-source/IMG_7501.JPG`**, which is new: Lance's photo from 10:32 today, 5.3 MB, purpose unknown.
 
-## Lance's priorities for 2026-10-22 (his words, in order)
-1. **Mobile layout.** You can zoom out and scroll sideways on a phone; that must never happen. Wants a proper mobile layout, not just an overflow clamp.
-2. **Personalise:** more of his own photos, plus creative sections for his interests (he'll bring specifics).
-3. **Spotify:** wire the Field Notes record player (placeholder) to the Spotify API to show what he's listening to now.
-4. **Real product screenshots** in Work instead of the placeholder paintings, especially **Worn**.
+## Top next item — mobile bug in the Worn swipe row (Lance, 2026-10-22, real phone)
+> On mobile the photos move up and down when you first tap them; only after a few seconds do they stay put.
+
+Not reproduced or verified. Both suspects are in `Screens()` in `src/components/Work.tsx`:
+1. **Late entrance animation.** `motion.figure` uses `initial {y:96, opacity:0, scale:.96}` → `whileInView`, with `viewport {once, amount:.2}` and a spring (stiffness 110, damping 20, delay `i*0.14`). In the horizontal swipe row, figures 3–6 start off-screen, so each one rises and settles as it's swiped in, which reads as "moving up and down". Possible fix: skip the entrance at ≤900px (for example `initial={false}` when `matchMedia('(max-width: 900px)')` matches), or rise once for the whole row.
+2. **Hover on touch.** `whileHover {y:-10}` can fire on a tap on iOS (sticky hover), and the figure springs back later. Possible fix: gate `whileHover` behind `(hover: hover) and (pointer: fine)`, as the CSS shadow already is.
+
+Drift is already off on phones: the scroll driver sets `transform: ''` at ≤900px. Verify on a real phone. The browser pane's emulated viewport doesn't reproduce touch hover.
 
 ## Where the product is
 | Area | State |
 |---|---|
-| Content | Real. Plates: I Pool Safety Solutions (résumé-level, no link), II Airtable Clone (live demo + code), III Worn ("In progress", repo private). Two real posts. Contact links real. Résumé PDF with phone redacted. (PR #3) |
-| Hero | Zhangjiajie painting (AI-generated from Lance's photo) + 2x export from his 4K upscale. Dissolves into cloud cream `#F1E7D5` (`--hero-exit`). Snowfall commented out with TODO (needs a mist treatment); flock active. (PR #4) |
-| Hosting | S3 (private, OAC) + CloudFront `E1ZCFALE8XHKH7` + ACM + Route 53 zone `Z08238469JD0YFW9R421`. URL function: www→apex, `/x`→`/x/`, dir index. Blog CNAME (hashnode) + Google TXT carried over. (PRs #5, #6) |
-| Visitor counter | HTTP API `https://jjplj3vij6.execute-api.us-east-1.amazonaws.com/visits` → Lambda (py3.12) → DynamoDB `lance-portfolio-VisitsTable-O9ZVHTEJH9U4`, seeded 1330. Shown on Back Cover. |
-| Deploy | OIDC role `lance-portfolio-DeployRole-Y046qF6SYJUz`, trust = immutable sub `repo:lanceriver@138498184/lance-portfolio@1372895004:ref:refs/heads/main`; can only write the site bucket + invalidate the distribution. Repo variables hold role ARN, bucket, distribution id, API URL. |
+| Worn (Plate III) | PR #12 merged (`fb5ba9c`). On desktop, "Worn", the tagline, the blurb and "In progress" stack in the left column, and the bullets start level in the right; both columns end level. Six figures in two staggered rows of three: The wardrobe, Worn with, Built for tonight, One piece, The numbers, Shared. Depth drift `DRIFT = [160, 40, 100]` cycles per column, plus a stronger entrance and a hover lift. Phones get one swipe row with no drift. |
+| Worn screens | Figs 1, 3 and 5 are from Lance's phone (PR #8). Figs 2, 4 and 6 are simulator captures of a **fictional seeded diary**: AI-generated men's outfit photos around Sydney plus tinted garment templates. They're cropped below the status bar (`cwebp -crop 0 162 1206 2435`) and exported at 480w and 960w to `public/worn/`. |
+| Old AWS site | **Retired 2026-10-22**, recorded in `infra/README.md` (`f9e9524`). Deleted: 6 stacks, 20 Lambdas, 6 HTTP APIs, roles `GitHubAction-AssumeRoleWithAction` (it had AdministratorAccess and trusted `lanceriver/*`) and `LambdaDynamoAPI`, 18 log groups, bucket `lanceriver.com` (5,679 versions), table `lancerivervisitor_counter`, the expired certificate, zone `Z045884510L49TOC5SLX0`, and distribution `EAKMWW6S5Z3KD`. Backup: `~/Documents/aws-old-site-backup-2026-10-22/` (bucket files, table row, old zone records). Kept: `lance-portfolio`, `exoplanets-backend`, `aws-sam-cli-managed-default`. Checked afterwards: apex 200, www 301, blog CNAME, counter. |
+| Hosting/deploy | Unchanged. S3 + CloudFront `E1ZCFALE8XHKH7` + zone `Z08238469JD0YFW9R421`, and the OIDC deploy role. Every push to `main` deploys, including docs-only pushes, which redeploy unchanged content. |
+| Visitor counter | Counted 1374 after a test POST of mine on 2026-10-22, which added 1. |
 
 ## Key findings (the why)
-- **Mobile overflow root cause** (critique 2026-10-21, `.impeccable/critique/2026-10-21T10-06-58Z__src-app-tsx.md`): `overflow-x: clip` is on `body` only (`src/styles/base.css:16`), so the fixed nav sizes to the overflowing layout viewport (scrollWidth 502 at 375px) and Contact falls off-screen. Offenders then: Field Notes `.obj--type` / `.specimen`, `.scene__num--ii`. The Fieldguide rail has since been removed. Clamp on `html` is the floor, but Lance wants a real mobile composition: Field Notes desk is a ~5,200px single column on phones and the page is ~14k px.
-- **Turntable placeholder:** `src/components/FieldNotes.tsx` ~line 353, `NOW_PLAYING` const shaped like Spotify `currently-playing`, falls back to last track when nothing plays (DECISIONS D48). Record spins only while playing.
-- **Spotify needs a server side:** the client secret + refresh token can't ship to the browser. Plan: Lambda `GET /now-playing` on the existing `VisitsApi` (CORS already locked to the site), short cache (~30s), scopes `user-read-currently-playing` + `user-read-recently-played`, secrets in SSM SecureString or Secrets Manager. **Secrets = Lance's sign-off on approach before implementing** (CLAUDE.md). One-time OAuth to get the refresh token must be done by Lance in his browser.
-- **Screenshots:** Worn lives in private repo `lanceriver/fits-app-workspace` (no public link, plate says "In progress"). Airtable clone demo sits behind Google sign-in (Lance must be the one signed in). Pool Safety: no screenshots, ever (employer system; résumé-level only).
-- **Critique 2026-10-21:** 22/36. P0 (demo content) fixed. Open P1s: Back Cover contact text illegible over the painting; nav has no ground; imagery reuse. Background research: hiring managers skim ~60s for role, stack, one project, code.
-- GitHub Actions on the `lanceriver` account failed on billing while the repo was private; making it public fixed it. Keep it public or fix billing before going private.
-- The auto-mode permission classifier blocks DNS/cert/CloudFront edits and making repos public. Those steps need Lance to run the command.
+- **Carousel declined (for now).** Lance asked about an endless auto-scrolling strip. I advised against it: with few screens the loop repeats visibly, it fights the drift, and it isn't accessible without a pause control. Revisit if there are many more screens.
+- **Share card over the "diary started" grid.** Lance's call. The grid duplicated the lookbook photos; the share card shows a finished output (title, occasion, note, and pieces with prices). It can't show weather, because seeded fits have none: the app only records weather at capture.
+- **Seeding the Worn simulator.** It uses Worn's DEBUG seeder: put `Documents/SeedPhotos/*.jpg` and `Documents/SeedCutouts/<stem>_<top|bottom|shoes>.png` in the app's data container, then launch with `-WardrobeSeedDiary YES -WardrobeSeedBuilder YES`. The spec, imagegen prompts and processing script are in `docs/worn-screens/`. Never edit the simulator's SwiftData store with sqlite; the classifier blocks it.
+- **Old site's last activity.** The admin role was last used 2026-04-15, the same day as the old bucket's last upload, so it was the old site's own deploy and not another project.
 
 ## Decisions pending with Lance
-1. **Retire the old site** (list in `infra/README.md`): bucket `lanceriver.com`, distribution `EAKMWW6S5Z3KD` (aliases already removed), role `GitHubAction-AssumeRoleWithAction`, table `lancerivervisitor_counter`, stacks `v1 v1point1 v1point2 testingWebsiteStack hello helloooo`, ~20 py3.9 Lambdas, 7 old APIs, expired cert, orphaned zone `Z045884510L49TOC5SLX0` ($0.50/mo). Recommend: yes, now that cutover is verified. Leave `exoplanets-backend`, `cobber-driver-onboarding-dev` alone (other projects).
-2. **Spotify secret storage:** SSM SecureString (free, recommended) vs Secrets Manager ($0.40/mo, rotation).
-3. **Imagery direction:** Lance chose Zhangjiajie for the hero; the remaining plates (coastal road, lake terrace, hill path, alpine village) are generic AI paintings. Recommendation from the critique: regenerate plates from his own trips (prompt template is the one used for the hero, in this session's transcript; style ref `assets-source/alpine-village.png`). Ask before generating.
+1. **Spotify secret storage:** SSM SecureString (free, recommended) or Secrets Manager ($0.40/mo, rotation). Then Lance creates the Spotify app and does the one-time sign-in.
+2. **Imagery direction:** the remaining plates (coastal road, lake terrace, hill path, alpine village) are generic AI paintings. The critique recommends regenerating them from his own trips. Ask before generating.
+3. **`assets-source/IMG_7501.JPG`:** what it's for. It's untracked, so don't commit it unless he says.
 
 ## Workflow / environment notes
-- Dev: `npm run dev` here (port 5173), or preview config `lance-portfolio` (port 5190) in `/Users/lance/Documents/Projects/resume_website/.claude/launch.json` (preview_start resolves configs from that session's cwd).
-- Verify: `npx tsc -b && npm run build && npm run verify`; Lambda tests `python3 -m venv /tmp/v && /tmp/v/bin/pip install -r infra/requirements-dev.txt && /tmp/v/bin/python -m pytest infra/tests`.
-- AWS: `aws sso login --profile admin` (Lance runs it), then `AWS_PROFILE=admin`. Infra changes: `cd infra && sam build && sam deploy --no-execute-changeset`, show the change set, execute after OK. Profile `pss` is work, never use it.
-- GitHub: `gh` active account is `digitalcommandeur` (work). For this repo prefix commands with `GH_TOKEN=$(gh auth token --user lanceriver)` instead of switching.
-- Codex: `codex exec -s danger-full-access -C <worktree> "$(cat spec.md)" </dev/null`. **Redirect stdin from /dev/null**, or it hangs on "Reading additional input from stdin". It hit its usage limit once on 2026-10-21. Hide AWS creds for Codex: `AWS_CONFIG_FILE=/dev/null AWS_SHARED_CREDENTIALS_FILE=/dev/null`.
-- Browser pane: emulated viewports don't run the hero entrance/IntersectionObserver reliably; verify the hero name on a real phone. `?settled=1` shows settled composition.
-- Hero image: edit `assets-source/zhangjiajie-pillars*.png`, re-export with `cwebp`, `--hero-exit` is sampled from the bottom-edge cloud (x 0–65%).
+- Dev: `npm run dev` (5173). To preview another worktree, temporarily add a `.claude/launch.json` entry `npm --prefix ../<worktree> run dev -- --port 5191 --strictPort`, then revert it.
+- Verify: `npx tsc -b && npm run build && npm run verify`.
+- The browser pane often ignores the first `scrollTo` after a load because the smooth-scroll library is still starting. Scroll twice, or wait about 3 s.
+- AWS: `aws sso login --profile admin` must be approved in Lance's browser. A background run times out if he doesn't click Allow, so ask him to run it. Then `AWS_PROFILE=admin`. S3 `delete-objects` takes at most 1,000 keys per call.
+- GitHub: use `GH_TOKEN=$(gh auth token --user lanceriver)` for this repo; the active `gh` account is the work one. `git push` over SSH works as is.
+- Codex: `codex exec --skip-git-repo-check -s workspace-write -C <dir> "$(cat spec)" </dev/null`. `--dangerously-bypass-approvals-and-sandbox` was blocked by the classifier. `--skip-git-repo-check` is needed outside a git repo.
+- **Simulator `worn-portfolio`** (`22D896FD-B2AD-4C2A-90B5-9A5F14C556C7`, iPhone 17 Pro, iOS 26.5): Worn built from fits-app-workspace `origin/main` `fe24116`, seeded with 8 fictional fits, location set to Sydney, and the fit "first warm morning" filled in for the share card. Tap coordinates are device points (402×874).
+  - **The control tool's screenshots lag one action behind.** Capture with `xcrun simctl io <udid> screenshot` instead.
+  - Taps sometimes drop during sheet animations, so wait about 1.5 s between steps.
+  - To reset: `simctl uninstall` / `install`, then `simctl privacy <udid> grant location dev.lanceriver.fits-app-workspace`, re-copy the seed files and relaunch with the seeder args.
+- Leave the other simulators alone. `worn-trip` (759C…) and the iPhone 17e (A57A…, the suite simulator) belong to Worn sessions.
 
 ## How we work
-- Feature branch + PR for code; docs-only may go to main. Worktree per branch; remove worktree + branches when merged.
-- Opus designs/reviews; implementation to Codex (preferred) or Sonnet with self-contained specs; mechanical git/PR jobs to Haiku. **Trivial swaps (asset + a few lines) done inline** (memory, 2026-10-21).
-- Auth/secrets/payments/access control: Lance signs off the approach first. Outward actions (deploys, deletes, public changes) confirmed per action.
-- Lance's taste: no generic dev-portfolio look; opinionated, referenced design. Don't add disclosure copy he didn't ask for (he rejected "AI-generated" in the colophon).
+- Feature branch + PR for code; docs-only changes may go straight to main. Worktree per branch; remove the worktree and branch once merged.
+- Opus designs and reviews; implementation goes to Codex or Sonnet. Trivial asset or few-line swaps are done inline. Simulator work stays with Claude.
+- Lance signs off the approach for auth, secrets, payments or access control first. Confirm outward actions (deploys, deletes) per action.
+- Taste: no generic dev-portfolio look; don't add disclosure copy he didn't ask for.
 
 ## Ephemeral artifacts
-- Session scratchpad `/private/tmp/claude-501/-Users-lance-Documents-Projects-resume-website/7363c24f-.../scratchpad/`: specs (`spec-*.md`), Codex logs, crops. All landed work is in git; the specs are not needed again.
-- `~/Downloads/zhangjiajie_hero_4k_lossless.png` — already copied into `assets-source/zhangjiajie-pillars-4k.png`.
-- Travel photo originals: `assets-source/travel/*.JPG` (gitignored by design; Photos library is the archive). Ingest new ones with `python3 scripts/ingest-photo.py` (strips GPS).
+Session scratchpad: `/private/tmp/claude-501/-Users-lance-Documents-Projects-lance-portfolio-claude/cbd5014b-c388-4334-ab3a-c1c59ca31ba7/scratchpad/`
+- `worn-seed/`: the 8 AI fit photos (`SeedPhotos/`), 24 cutouts (`SeedCutouts/`), the contact sheets, and `codex.log`. These are images of a fictional person, so they were **not** copied into the repo. The spec, prompts and script are preserved in `docs/worn-screens/` and can regenerate them.
+- `shots/`: full-resolution simulator captures (01–07); the chosen ones are already in `public/worn/`.
+- `dd-worn/`: Worn DerivedData (the simulator `.app`). Safe to delete; needed only to reinstall without rebuilding.
+- Durable: `~/Documents/aws-old-site-backup-2026-10-22/`.
 
 ## Suggested next session
-1. Open the session in **this** directory so the hook injects this file.
-2. Mobile layout: measure every section at 375/390/430px for `scrollWidth > innerWidth`, clamp overflow at the root, then design the phone composition section by section (Work scenes, Field Notes desk, Back Cover contact on a clean ground). Opus designs; spec to Codex; verify on a real phone.
-3. Ask Lance which photos and interests to add; plan the personal sections with him before building.
-4. Spotify: get Lance's sign-off on secret storage, have him create the Spotify app + do the one-time auth, then Lambda `GET /now-playing` + wire `Turntable`.
-5. Screenshots: Worn from the simulator (Claude drives it), Airtable clone with Lance signed in; swap them into the plates in a print treatment that fits the plate-book.
-6. Old-site retirement once Lance OKs decision 1.
+1. Reproduce the mobile Worn bug on Lance's phone, or ask him which one it looks like. Fix it in a branch (likely suspect 1, maybe both), verify at 390px plus a phone check, then PR.
+2. Ask Lance about `IMG_7501.JPG` and which personal photos and interests to add; plan those sections with him.
+3. Spotify: his sign-off on secret storage, then the Spotify app and one-time sign-in, then a Lambda `GET /now-playing` wired to `Turntable` (`src/components/FieldNotes.tsx`, around line 353).
+4. Airtable clone screenshot (Lance signed in) for Plate II, if he still wants it.

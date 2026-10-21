@@ -1,0 +1,22 @@
+Built-in imagegen prompt set
+
+Sheet A (new generation):
+Use case: photorealistic-natural.
+Generate Sheet A, ONE clean 2×2 contact sheet: four exactly equal portrait panels in row-major order, each a separate complete photograph. Overall canvas portrait 2:3 aspect ratio, ideally 2048×3072; each quadrant is 1024×1536. Strict straight divisions at EXACTLY 50% width and 50% height. NO gutters, borders, graphic frames, captions, logos, branding, watermarks or visible text anywhere (including shops).
+The SAME entirely fictional man appears in ALL four panels: late twenties, short dark brown hair, slim build, oval face, brown eyes, straight nose, light olive skin, clean-shaven. Consistent facial identity and body. Candid men's outfit-diary photography, natural 35mm film texture, warm desaturated neutral colours, realistic anatomy, authentic Sydney locations. Head-to-shoes full-body framing in EVERY quadrant, both shoes and whole head visible with safe margin, feet not cut off. Keep face clearly visible (phone must not hide face). One person per panel.
+TOP LEFT fit-01: plain white short-sleeve tee, charcoal tailored full-length trousers, clean white leather court sneakers. Full-length mirror selfie at a Sydney apartment, warm morning light, plain unbranded phone held to side of face. No extra layers.
+TOP RIGHT fit-02: sage-green SHORT-sleeve camp-collar shirt with open notched camp collar, BLACK straight jeans, BLACK leather DERBY lace-up shoes. Sydney cafe exterior with no lettering.
+BOTTOM LEFT fit-03: NAVY crew-neck knit sweater with no collar or zip, INDIGO jeans, BROWN suede CHELSEA ankle boots with elastic side panels and no laces. Sydney terrace-house street.
+BOTTOM RIGHT fit-04: CREAM long-sleeve button shirt, OLIVE cargo trousers with visible thigh cargo pockets, WHITE low sneakers. Sydney park path.
+Respect exactly every garment, cut, colour, footwear type and panel order. Real garments have fabric texture and seams, no decorative text. All full outfits readable.
+
+Sheet B (Sheet A as identity/style reference):
+Use case: photorealistic-natural, identity-preserve reference.
+REFERENCE: the supplied contact sheet is an identity/style reference ONLY. Generate a NEW Sheet B of the EXACT SAME fictional dark-haired young adult man with the SAME face, slim body, skin tone and hairstyle in four NEW outfits below.
+ONE clean 2×2 contact sheet of four EXACTLY equal portrait panels, seamless grid no gutters/borders/frames. Canvas portrait 2:3, ideally 2048×3072. The straight horizontal seam MUST be at EXACTLY 50% of canvas HEIGHT, the straight vertical seam MUST be at EXACTLY 50% of canvas WIDTH. Each quadrant is its own full photograph. No white spaces. No captions, letters, numbers, brands, logos, watermarks or visible text anywhere.
+Candid men's outfit-diary photography, natural 35mm texture, warm desaturated neutral colours, realistic anatomy. Authentic Sydney. Full head-to-shoes outfit visible in EVERY quadrant with enough margin below both feet and above the head. ONE person per panel, consistent identity across all panels. No extra layers, hats or bags.
+TOP LEFT fit-05: HEATHER-GREY crewneck sweatshirt, BLACK joggers, GREY running shoes with no logos. Early-morning Sydney street.
+TOP RIGHT fit-06: BLACK short-sleeved KNIT POLO with collar and short button placket, STONE-coloured full-length trousers, BLACK leather LOAFERS (slip-ons, no laces). Evening at restaurant doorway, warm lighting but garment colours still visible; no signage.
+BOTTOM LEFT fit-07: BROWN QUARTER-ZIP knit sweater with clearly visible short zip and stand collar, INDIGO BAGGY JEANS with wide loose legs, BROWN leather DERBY lace-up shoes. Sydney gallery interior, art has no letters/text.
+BOTTOM RIGHT fit-08: LIGHT-BLUE SHORT-sleeve button shirt, CHARCOAL above-knee SHORTS, WHITE low sneakers. Sydney harbour walk in bright daylight.
+Match these garment types, sleeve lengths, colours and footwear exactly. Preserve face identity from reference.
