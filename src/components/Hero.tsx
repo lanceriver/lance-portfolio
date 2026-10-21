@@ -58,7 +58,7 @@ export function Hero() {
   }, !reduced)
 
   return (
-    <section className="hero-wrap" ref={wrapRef} id="top" data-tone="light" data-rule="off">
+    <section className="hero-wrap" ref={wrapRef} id="top" data-tone="light" data-rule="off" data-tint-top="cobalt" data-tint-bottom="hero-exit">
       <div className="hero" ref={heroRef}>
         <div className="hero__plate" role="img" aria-label="A painted travel poster of Zhangjiajie: sandstone pillars crowned with pines under a cobalt sky, a red-eaved pavilion on a cliff to the right, and a sea of cloud below." />
 
