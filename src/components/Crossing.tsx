@@ -12,7 +12,7 @@ import './crossing.css'
  * now (see `PlateIndex`), and this section keeps only the two jobs nothing else
  * can do:
  *
- *  (a) the ground warms  snow-shadow → snow-drift → snow-lit  across the
+ *  (a) the ground warms  hero-exit → snow-lit  across the
  *      section. It is the slowest thing on the site: imperceptible while it
  *      happens, obvious in retrospect. DECISIONS D3.
  *  (b) it is the About anchor, and the one place the page says who this is.
@@ -22,12 +22,18 @@ import './crossing.css'
 export function Crossing() {
   const reduced = useReducedMotion()
   const ref = useRef<HTMLElement>(null)
+  const exitColor = useRef('')
+
+  useEffect(() => {
+    exitColor.current = getComputedStyle(document.documentElement)
+      .getPropertyValue('--hero-exit').trim()
+  }, [])
 
   /**
    * With motion reduced the scroll driver never runs, so the ground would stay
-   * at its cool starting value for the whole page. Resolve it to the settled
-   * warm value instead; the Crossing paints its own static shadow→lit gradient
-   * so the hero's join and the warm-up both survive without animation.
+   * at its hero-exit value for the whole page. Resolve it to the settled warm
+   * value instead; the Crossing paints its own static exit→lit gradient so the
+   * join and warm-up both survive without animation.
    */
   useEffect(() => {
     if (!reduced) return
@@ -38,16 +44,22 @@ export function Crossing() {
 
   useScrollDriver(() => {
     const el = ref.current
-    if (!el) return
+    if (!el || !exitColor.current) return
     // Spread the warm-up over the section PLUS a viewport. The section is
     // short now, and D3 wants this to be the slowest thing on the site —
     // imperceptible while it happens. Tying it to the section height alone
     // would make the colour shift visible.
     const span = el.offsetHeight + innerHeight
     const p = clamp((innerHeight * 0.62 - el.getBoundingClientRect().top) / span)
-    const ground =
-      p < 0.5
-        ? mixHex('#b3c0d8', '#d7dbe0', p / 0.5)
+    const hex = exitColor.current
+    const red = Number.parseInt(hex.slice(1, 3), 16)
+    const blue = Number.parseInt(hex.slice(5, 7), 16)
+    // A cool grey midpoint would make two warm grounds dip; the sampled cream
+    // exit therefore goes straight to snow-lit. Cool plates keep the old path.
+    const ground = red >= blue
+      ? mixHex(hex, '#f0eae0', p)
+      : p < 0.5
+        ? mixHex(hex, '#d7dbe0', p / 0.5)
         : mixHex('#d7dbe0', '#f0eae0', (p - 0.5) / 0.5)
     return () => document.documentElement.style.setProperty('--page-ground', ground)
   }, !reduced)

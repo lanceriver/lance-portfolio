@@ -9,11 +9,11 @@ import './hero.css'
  * The Hero. Composition preserved from the approved prototype.
  *
  * The painting is STATIC — no parallax, no scale, no drift, no layer splitting,
- * no filters. The only things that move are the snowfall, the flock, the copy on
+ * no filters. The only things that move are the flock, the copy on
  * exit, and the dissolve. DECISIONS D5.
  *
- * The dissolve resolves to #B3C0D8 — the painting's exact last pixel row — so no
- * hue boundary is crossed at the join. DECISIONS D3/D17.
+ * The dissolve resolves to the sampled cream cloud sea along the plate's bottom
+ * edge, so no hue boundary is crossed at the join. DECISIONS D3/D17.
  */
 /** One line of the name, split into per-letter spans for the hover lift. */
 function Line({ word }: { word: string }) {
@@ -60,7 +60,7 @@ export function Hero() {
   return (
     <section className="hero-wrap" ref={wrapRef} id="top" data-tone="light" data-rule="off">
       <div className="hero" ref={heroRef}>
-        <div className="hero__plate" role="img" aria-label="A painted alpine high street in winter: a cobalt sky, snow underfoot, shopfronts either side and a mountain range beyond." />
+        <div className="hero__plate" role="img" aria-label="A painted travel poster of Zhangjiajie: sandstone pillars crowned with pines under a cobalt sky, a red-eaved pavilion on a cliff to the right, and a sea of cloud below." />
 
         <Atmosphere reduced={reduced} />
 

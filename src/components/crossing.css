@@ -21,12 +21,11 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  /* the warm-up, rendered statically: the hero still joins on snow-shadow and
+  /* the warm-up, rendered statically: the hero still joins on hero-exit and
      the page still arrives at snow-lit — it just does not animate */
   .crossing {
     background: linear-gradient(to bottom,
-      var(--snow-shadow) 0%,
-      var(--snow-drift) 46%,
+      var(--hero-exit) 0%,
       var(--snow-lit) 100%);
   }
 }

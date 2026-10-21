@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs'
+
 /**
  * Verifies the scroll-linked maths for every section against synthetic geometry.
  *
@@ -41,19 +43,43 @@ console.log('\n— Hero dissolve (Hero.tsx) —')
 
 console.log('\n— Crossing ground warm-up (Crossing.tsx) —')
 {
+  const tokenCss = readFileSync(new URL('../src/styles/tokens.css', import.meta.url), 'utf8')
+  const token = (name) => {
+    const match = tokenCss.match(new RegExp(`--${name}:\\s*(#[0-9a-f]{6})`, 'i'))
+    if (!match) throw new Error(`Missing --${name} colour token`)
+    return match[1]
+  }
+  const rgb = (hex) => [1, 3, 5].map((i) => Number.parseInt(hex.slice(i, i + 2), 16))
+  const hex = (channels) => `#${channels.map((c) => Math.round(c).toString(16).padStart(2, '0')).join('')}`
+  const mix = (a, b, t) => rgb(a).map((channel, i) => lerp(channel, rgb(b)[i], t))
+  const exit = token('hero-exit')
+  const drift = token('snow-drift')
+  const lit = token('snow-lit')
+  const [red, , blue] = rgb(exit)
+  const warmExit = red >= blue
   const ground = (y) => {
     // span = section height + one viewport (see Crossing.tsx)
     const p = clamp((VH * 0.62 - rectTop(L.crossing, y)) / (L.crossing.h + VH))
-    return p < 0.5 ? { leg: 'shadow→drift', t: p / 0.5 } : { leg: 'drift→lit', t: (p - 0.5) / 0.5 }
+    const colour = warmExit
+      ? mix(exit, lit, p)
+      : p < 0.5
+        ? mix(exit, drift, p / 0.5)
+        : mix(drift, lit, (p - 0.5) / 0.5)
+    return { p, colour }
   }
   const g1 = ground(L.crossing.top - VH)          // section just entering
-  eq('cool at first contact', g1.leg === 'shadow→drift' ? g1.t : 1, 0)
+  eq('warm exit selects direct exit→lit path', warmExit ? 1 : 0, 1)
+  eq('holds exit colour at first contact', g1.p === 0 && hex(g1.colour) === exit ? 1 : 0, 1)
+  const yMid = L.crossing.top + (L.crossing.h + VH) * 0.5 - VH * 0.62
+  const gMid = ground(yMid)
+  eq('midpoint uses direct exit→lit colour, without grey dip',
+    Math.abs(gMid.p - 0.5) < 1e-9 && hex(gMid.colour) === hex(mix(exit, lit, 0.5)) && hex(gMid.colour) !== hex(mix(exit, drift, 0.5)) ? 1 : 0, 1)
   const g2 = ground(L.crossing.top + L.crossing.h + VH) // a viewport past it
-  eq('fully warm a viewport past the section', g2.leg === 'drift→lit' ? g2.t : 0, 1)
+  eq('holds snow-lit a viewport past the section', g2.p === 1 && hex(g2.colour) === lit ? 1 : 0, 1)
   const g3 = ground(L.work.top + 2000)             // deep inside Work
-  eq('stays warm deep into Work', g3.leg === 'drift→lit' ? g3.t : 0, 1)
+  eq('stays snow-lit deep into Work', g3.p === 1 && hex(g3.colour) === lit ? 1 : 0, 1)
   const g4 = ground(L.notes.top + 800)             // inside Field Notes
-  eq('stays warm in Field Notes', g4.leg === 'drift→lit' ? g4.t : 0, 1)
+  eq('stays snow-lit in Field Notes', g4.p === 1 && hex(g4.colour) === lit ? 1 : 0, 1)
 }
 
 console.log('\n— Work II aperture (Work.tsx) —')
