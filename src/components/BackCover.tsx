@@ -68,11 +68,11 @@ export function BackCover() {
             <p className="cover__lede">
               For work, projects, or a good conversation about either.
             </p>
-            <a className="cover__mail" href="mailto:hello@lancerivera.dev">hello@lancerivera.dev</a>
+            <a className="cover__mail" href="mailto:lanceriver@gmail.com">lanceriver@gmail.com</a>
             <ul className="cover__links">
-              <li><a href="#contact">GitHub</a></li>
-              <li><a href="#contact">LinkedIn</a></li>
-              <li><a href="#contact">Résumé</a></li>
+              <li><a href="https://github.com/lanceriver" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+              <li><a href="https://www.linkedin.com/in/lance-rivera" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
+              <li><a href="/lance-rivera-resume.pdf" download="Lance-Rivera-Resume.pdf">Résumé</a></li>
             </ul>
           </div>
         </div>

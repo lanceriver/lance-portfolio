@@ -78,7 +78,7 @@ export function Hero() {
                 cannot shift the :nth-child indices the line animations use. */}
             <span className="vh">Lance Rivera</span>
           </h1>
-          <p className="hero__lede">I build thoughtful digital experiences.</p>
+          <p className="hero__lede">I build production software.</p>
           <div className="hero__cue">Scroll to explore ↓</div>
         </div>
       </div>

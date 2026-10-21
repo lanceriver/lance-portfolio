@@ -98,7 +98,7 @@ export function PlateIndex({ open, onClose }: { open: boolean; onClose: () => vo
             </ol>
 
             <p className="plateindex__foot caption">
-              Four plates. Pick one, or keep scrolling — they arrive in order.
+              Three plates. Pick one, or keep scrolling.
             </p>
           </div>
         </motion.div>

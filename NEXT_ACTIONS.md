@@ -1,12 +1,12 @@
 # NEXT_ACTIONS.md
 
-> Do not inspect, read, copy from, or use any resume-frontend or previous resume-website project. The approved prototype, current brief, direction files, and Claude's new project folder are the only local design authorities.
+> Previous resume-website projects are not design authorities. The 2026-10-21 real-content task permits reading only the two specified writing posts for their prose.
 
 **On resume ("Read the project state and continue"):** read `PROJECT_STATE.md` → `DECISIONS.md` → `MOTION_DIRECTION.md` → `DESIGN_DIRECTION.md`, then start at **THE EXACT NEXT ACTION** below. Do not re-plan or redo anything `PROJECT_STATE.md` marks complete unless it is recorded there as failed.
 
-**Last checkpoint:** 2026-09-17 — three travel photographs now on the Field Notes desk (D51); the desk is due its density pass. Previously: 2026-09-16 — review rounds 1–8 applied (D39–D50); the ascent confirmed smooth by Lance in a real browser. Work is on local branch `turntable-prototype`, **15 commits ahead of `main` and pushed nowhere — there is no git remote.** Built clean, `npm run verify` 35/35.
+**Last checkpoint:** 2026-10-21 real-content. Branch `real-content`, based on `travel-photos`. Three real projects, two real writing posts, contact links, and the résumé without a phone number are in place. Remote: `lanceriver/lance-portfolio`. PR #1 is merged and PR #2 (`travel-photos`) is open. Local commits are not pushed.
 
-**To run:** `npm run dev` in `/Users/lance/Documents/Projects/lance-portfolio-claude` → `http://localhost:5173`
+**To run:** from `/Users/lance/Documents/Projects/lance-portfolio-real-content`, run `npm run build` then `npm run preview -- --host 127.0.0.1 --port 4173` → `http://127.0.0.1:4173`.
 **To re-verify the scroll maths after touching any driver:** `npm run verify`
 
 ---
@@ -22,13 +22,13 @@
 **Do:** open `http://localhost:5173` in a normal browser and scroll the whole page, slowly, twice.
 
 **Judge, in this order:**
-1. **Rhythm** — MOTION_DIRECTION §4. spectacle → rest → spectacle → precision → travel → rest → tactile → controlled → cinematic. Do any two adjacent sections compete? The reader should exhale twice: after the Crossing, and at Work IV.
+1. **Rhythm:** MOTION_DIRECTION §4. spectacle → rest → spectacle → precision → rest → tactile → controlled → cinematic. Do any two adjacent sections compete? The reader should exhale twice: after the Crossing, and at Work III.
 2. **Both joins in motion** — the hero dissolve and the back-cover feather were verified as still frames. Confirm they hold while scrolling, at several speeds, and on the way back up.
 3. **Nav tone** across every ground: Hero (cream) → Crossing/Work/Notes (ink) → Writing (cream) → Back Cover (cream). The reference prototype misfired here. The probe now samples at the ink's own height, not the nav's top edge (D41) — check every join, not just the ridge.
-3z. **The post page** (D44). Read one end to end at full size. Is the measure right, is the pull-quote hang doing anything, does the plate want to be larger or smaller? Then: the stack plate flying into the post's hero via `layoutId` was cut because a cross-route shared element could not be verified here — try it, it is the one piece of continuity the route costs you. Article bodies are demo copy and want replacing.
+3z. **The post page** (D44). Read one end to end at full size. Is the measure right, is the pull-quote hang doing anything, and does the plate want to be larger or smaller? The two real posts are now in place.
 3a. **The ascent** (Field Notes → Writing, D41/D42/D50) — **CONFIRMED by Lance, 16 Sep 2026: "looks good its smooth now".** Held with `position: sticky` and a negative `top` written from JS on mount and resize; nothing scroll-coupled, so the compositor does the holding. The desk holds still while the range climbs. Closed.
-4. **Ground continuity** — the knocked-out panels (`.scene__caption-block`, `.rail__head`) paint `var(--page-ground)`; any seam against the body means the value stopped updating.
-5. **Field Notes entrances** — six objects, six trajectories, irregular timing. If they read as one staggered group, the irregularity is not reading and the delays need re-authoring.
+4. **Ground continuity:** the knocked-out panels (`.scene__caption-block`) paint `var(--page-ground)`; any seam against the body means the value stopped updating.
+5. **Field Notes entrances:** ten objects with distinct trajectories and hand-authored timing. If they read as one staggered group, the irregularity is not reading and the delays need re-authoring.
 6. **The Writing stack** — is it fun enough that you cycle the list on purpose? That is the acceptance test, not the spec.
 7. **Section individuality** — cover the content and identify each section by its motion alone.
 

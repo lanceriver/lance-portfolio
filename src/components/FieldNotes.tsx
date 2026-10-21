@@ -8,8 +8,8 @@ import './fieldnotes.css'
 /**
  * Field Notes — an art-directed editorial surface.
  *
- * Six objects, six genuinely different entrances, with timing authored by hand
- * rather than by index. Objects overlap intentionally and pass behind the
+ * Desk objects use distinct entrances, with timing authored by hand rather
+ * than by index. Objects overlap intentionally and pass behind the
  * section title. MOTION_DIRECTION §3.4.
  *
  * HARD RULE: no atmospheric haze over this section. No fog, no washed overlay,
@@ -20,7 +20,7 @@ type Enter = { x?: number; y?: number; rotate?: number; scale?: number }
 
 type Obj = {
   id: string
-  kind: 'print' | 'type' | 'quote' | 'palette' | 'hand' | 'detail' | 'colophon' | 'band' | 'glyph' | 'slip' | 'turntable'
+  kind: 'print' | 'type' | 'palette' | 'detail' | 'colophon' | 'band' | 'glyph' | 'slip' | 'turntable'
   className: string
   depth: number            // cursor-drift multiplier
   rest: number             // resting rotation, degrees
@@ -58,17 +58,6 @@ const OBJECTS: Obj[] = [
     delay: 0.06,          // arrives almost with the first — a cluster
     stiffness: 160,
     damping: 19,
-  },
-  {
-    id: 'quote',
-    kind: 'quote',
-    className: 'obj obj--quote',
-    depth: 0.6,
-    rest: -0.8,
-    from: { x: -70, y: 120, rotate: 3.4, scale: 0.95 },
-    delay: 0.34,          // then a gap
-    stiffness: 110,
-    damping: 20,
   },
   {
     id: 'night',
@@ -166,17 +155,6 @@ const OBJECTS: Obj[] = [
     delay: 0.92,          // the last thing to land
     stiffness: 115,
     damping: 19,
-  },
-  {
-    id: 'hand',
-    kind: 'hand',
-    className: 'obj obj--hand',
-    depth: 1.3,
-    rest: 1.9,
-    from: { x: -40, y: 96, rotate: 6, scale: 0.92 },
-    delay: 0.78,          // the late arrival
-    stiffness: 120,
-    damping: 18,
   },
 ]
 
@@ -450,16 +428,6 @@ function ObjectBody({ o, onOpen }: { o: Obj; onOpen: () => void }) {
     )
   }
 
-  if (o.kind === 'quote') {
-    return (
-      <blockquote className="quote">
-        <span className="quote__wipe" aria-hidden="true" />
-        <p>“Also, linked lists are cool.”</p>
-        <cite>From a demo journal note · December 2023</cite>
-      </blockquote>
-    )
-  }
-
   if (o.kind === 'detail') {
     return (
       <figure className="plate-sheet obj__print obj__detail">
@@ -504,7 +472,7 @@ function ObjectBody({ o, onOpen }: { o: Obj; onOpen: () => void }) {
       <div className="colophon">
         <p className="colophon__label eyebrow">Colophon</p>
         <p className="colophon__text">
-          Set in <em>Georgia</em>. The plates are painted; the photographs are mine. Every
+          Set in <em>Georgia</em>. The photographs are mine. Every
           colour on this site was lifted out of one of the paintings.
         </p>
       </div>
@@ -527,10 +495,5 @@ function ObjectBody({ o, onOpen }: { o: Obj; onOpen: () => void }) {
     )
   }
 
-  return (
-    <div className="hand">
-      <div className="hand__box">Something<br />made by hand</div>
-      <p className="caption">Demo placeholder — an original painting belongs here.</p>
-    </div>
-  )
+  return null
 }
