@@ -1,0 +1,78 @@
+name: Deploy site
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      SITE_URL: https://lanceriver.com
+      VITE_VISITS_API: ${{ vars.VISITS_API_URL }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - run: npm run verify
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install -r infra/requirements-dev.txt
+      - run: python -m pytest infra/tests
+      - uses: actions/upload-artifact@v4
+        with:
+          name: site-dist
+          path: dist/
+          if-no-files-found: error
+
+  deploy:
+    needs: test
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    env:
+      SITE_URL: https://lanceriver.com
+      VITE_VISITS_API: ${{ vars.VISITS_API_URL }}
+      BUCKET: ${{ vars.SITE_BUCKET }}
+      CF_DISTRIBUTION_ID: ${{ vars.CF_DISTRIBUTION_ID }}
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: site-dist
+          path: dist/
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: us-east-1
+      - name: Upload immutable assets
+        run: aws s3 sync dist/assets/ "s3://$BUCKET/assets/" --cache-control 'public,max-age=31536000,immutable'
+      - name: Upload other static files
+        run: aws s3 sync dist/ "s3://$BUCKET/" --exclude 'assets/*' --exclude '*.html' --cache-control 'public,max-age=86400'
+      - name: Upload HTML without caching
+        run: aws s3 sync dist/ "s3://$BUCKET/" --exclude '*' --include '*.html' --cache-control 'no-cache'
+      - name: Delete objects absent from dist
+        shell: bash
+        run: |
+          # Excluding every local dist key makes sync's --delete consider only remote keys absent from dist.
+          # AWS CLI excludes also hide matching remote keys from deletion, so do not use --exclude '*' here.
+          filters=()
+          while IFS= read -r -d '' file; do
+            key="${file#dist/}"
+            filters+=(--exclude "$key")
+          done < <(find dist -type f -print0)
+          aws s3 sync dist/ "s3://$BUCKET/" --delete "${filters[@]}"
+      - name: Invalidate CloudFront
+        run: aws cloudfront create-invalidation --distribution-id "$CF_DISTRIBUTION_ID" --paths '/*'

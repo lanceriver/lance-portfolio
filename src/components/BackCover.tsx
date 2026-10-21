@@ -1,4 +1,5 @@
-import { useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { getVisitCount } from '../lib/visits'
 import { useScrollDriver } from '../hooks/useScrollDriver'
 import { useReducedMotion } from '../hooks/useReducedMotion'
 import { clamp, lerp, range } from '../lib/math'
@@ -24,6 +25,15 @@ import './backcover.css'
  */
 export function BackCover() {
   const reduced = useReducedMotion()
+  const [visitCount, setVisitCount] = useState<number | null>(null)
+
+  useEffect(() => {
+    let active = true
+    void getVisitCount().then((count) => {
+      if (active) setVisitCount(count)
+    })
+    return () => { active = false }
+  }, [])
   const wrapRef = useRef<HTMLDivElement>(null)
   const sceneRef = useRef<HTMLDivElement>(null)
 
@@ -74,6 +84,7 @@ export function BackCover() {
               <li><a href="https://www.linkedin.com/in/lance-rivera" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
               <li><a href="/lance-rivera-resume.pdf" download="Lance-Rivera-Resume.pdf">Résumé</a></li>
             </ul>
+            <p className="caption cover__visits">{visitCount === null ? null : `Visitor No. ${visitCount.toLocaleString('en-AU')}`}</p>
           </div>
         </div>
       </div>

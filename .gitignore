@@ -4,3 +4,7 @@ dist
 tsconfig.tsbuildinfo
 assets-source/travel/*
 !assets-source/travel/README.md
+
+infra/.aws-sam/
+__pycache__/
+.pytest_cache/

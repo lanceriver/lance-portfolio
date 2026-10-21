@@ -136,3 +136,5 @@
     --copy-in: 1;
   }
 }
+
+.cover__visits { min-height: 1.35em; color: inherit; }
