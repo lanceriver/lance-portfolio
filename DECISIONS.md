@@ -902,3 +902,42 @@ the pixel, and that the document had not grown — every precondition, all green
 and not once did I ask whether the foot actually stayed where it was supposed
 to. Preconditions are not the behaviour. The one assertion worth making was the
 one the reader would notice.
+
+## D51 — The placeholder prints become real photographs
+
+Two of the desk's four prints were crops of the site's own paintings, standing in
+until Lance had travel photographs to put there: `hill-path` captioned "A
+different cover", and `coastal-road` captioned "Detail — the harbour". He said
+at the time that they would be replaced with photographs from his trips.
+
+Two arrived — Xi'an (17 May 2026) and Furong Ancient Town after dark (22 May
+2026), same trip as the Zhangjiajie print already on the desk. The Furong
+caption first shipped as the province, "Hunan", because guessing a town name
+under someone's own photograph is not a guess worth making; Lance named it. They take those
+two slots rather than being added beside them. The desk was already carrying
+twelve objects and a density re-tune was outstanding; fourteen would have made
+that worse, and the plate crops were the placeholders by Lance's own account.
+
+The `band` stays painted. It is the one print that ties the desk back to the
+hero's alpine street, and a desk of nothing but photographs loses the argument
+the colophon is making about the paintings.
+
+Slots renamed with the contents — `obj--path` → `obj--night`, `obj--detail` →
+`obj--army` — because a class called `path` pointing at a night townscape is the
+kind of drift nobody notices until it misleads someone. The `detail` crop was
+retuned from `22% 72%` (framing a harbour wall) to `38% 42%`, which holds the
+massed ranks and leaves a little pit wall for context.
+
+The colophon needed a word changed. "The plates are painted, not photographed"
+was true of a desk with one photograph on it and reads as a contradiction on a
+desk with three. It is now "The plates are painted; the photographs are mine."
+The colour claim is untouched and still exact: every token is sampled from the
+four paintings, and the photographs contribute none.
+
+**Known and accepted:** at rest the colophon covers the Xi'an caption almost
+entirely (182 of 192px). This is the pile behaving as designed — hovering the
+print lifts it and the caption is readable, which is the same bargain the
+Zhangjiajie print already makes with the quote card. The photograph itself is
+never covered, only its date. Two objects want the same 200×60 patch of desk and
+there is no free space to move either into; that is the density pass that has
+been outstanding since the twelfth object, not a defect of this change.
