@@ -9,9 +9,11 @@ Parameters:
   HostedZoneId:
     Type: String
     Default: Z08238469JD0YFW9R421
-  GitHubRepo:
+  GitHubSubjectPrefix:
     Type: String
-    Default: lanceriver/lance-portfolio
+    # GitHub's immutable subject claim for lanceriver/lance-portfolio (owner and
+    # repo IDs, not names), so a renamed or re-created repo cannot match.
+    Default: repo:lanceriver@138498184/lance-portfolio@1372895004
   GitHubOidcProviderArn:
     Type: String
     Default: arn:aws:iam::319611139788:oidc-provider/token.actions.githubusercontent.com
@@ -298,7 +300,7 @@ Resources:
             Condition:
               StringEquals:
                 token.actions.githubusercontent.com:aud: sts.amazonaws.com
-                token.actions.githubusercontent.com:sub: !Sub 'repo:${GitHubRepo}:ref:refs/heads/main'
+                token.actions.githubusercontent.com:sub: !Sub '${GitHubSubjectPrefix}:ref:refs/heads/main'
       Policies:
         - PolicyName: DeployPortfolioSite
           PolicyDocument:
