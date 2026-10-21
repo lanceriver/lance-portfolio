@@ -10,11 +10,12 @@ export type Plate = {
   tagline: string
   blurb: string
   discipline: string
-  src: string
-  srcSmall: string
-  alt: string
-  plateLabel: string
-  caption: string
+  /** The painted plate. Worn has none: its screens are the picture. */
+  src?: string
+  srcSmall?: string
+  alt?: string
+  plateLabel?: string
+  caption?: string
   points?: string[]
   href?: string
   repo?: string
@@ -65,12 +66,12 @@ export const projects: Plate[] = [
     tagline: 'your fit diary',
     discipline: 'Product + engineering',
     blurb: 'A personal outfit diary — for remembering what you wore, where you went, and how a fit actually felt. It keeps the record you would never keep by hand.',
+    points: [
+      'Garments are cut out of your own fit photos on the phone, with Vision instance masks and Core ML, so the wardrobe builds itself from what you actually wore.',
+      'A rule-based outfit builder suggests new combinations of your own clothes from the occasion, the live weather, colour pairing and what you wore recently. No AI stylist.',
+      'Cost-per-wear and worn-once stats come from the wear record, because every piece links back to the fits it appeared in.',
+    ],
     status: 'In progress',
-    src: '/plates/hill-path.webp',
-    srcSmall: '/plates/hill-path-1200.webp',
-    alt: 'A painted snowy village path, a walker in a red coat, a church spire and a frozen lake.',
-    plateLabel: 'Plate III',
-    caption: 'The path down to the village',
     screens: [
       {
         src: '/worn/wardrobe-480.webp',
