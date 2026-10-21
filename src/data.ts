@@ -251,3 +251,11 @@ export const navLinks = [
   { label: 'Writing', href: '#writing' },
   { label: 'Contact', href: '#contact' },
 ]
+
+export const contactLinks = [
+  { label: 'GitHub', href: 'https://github.com/lanceriver', external: true },
+  { label: 'LinkedIn', href: 'https://www.linkedin.com/in/lance-rivera', external: true },
+  { label: 'Résumé', href: '/lance-rivera-resume.pdf', download: 'Lance-Rivera-Resume.pdf' },
+]
+
+export const email = 'lanceriver@gmail.com'

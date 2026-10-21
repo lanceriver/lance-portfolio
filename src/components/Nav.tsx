@@ -4,17 +4,33 @@ import { useScrollDriver } from '../hooks/useScrollDriver'
 import './nav.css'
 
 type Tone = 'light' | 'dark'
+export type IndexMode = 'plates' | 'contents'
+
+/** Scrolled this far past the top before the nav may tuck away on a phone. */
+const TUCK_AFTER = 120
+/** Ignore scroll jitter smaller than this when deciding direction. */
+const TUCK_SLOP = 6
 
 /**
  * Minimal navigation on a hairline. Never a floating pill, never a container.
  * `tone` describes the ink, not the ground: 'light' = cream ink over a painting
  * or the slate section; 'dark' = ink over the snow page.
+ *
+ * On a phone five words do not fit beside `LR`, so the links give way to one:
+ * `Contents`, which opens the book's contents page — the List of Plates with
+ * the chapters and the back cover beneath it. A word rather than a hamburger:
+ * the site has no icons anywhere, and a labelled trigger is the more legible
+ * of the two. The nav also tucks away while the reader scrolls down and returns
+ * the moment they scroll up, so its ink never sits on top of the type it would
+ * otherwise collide with — and it does that without a scrim or a ground.
  */
-export function Nav({ onOpenIndex }: { onOpenIndex: () => void }) {
+export function Nav({ onOpenIndex }: { onOpenIndex: (mode: IndexMode) => void }) {
   const [tone, setTone] = useState<Tone>('light')
   // The hairline is an editorial rule on paper. Over a painting it is just a
   // line drawn across the artwork, so sections carrying a plate opt out.
   const [rule, setRule] = useState(false)
+  const [tucked, setTucked] = useState(false)
+  const lastY = useRef(0)
   const ref = useRef<HTMLElement>(null)
 
   useScrollDriver(() => {
@@ -24,18 +40,32 @@ export function Nav({ onOpenIndex }: { onOpenIndex: () => void }) {
     // section had already arrived behind the type, which put dark ink on a dark
     // ground at every join on the page. Worst at the ridge, where the slate
     // reaches the links first. DECISIONS D41.
-    const row = ref.current?.getBoundingClientRect()
-    const y = row ? row.top + row.height * 0.58 : 8
+    // Measured from the nav's resting place, not its live box: while tucked the
+    // box is above the viewport, and the tone must already be right when it
+    // slides back in.
+    const h = ref.current?.offsetHeight
+    const y = h ? h * 0.58 : 8
     const probe = (document.elementsFromPoint(innerWidth / 2, y) as HTMLElement[])
       .find((el) => el.dataset && el.dataset.tone)
     const next = (probe?.dataset.tone as Tone) ?? 'light'
     const nextRule = probe?.dataset.rule !== 'off'
     setTone((cur) => (cur === next ? cur : next))
     setRule((cur) => (cur === nextRule ? cur : nextRule))
+
+    // Direction, not position: down tucks, up returns. Only a phone acts on
+    // it (nav.css); the class is harmless everywhere else.
+    const delta = scrollY - lastY.current
+    if (Math.abs(delta) < TUCK_SLOP) return
+    lastY.current = scrollY
+    const nextTucked = delta > 0 && scrollY > TUCK_AFTER
+    setTucked((cur) => (cur === nextTucked ? cur : nextTucked))
   })
 
   return (
-    <nav className={`nav nav--${tone}${rule ? '' : ' nav--norule'}`} ref={ref}>
+    <nav
+      className={`nav nav--${tone}${rule ? '' : ' nav--norule'}${tucked ? ' nav--tucked' : ''}`}
+      ref={ref}
+    >
       <div className="nav__inner">
         <a className="nav__brand" href="#top" aria-label="Lance Rivera — back to top">LR</a>
         <ul className="nav__links">
@@ -44,13 +74,16 @@ export function Nav({ onOpenIndex }: { onOpenIndex: () => void }) {
               /* Work opens the List of Plates — the index is more use here than
                  a jump to a section heading. */
               <li key={l.label}>
-                <button onClick={onOpenIndex} aria-haspopup="dialog">{l.label}</button>
+                <button onClick={() => onOpenIndex('plates')} aria-haspopup="dialog">{l.label}</button>
               </li>
             ) : (
               <li key={l.label}><a href={l.href}>{l.label}</a></li>
             )
           )}
         </ul>
+        <button className="nav__contents" onClick={() => onOpenIndex('contents')} aria-haspopup="dialog">
+          Contents
+        </button>
       </div>
     </nav>
   )

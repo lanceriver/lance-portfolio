@@ -3,6 +3,7 @@ import { motion, useAnimationControls } from 'motion/react'
 import { articles } from '../data'
 import { postHref } from '../lib/router'
 import { Link } from './Link'
+import { clampTravel, isPhone } from '../lib/enter'
 import { useReducedMotion } from '../hooks/useReducedMotion'
 import { Ridge } from './Ridge'
 import './writing.css'
@@ -168,7 +169,14 @@ function StackSheet({
       landed.current = true
       return
     }
-    controls.set({ x: v.x, y: v.y, rotate: v.rotate, scale: 0.88, opacity: 0 })
+    const phone = isPhone()
+    controls.set({
+      x: phone ? clampTravel(v.x) : v.x,
+      y: phone ? clampTravel(v.y) : v.y,
+      rotate: v.rotate,
+      scale: 0.88,
+      opacity: 0,
+    })
     controls
       .start({
         x: 0,

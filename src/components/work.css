@@ -56,6 +56,12 @@
   transition: color .28s var(--ease-settle);
 }
 .scene__link:hover { color: var(--rust); }
+/* A 44px touch target without moving the word or its rule: the hit area
+   grows invisibly around it. */
+@media (max-width: 720px) {
+  .scene__link { position: relative; }
+  .scene__link::before { content: ""; position: absolute; inset: -10px -6px; }
+}
 
 /* ── I · ARRIVAL ──────────────────────────────────────────
    The plate dominates. The copy is a caption hung below-left, not a column. */

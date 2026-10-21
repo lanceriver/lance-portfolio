@@ -74,8 +74,37 @@
   .nav__links button:hover::after { transform: scaleX(1); }
 }
 
+/* The phone's single trigger. Hidden until there is no room for the row. */
+.nav__contents { display: none; }
+
 @media (max-width: 720px) {
-  .nav__links { gap: 14px; font-size: 12.5px; }
-  .nav__links li:nth-child(2),
-  .nav__links li:nth-child(3) { display: none; }
+  .nav { transition: color .3s var(--ease-settle), transform .42s var(--ease-settle); }
+  /* Tucked above the viewport while the reader scrolls down. Never while a
+     keyboard user is in it — they must be able to see where focus is. Not
+     `:focus-within`: closing the Contents page hands focus back to its
+     trigger, and a tap-focused button would then hold the nav down for good. */
+  .nav--tucked:not(:has(:focus-visible)) { transform: translateY(-100%); }
+
+  .nav__links { display: none; }
+  .nav__contents {
+    display: inline-flex;
+    align-items: center;
+    /* a 44px target around a 13.5px word, without moving the word */
+    min-height: 44px;
+    padding: 0 12px;
+    margin-right: -12px;
+    font-family: var(--sans);
+    font-size: 13.5px;
+    letter-spacing: .02em;
+  }
+  .nav__brand {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+@media (max-width: 720px) and (prefers-reduced-motion: reduce) {
+  .nav { transition: color .3s var(--ease-settle); }
 }

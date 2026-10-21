@@ -1,5 +1,5 @@
-import { useLayoutEffect, useRef, useState } from 'react'
-import { Nav } from './components/Nav'
+import { useCallback, useLayoutEffect, useRef, useState } from 'react'
+import { Nav, type IndexMode } from './components/Nav'
 import { PlateIndex } from './components/PlateIndex'
 import { Hero } from './components/Hero'
 import { Crossing } from './components/Crossing'
@@ -28,8 +28,9 @@ const wanted = only ? only.split(',').map((s) => s.trim()) : null
 const show = (name: string) => !wanted || wanted.includes(name)
 
 export function App() {
-  const [indexOpen, setIndexOpen] = useState(false)
+  const [index, setIndex] = useState<IndexMode | null>(null)
   const route = useRoute()
+  const closeIndex = useCallback(() => setIndex(null), [])
 
   /**
    * Scroll across the one route change this site has.
@@ -94,8 +95,8 @@ export function App() {
 
   return (
     <>
-      <Nav onOpenIndex={() => setIndexOpen(true)} />
-      <PlateIndex open={indexOpen} onClose={() => setIndexOpen(false)} />
+      <Nav onOpenIndex={setIndex} />
+      <PlateIndex open={index} onClose={closeIndex} />
       <main>
         {show('hero') && <Hero />}
         {show('crossing') && <Crossing />}
