@@ -49,13 +49,6 @@ curl -i -X OPTIONS '<VisitsApiUrl>' -H 'Origin: https://another-origin.example' 
 
 Expected: apex returns 200; `www` returns 301 to the apex; the slashless writing URL returns 301 to its trailing-slash form; the unknown path returns 404. The first preflight includes `Access-Control-Allow-Origin: https://lanceriver.com`. The second must omit `Access-Control-Allow-Origin` (the browser rejects it even if API Gateway responds 204).
 
-## Retire the old site
+## Old site (retired 2026-10-22)
 
-Delete only after cutover is verified:
-
-- S3 bucket `lanceriver.com`
-- CloudFront distribution `EAKMWW6S5Z3KD`
-- IAM role `GitHubAction-AssumeRoleWithAction`
-- DynamoDB table `lancerivervisitor_counter`
-- CloudFormation stacks `v1`, `v1point1`, `v1point2`, `testingWebsiteStack`, `hello`, and `helloooo`
-- Orphaned Route 53 hosted zone `Z045884510L49TOC5SLX0`
+Deleted after the cutover was verified: S3 bucket `lanceriver.com` (all versions), CloudFront distribution `EAKMWW6S5Z3KD`, IAM roles `GitHubAction-AssumeRoleWithAction` and `LambdaDynamoAPI`, DynamoDB table `lancerivervisitor_counter`, CloudFormation stacks `v1`, `v1point1`, `v1point2`, `testingWebsiteStack`, `hello` and `helloooo`, the standalone counter Lambdas and HTTP APIs, their log groups, the expired ACM certificate and the orphaned hosted zone `Z045884510L49TOC5SLX0`. A local backup of the bucket, the table and the old zone's records is in `~/Documents/aws-old-site-backup-2026-10-22/`.
