@@ -381,7 +381,7 @@ Content: a closing line, `hello@lancerivera.dev`, and three links (GitHub, Linke
 - Over Writing (slate): `--paper` again.
 - The `LR` is Fraunces italic. It is the only brandmark. No logo, no monogram badge, no avatar.
 - Active-section indication, if any, is a hairline under the word — not a pill, dot, or colour fill.
-- On a phone (≤720px) the row becomes one word, `Contents`, opening the List of Plates with the chapters beneath, and the nav tucks away while scrolling down. DECISIONS D53.
+- On a phone (≤720px) the row becomes a two-hairline menu mark, opening the List of Plates with the chapters beneath, and the nav tucks away while scrolling down. DECISIONS D53.
 
 ---
 

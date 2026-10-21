@@ -16,13 +16,14 @@ const TUCK_SLOP = 6
  * `tone` describes the ink, not the ground: 'light' = cream ink over a painting
  * or the slate section; 'dark' = ink over the snow page.
  *
- * On a phone five words do not fit beside `LR`, so the links give way to one:
- * `Contents`, which opens the book's contents page — the List of Plates with
- * the chapters and the back cover beneath it. A word rather than a hamburger:
- * the site has no icons anywhere, and a labelled trigger is the more legible
- * of the two. The nav also tucks away while the reader scrolls down and returns
- * the moment they scroll up, so its ink never sits on top of the type it would
- * otherwise collide with — and it does that without a scrim or a ground.
+ * On a phone five words do not fit beside `LR`, so the links give way to a
+ * menu mark that opens the book's contents page — the List of Plates with the
+ * chapters and the back cover beneath it. The mark is two hairlines, the same
+ * rule the eyebrows draw, the lower one shorter and hung right: a hamburger
+ * a reader recognises, drawn in the site's own line. The nav also tucks away
+ * while the reader scrolls down and returns the moment they scroll up, so its
+ * ink never sits on top of the type it would otherwise collide with — and it
+ * does that without a scrim or a ground.
  */
 export function Nav({ onOpenIndex }: { onOpenIndex: (mode: IndexMode) => void }) {
   const [tone, setTone] = useState<Tone>('light')
@@ -81,8 +82,8 @@ export function Nav({ onOpenIndex }: { onOpenIndex: (mode: IndexMode) => void })
             )
           )}
         </ul>
-        <button className="nav__contents" onClick={() => onOpenIndex('contents')} aria-haspopup="dialog">
-          Contents
+        <button className="nav__menu" onClick={() => onOpenIndex('contents')} aria-haspopup="dialog" aria-label="Menu">
+          <span className="nav__burger" aria-hidden="true" />
         </button>
       </div>
     </nav>

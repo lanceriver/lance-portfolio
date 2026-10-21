@@ -969,11 +969,12 @@ holds are untouched. Measured: 390px wide at first layout and at every 300px
 of scroll, down from 501.
 
 **The nav.** Five words do not fit beside `LR` at 390px, and two of them had
-simply been hidden. Below 720px the row gives way to one word, `Contents`, which
-opens the List of Plates overlay with the rest of the book beneath it: the
-chapters (About, Notes, Writing, Contact), then the address and links. A word, not a
-hamburger: the site has no icons anywhere, and a labelled trigger is the more
-legible of the two. It reuses D34's overlay rather than adding a drawer, so the
+simply been hidden. Below 720px the row gives way to a menu mark, which opens the List of Plates overlay with the rest of the book beneath it: the
+chapters (About, Notes, Writing, Contact), then the address and links. The mark is a
+hamburger drawn as two hairlines — the eyebrow's rule, the lower one shorter
+and hung right — so it is the pattern a reader recognises in the site's own
+line. It was briefly the word `Contents`; Lance preferred the icon, and it is
+announced as "Menu". It reuses D34's overlay rather than adding a drawer, so the
 phone's menu is the book's own front matter. Desktop is unchanged: `Work` still
 opens the plates alone.
 
