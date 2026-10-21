@@ -91,7 +91,7 @@ export function Writing() {
   }, [activate])
 
   return (
-    <section className="writing" id="writing" data-tone="light" data-tint="slate-deep">
+    <section className="writing" id="writing" data-tone="light">
       <Ridge />
       <div className="shell">
         <header className="writing__head">

@@ -4,7 +4,15 @@
 *, *::before, *::after { box-sizing: border-box; }
 * { margin: 0; }
 
-html { scroll-behavior: smooth; }
+html {
+  scroll-behavior: smooth;
+  /* An explicit root ground. Safari 26 tints its toolbars from the root
+     background when no fixed or sticky edge element has one; with `html`
+     transparent it sampled the top of the page instead — the hero's blue sky —
+     and kept it down the whole cream page (D55). Same value as the body, so
+     nothing on screen changes; only the overscroll and the bars see it. */
+  background-color: var(--page-ground);
+}
 
 body {
   background: var(--page-ground);
