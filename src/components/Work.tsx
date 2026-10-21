@@ -179,15 +179,17 @@ function SceneRest() {
 
       <div className="rest__inner">
         <div className="rest__copy" ref={copyRef}>
-          <div className="rest__head">
+          {/* the introduction and its status in one column, the detail beside
+              it from the same top line, so the two end near each other */}
+          <div className="rest__lead">
             <p className="scene__disc eyebrow">{p.discipline}</p>
             <h3 className="display-r scene__name">{p.name}</h3>
             <p className="scene__tag">{p.tagline}</p>
+            <p className="body scene__blurb">{p.blurb}</p>
+            {projectMeta(p)}
           </div>
-          <p className="body scene__blurb rest__blurb">{p.blurb}</p>
           <div className="rest__detail">
             {p.points && <ul className="body scene__points">{p.points.map((point) => <li key={point}>{point}</li>)}</ul>}
-            {projectMeta(p)}
           </div>
         </div>
 

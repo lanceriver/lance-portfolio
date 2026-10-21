@@ -184,12 +184,10 @@
   display: grid;
   grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
   column-gap: clamp(40px, 5vw, 96px);
-  row-gap: clamp(20px, 3vh, 32px);
   align-items: start;
   padding-left: clamp(40px, 9vw, 150px);
 }
-.rest__head { grid-column: 1 / -1; }
-.rest__blurb { margin-top: 0; max-width: 36ch; }
+.rest__lead .scene__blurb { max-width: 40ch; }
 .rest__detail { max-width: 52ch; }
 .rest__detail .scene__points { margin-top: 0; }
 
@@ -237,7 +235,6 @@
   .scene--rest { padding: clamp(90px, 14vh, 160px) 0; }
   .rest__inner { row-gap: 40px; }
   .rest__copy { padding-left: 0; grid-template-columns: 1fr; gap: 0; }
-  .rest__blurb { margin-top: 20px; }
   .rest__detail .scene__points { margin-top: 16px; }
   .scene--rest { min-height: 0; }
   .scene__num--iii { font-size: 300px; opacity: .04; }
