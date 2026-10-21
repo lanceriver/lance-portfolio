@@ -1,10 +1,13 @@
-import { useRef } from 'react'
+import { useRef, type RefObject } from 'react'
 import { motion } from 'motion/react'
 import { projects, type Screen } from '../data'
 import { useScrollDriver } from '../hooks/useScrollDriver'
 import { useReducedMotion } from '../hooks/useReducedMotion'
 import { clamp, range } from '../lib/math'
 import './work.css'
+
+// Screens sit at three different depths.
+const DRIFT = [160, 40, 100]
 
 /**
  * Selected Work: three scenes with three compositional logics.
@@ -149,17 +152,24 @@ function SceneRest() {
   const ref = useRef<HTMLElement>(null)
   const numRef = useRef<HTMLSpanElement>(null)
   const copyRef = useRef<HTMLDivElement>(null)
+  const listRef = useRef<HTMLDivElement>(null)
 
   useScrollDriver(() => {
     const el = ref.current
-    if (!el || !numRef.current || !copyRef.current) return
+    if (!el || !numRef.current || !copyRef.current || !listRef.current) return
     const r = el.getBoundingClientRect()
     const t = clamp((innerHeight - r.top) / (innerHeight + r.height))
+    const screens = Array.from(listRef.current.children) as HTMLDivElement[]
+    const mobile = matchMedia('(max-width: 900px)').matches
     // two rates, both slow. The numeral is the slowest thing in the section.
     const num = numRef.current, copy = copyRef.current
     return () => {
       num.style.transform = `translate3d(0, ${(0.5 - t) * 130}px, 0)`
       copy.style.transform = `translate3d(0, ${(0.5 - t) * 26}px, 0)`
+      screens.forEach((child, i) => {
+        if (mobile) child.style.transform = ''
+        else child.style.transform = `translate3d(0, ${(0.5 - t) * DRIFT[i % DRIFT.length]}px, 0)`
+      })
     }
   }, !reduced)
 
@@ -168,22 +178,22 @@ function SceneRest() {
       <span className="numeral scene__num scene__num--iii" aria-hidden="true" ref={numRef}>{p.numeral}</span>
 
       <div className="rest__inner">
-        {/* two columns on a wide screen — the introduction, then the detail
-            beside it — so the copy is a band above the screens, not a tower */}
         <div className="rest__copy" ref={copyRef}>
+          {/* the introduction and its status in one column, the detail beside
+              it from the same top line, so the two end near each other */}
           <div className="rest__lead">
             <p className="scene__disc eyebrow">{p.discipline}</p>
             <h3 className="display-r scene__name">{p.name}</h3>
             <p className="scene__tag">{p.tagline}</p>
             <p className="body scene__blurb">{p.blurb}</p>
+            {projectMeta(p)}
           </div>
           <div className="rest__detail">
             {p.points && <ul className="body scene__points">{p.points.map((point) => <li key={point}>{point}</li>)}</ul>}
-            {projectMeta(p)}
           </div>
         </div>
 
-        {p.screens && <Screens screens={p.screens} reduced={reduced} />}
+        {p.screens && <Screens screens={p.screens} reduced={reduced} listRef={listRef} />}
       </div>
     </article>
   )
@@ -192,33 +202,34 @@ function SceneRest() {
 /* The app itself. Figures rather than plates: a plate book prints its
    photographs as numbered figures on the same stock, square to the page like
    every Work plate, so they keep the rule a collage would break. They rise in
-   one after another and then hold still — the scene's drift stays with the
-   numeral and the copy. On a phone they become a row you swipe. DECISIONS D54. */
-function Screens({ screens, reduced }: { screens: Screen[]; reduced: boolean }) {
+   one after another, then drift at three depths. On a phone they become a row
+   you swipe. DECISIONS D54. */
+function Screens({ screens, reduced, listRef }: { screens: Screen[]; reduced: boolean; listRef: RefObject<HTMLDivElement> }) {
   return (
-    <div className="rest__screens" role="list" aria-label="Screens from Worn">
+    <div className="rest__screens" role="list" aria-label="Screens from Worn" ref={listRef}>
       {screens.map((s, i) => (
-        <motion.figure
-          key={s.src}
-          role="listitem"
-          className="rest__screen plate-sheet"
-          initial={reduced ? false : { y: 56, opacity: 0 }}
-          whileInView={{ y: 0, opacity: 1 }}
-          viewport={{ once: true, amount: 0.25 }}
-          transition={{ type: 'spring', stiffness: 120, damping: 20, mass: 1, delay: reduced ? 0 : i * 0.12 }}
-        >
-          <img
-            src={s.src}
-            srcSet={`${s.src} 480w, ${s.src2x} 960w`}
-            sizes="(max-width: 900px) 62vw, 340px"
-            alt={s.alt}
-            width={480}
-            height={969}
-            loading="lazy"
-            decoding="async"
-          />
-          <PlateCaption label={`Fig. ${i + 1}`} text={s.caption} />
-        </motion.figure>
+        <div key={s.src} role="listitem" className="rest__screen">
+          <motion.figure
+            className="rest__fig plate-sheet"
+            initial={reduced ? false : { y: 96, opacity: 0, scale: 0.96 }}
+            whileInView={{ y: 0, opacity: 1, scale: 1 }}
+            whileHover={reduced ? undefined : { y: -10 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ type: 'spring', stiffness: 110, damping: 20, mass: 1, delay: reduced ? 0 : i * 0.14 }}
+          >
+            <img
+              src={s.src}
+              srcSet={`${s.src} 480w, ${s.src2x} 960w`}
+              sizes="(max-width: 900px) 62vw, 340px"
+              alt={s.alt}
+              width={480}
+              height={969}
+              loading="lazy"
+              decoding="async"
+            />
+            <PlateCaption label={`Fig. ${i + 1}`} text={s.caption} />
+          </motion.figure>
+        </div>
       ))}
     </div>
   )

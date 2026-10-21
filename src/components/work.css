@@ -159,9 +159,8 @@
    Almost nothing moves. The space is the design. */
 .scene--rest {
   position: relative;
-  padding: clamp(140px, 24vh, 300px) 0 clamp(160px, 26vh, 340px);
-  min-height: 118vh;            /* travel for the drift, and more air — which
-                                   is what this beat wants anyway */
+  padding: clamp(140px, 24vh, 300px) 0 clamp(96px, 14vh, 180px);
+  min-height: 0;
   display: grid;
   align-content: center;
   overflow: hidden;
@@ -183,27 +182,41 @@
 }
 .rest__copy {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: clamp(40px, 6vw, 110px);
-  align-items: end;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+  column-gap: clamp(40px, 5vw, 96px);
+  align-items: start;
   padding-left: clamp(40px, 9vw, 150px);
 }
+.rest__lead .scene__blurb { max-width: 40ch; }
+.rest__detail { max-width: 52ch; }
 .rest__detail .scene__points { margin-top: 0; }
 
-/* The app's own screens — the picture this scene has instead of a plate. A
-   staggered row from the copy's margin to the shell's edge: the asymmetry of
-   the scene, carried on, and square to the page. */
+/* The app's own screens — the picture this scene has instead of a plate.
+   Staggered rows of three from the copy's margin to the shell's edge: the
+   asymmetry of the scene, carried on, and square to the page. */
 .rest__screens {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: flex-start;
-  gap: clamp(24px, 3vw, 56px);
+  gap: clamp(56px, 9vh, 104px) clamp(24px, 3vw, 56px);
   padding-left: clamp(40px, 9vw, 150px);
 }
 .rest__screen { width: min(24vw, 340px); flex: none; }
 .rest__screen img { height: auto; }
-.rest__screen:nth-child(2) { margin-top: clamp(56px, 10vh, 120px); }
-.rest__screen:nth-child(3) { margin-top: clamp(20px, 3.5vh, 44px); }
+.rest__screen:nth-child(3n+2) { margin-top: clamp(56px, 10vh, 120px); }
+.rest__screen:nth-child(3n+3) { margin-top: clamp(20px, 3.5vh, 44px); }
+
+@media (min-width: 901px) {
+  .rest__screen { will-change: transform; }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .rest__fig { transition: box-shadow .34s var(--ease-settle); }
+  .rest__fig:hover {
+    box-shadow: 0 3px 7px rgba(27, 42, 51, .05), 0 34px 66px -16px rgba(27, 42, 51, .26);
+  }
+}
 
 /* ── responsive ───────────────────────────────────────────
    Mobile simplifies the long pin and keeps the
@@ -230,6 +243,7 @@
   /* A row you swipe, bled to the screen edges, each figure snapping to the
      margin. Contained: the row scrolls, the page never widens. */
   .rest__screens {
+    flex-wrap: nowrap;
     justify-content: flex-start;
     gap: 16px;
     margin: 0 -20px;
@@ -248,7 +262,7 @@
    Pinned scenes become static compositions in document order. Nothing is lost. */
 @media (prefers-reduced-motion: reduce) {
   .scene--rest { min-height: 0; }
-  .scene__num--iii, .rest__copy { transform: none !important; }
+  .scene__num--iii, .rest__copy, .rest__screen { transform: none !important; }
   .scene--aperture { height: auto; }
   .scene--aperture .scene__pin { position: relative; height: auto; padding: 80px 0; --slot: 8; }
   .aperture { height: 58vh; }
