@@ -353,6 +353,11 @@ export function FieldNotes() {
                     />
                   </span>
                 </a>
+                <span className="album-crate__cap" aria-hidden="true">
+                  <span className="album-crate__cap-status">{nowPlaying.playing ? 'On the turntable' : 'Last played'}</span>
+                  <span className="album-crate__cap-title">{nowPlaying.title}</span>
+                  <span className="album-crate__cap-artist">{nowPlaying.artist}</span>
+                </span>
               </li>
             )}
             {crate.map((r, i) => {
@@ -379,6 +384,11 @@ export function FieldNotes() {
                       />
                     </span>
                   </a>
+                  <span className="album-crate__cap" aria-hidden="true">
+                    <span className="album-crate__cap-status">Played earlier</span>
+                    <span className="album-crate__cap-title">{r.title}</span>
+                    <span className="album-crate__cap-artist">{r.artist}</span>
+                  </span>
                 </li>
               )
             })}

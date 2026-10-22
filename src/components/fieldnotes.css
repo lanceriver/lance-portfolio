@@ -102,7 +102,8 @@
 .obj__expand img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
 /* Placement — authored, not generated. A compact scatter gathers the photos
-   around the centre, with the two kept objects close beneath them. */
+   around the centre; the turntable sits close beneath them and the colophon
+   takes the empty top-right corner. */
 .obj--terrace  { left: 8%; top: 12px; width: min(42%, 430px); z-index: 2; }
 .obj--night    { left: 39%; top: 156px; width: min(33%, 340px); z-index: 3; }
 .obj--bamboo   { left: 68%; top: 372px; width: min(23%, 255px); z-index: 4; }
@@ -110,19 +111,19 @@
 .obj--mountain-road { left: 21%; top: 516px; width: min(23%, 250px); z-index: 6; }
 .obj--coastal-train { left: 42%; top: 564px; width: min(23%, 250px); z-index: 7; }
 .obj--torii    { left: 60%; top: 720px; width: min(32%, 340px); z-index: 8; }
-.obj--colophon { left: 16%; top: 1040px; width: min(34%, 360px); z-index: 9; }
+.obj--colophon { left: 76%; top: 80px; width: min(24%, 250px); z-index: 9; }
 .obj--turntable{ left: 60%; top: auto; bottom: 32px; width: min(22%, 255px); z-index: 10; }
 
-/* The crate, on the desk beside the turntable: the record playing now at the
-   front with its disc half out, up to four earlier albums standing behind it,
-   each showing nearly half its cover. Hover or focus lifts one clear of the
-   one in front so its whole cover shows. Covers are never
+/* The shelf: records standing in a row beside the turntable. The record
+   playing now is nearest the player with its disc half out, and up to four
+   earlier albums trail to the left, each showing most of its cover. Hover or
+   focus lifts one clear and shows its title and artist. Covers are never
    cropped, rotated or overlaid; a jacket only ever slides straight up. The
    list's box is one jacket plus its disc, so nothing overflows the surface. */
 .album-crate {
   position: absolute;
-  left: 83%;
-  bottom: 40px;
+  left: 42.2%;
+  bottom: 32px;
   width: min(17%, 175px);
   aspect-ratio: 100 / 74;
   margin: 0;
@@ -134,16 +135,33 @@
   position: absolute;
   inset: 0;
   z-index: calc(10 - var(--depth));
-  translate: 0 calc(var(--depth) * -44%);
+  translate: calc(var(--depth) * -44.4%) 0;
 }
 .album-crate__slot--back .album-sleeve { transition: translate .34s var(--ease-settle); }
 @media (hover: hover) and (pointer: fine) {
-  .album-crate__slot--back:hover .album-sleeve { translate: 0 -60%; }
+  .album-crate__slot--back:hover .album-sleeve { translate: 0 -100%; }
 }
-.album-crate__slot--back:focus-within .album-sleeve { translate: 0 -60%; }
+.album-crate__slot--back:focus-within .album-sleeve { translate: 0 -100%; }
 @media (prefers-reduced-motion: reduce) {
   .album-crate__slot--back .album-sleeve { transition: none; }
 }
+.album-crate__cap {
+  position: absolute; left: 0; bottom: calc(100% + 10px); z-index: 1;
+  display: grid; gap: 1px; width: max-content; max-width: 210px;
+  background: var(--paper); padding: 9px 12px 10px; line-height: 1.25;
+  box-shadow: 0 2px 4px rgba(27, 42, 51, .06), 0 14px 30px -12px rgba(27, 42, 51, .28);
+  pointer-events: none; opacity: 0; translate: 0 4px;
+  transition: opacity .2s ease, translate .25s var(--ease-settle);
+}
+.album-crate__slot--back .album-crate__cap { bottom: calc(200% + 10px); }   /* above the lifted cover */
+.album-crate__cap-status { font-family: var(--sans); font-size: 9px; font-weight: 500; letter-spacing: .15em; text-transform: uppercase; color: var(--ink-soft); margin-bottom: 3px; }
+.album-crate__cap-title  { font-family: var(--serif); font-size: 15px; color: var(--ink); overflow-wrap: anywhere; }
+.album-crate__cap-artist { font-family: var(--serif); font-style: italic; font-size: 13px; color: var(--ink-warm); overflow-wrap: anywhere; }
+@media (hover: hover) and (pointer: fine) {
+  .album-crate__slot:hover .album-crate__cap { opacity: 1; translate: 0 0; }
+}
+.album-crate__slot:focus-within .album-crate__cap { opacity: 1; translate: 0 0; }
+@media (prefers-reduced-motion: reduce) { .album-crate__cap { transition: opacity .2s ease; translate: 0 0; } }
 .album-sleeve {
   position: absolute;
   inset: 0;
@@ -298,11 +316,11 @@
     position: relative;
     left: auto;
     bottom: auto;
-    width: min(56%, 216px);
+    width: min(44%, 160px);
     align-self: flex-end;
-    /* the back jackets rise above the list; keep them clear of the turntable */
-    margin-top: calc(var(--n) * 0.326 * min(56%, 216px));
+    margin-top: 20px;
   }
+  .album-crate__slot { translate: calc(var(--depth) * -29.6%) 0; }  /* 0.74 × 40%: phones show 40% of each earlier cover so five fit across */
   .obj + .obj--colophon,
   .obj + .obj--turntable { margin-top: 20px; }
   .obj--mountain-road .obj__expand img,
