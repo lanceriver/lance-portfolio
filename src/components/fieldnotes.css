@@ -122,9 +122,9 @@
    list's box is one jacket plus its disc, so nothing overflows the surface. */
 .album-crate {
   position: absolute;
-  left: 42.2%;
+  left: 38%;
   bottom: 32px;
-  width: min(17%, 175px);
+  width: min(21%, 215px);
   aspect-ratio: 100 / 74;
   margin: 0;
   padding: 0;
@@ -316,11 +316,11 @@
     position: relative;
     left: auto;
     bottom: auto;
-    width: min(44%, 160px);
+    width: min(50%, 200px);
     align-self: flex-end;
     margin-top: 20px;
   }
-  .album-crate__slot { translate: calc(var(--depth) * -29.6%) 0; }  /* 0.74 × 40%: phones show 40% of each earlier cover so five fit across */
+  .album-crate__slot { translate: calc(var(--depth) * -24.4%) 0; }  /* 0.74 × 33%: phones show 33% of each earlier cover so five fit across */
   .obj + .obj--colophon,
   .obj + .obj--turntable { margin-top: 20px; }
   .obj--mountain-road .obj__expand img,
