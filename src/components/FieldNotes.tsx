@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type CSSProperties, type RefObject } from 'react'
+import { useEffect, useRef, useState, type CSSProperties, type MouseEvent, type RefObject } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 import { useReducedMotion } from '../hooks/useReducedMotion'
 import { useNowPlaying, type NowPlayingState } from '../hooks/useNowPlaying'
@@ -73,8 +73,8 @@ const OBJECTS: Obj[] = [
     stiffness: 150,
     damping: 17,
     src: '/plates/mountain-road-1200.webp',
-    alt: 'A winding road disappearing into mist between steep mountain peaks.',
-    caption: 'Mountain road · May 2026',
+    alt: 'A winding road disappearing into mist between the steep peaks of Tianmen Mountain.',
+    caption: 'Tianmen Mountain · May 2026',
   },
   {
     id: 'coastal-train',
@@ -87,8 +87,8 @@ const OBJECTS: Obj[] = [
     stiffness: 142,
     damping: 18,
     src: '/plates/coastal-train-1200.webp',
-    alt: 'A green train passing through a lush coastal landscape.',
-    caption: 'Coastal train · September 2025',
+    alt: 'A green train running along the coast in Busan.',
+    caption: 'Busan, Korea · September 2025',
   },
   {
     id: 'torii-corridor',
@@ -101,8 +101,8 @@ const OBJECTS: Obj[] = [
     stiffness: 156,
     damping: 17,
     src: '/plates/torii-corridor-1200.webp',
-    alt: 'A symmetrical corridor of red torii gates receding into the distance.',
-    caption: 'Torii corridor · February 2024',
+    alt: 'A corridor of red torii gates at Fushimi Inari receding into the distance.',
+    caption: 'Fushimi Inari, Kyoto · February 2024',
   },
   {
     id: 'bamboo-canopy',
@@ -115,8 +115,8 @@ const OBJECTS: Obj[] = [
     stiffness: 166,
     damping: 16,
     src: '/plates/bamboo-canopy-1200.webp',
-    alt: 'Looking up through a dense canopy of bamboo.',
-    caption: 'Bamboo canopy · February 2024',
+    alt: 'Looking up through the bamboo canopy of the Arashiyama forest in Kyoto.',
+    caption: 'Arashiyama, Kyoto · February 2024',
   },
   {
     id: 'army',
@@ -131,6 +131,76 @@ const OBJECTS: Obj[] = [
     src: '/plates/terracotta-army-1200.webp',
     alt: 'Ranks of the Terracotta Army in their excavated pit, every face different.',
     caption: "Xi'an · May 2026",
+  },
+  {
+    id: 'gamcheon',
+    kind: 'print',
+    className: 'obj obj--gamcheon',
+    depth: 2.3,
+    rest: -2.2,
+    from: { x: -98, y: 88, rotate: -6.5, scale: 0.9 },
+    delay: 1.2,
+    stiffness: 148,
+    damping: 17,
+    src: '/plates/gamcheon-1200.webp',
+    alt: 'Pastel houses stacked up the hillside of Gamcheon Culture Village, Busan, with the harbour beyond.',
+    caption: 'Gamcheon, Busan · September 2025',
+  },
+  {
+    id: 'starfield-library',
+    kind: 'print',
+    className: 'obj obj--library',
+    depth: 1.7,
+    rest: 2.4,
+    from: { x: 84, y: 110, rotate: 6, scale: 0.9 },
+    delay: 1.3,
+    stiffness: 152,
+    damping: 17,
+    src: '/plates/starfield-library-1200.webp',
+    alt: 'The towering, lit bookshelves of the Starfield Library in Seoul.',
+    caption: 'Starfield Library, Seoul · September 2025',
+  },
+  {
+    id: 'kinkakuji',
+    kind: 'print',
+    className: 'obj obj--kinkakuji',
+    depth: 2.5,
+    rest: -1.4,
+    from: { x: 102, y: 76, rotate: -7, scale: 0.91 },
+    delay: 1.38,
+    stiffness: 158,
+    damping: 16,
+    src: '/plates/kinkakuji-1200.webp',
+    alt: 'The gold-leafed Kinkaku-ji pavilion beside its pond in Kyoto.',
+    caption: 'Kinkaku-ji, Kyoto · February 2024',
+  },
+  {
+    id: 'seoul-market',
+    kind: 'print',
+    className: 'obj obj--market',
+    depth: 2.0,
+    rest: 1.9,
+    from: { x: -90, y: 120, rotate: 7, scale: 0.89 },
+    delay: 1.48,
+    stiffness: 144,
+    damping: 18,
+    src: '/plates/seoul-market-1200.webp',
+    alt: 'A Seoul market food stall piled with noodles, kimchi and side dishes under hanging lamps.',
+    caption: 'Market stall, Seoul · September 2025',
+  },
+  {
+    id: 'shanghai-bakery',
+    kind: 'print',
+    className: 'obj obj--bakery',
+    depth: 2.7,
+    rest: -2.6,
+    from: { x: 70, y: 130, rotate: -8, scale: 0.9 },
+    delay: 1.58,
+    stiffness: 162,
+    damping: 16,
+    src: '/plates/shanghai-bakery-1200.webp',
+    alt: 'Rows of fresh bread along a bakery counter in Shanghai.',
+    caption: 'Shanghai · May 2026',
   },
   {
     id: 'colophon',
@@ -200,6 +270,7 @@ export function FieldNotes() {
   const [open, setOpen] = useState<Obj | null>(null)
   const [failedArtworkUrl, setFailedArtworkUrl] = useState<string | null>(null)
   const [failedCrateArt, setFailedCrateArt] = useState<string[]>([])
+  const [selectedArt, setSelectedArt] = useState<string | null>(null)
   const sectionRef = useRef<HTMLElement>(null)
   const lift = useLift()
   const [phone] = useState(isPhone)
@@ -211,6 +282,45 @@ export function FieldNotes() {
       && failedArtworkUrl !== nowPlaying.art,
   )
   const crate = nowPlaying.crate.filter((r) => !failedCrateArt.includes(r.art))
+
+  // Touch has no hover: the first tap on a record selects it (full cover, name,
+  // an Open link) and a second tap on the same cover follows the link.
+  const selected = selectedArt === null ? null
+    : frontVisible && selectedArt === nowPlaying.art
+      ? {
+        label: nowPlaying.playing ? 'On the turntable' : 'Last played',
+        title: nowPlaying.title,
+        artist: nowPlaying.artist,
+        url: nowPlaying.url,
+      }
+      : (() => {
+        const r = crate.find((entry) => entry.art === selectedArt)
+        return r ? { label: 'Played earlier', title: r.title, artist: r.artist, url: r.url } : null
+      })()
+  const selectRecord = (event: MouseEvent<HTMLAnchorElement>, art: string | null) => {
+    if (!art || selectedArt === art) return
+    if (!window.matchMedia('(hover: none)').matches) return
+    event.preventDefault()
+    setSelectedArt(art)
+  }
+
+  useEffect(() => { if (selectedArt && !selected) setSelectedArt(null) }, [selectedArt, selected])
+
+  useEffect(() => {
+    if (!selectedArt) return
+    const onPointerDown = (event: PointerEvent) => {
+      const target = event.target
+      if (target instanceof Element && target.closest('.album-crate, .album-crate__detail')) return
+      setSelectedArt(null)
+    }
+    const onKeyDown = (event: KeyboardEvent) => { if (event.key === 'Escape') setSelectedArt(null) }
+    document.addEventListener('pointerdown', onPointerDown)
+    document.addEventListener('keydown', onKeyDown)
+    return () => {
+      document.removeEventListener('pointerdown', onPointerDown)
+      document.removeEventListener('keydown', onKeyDown)
+    }
+  }, [selectedArt])
 
   /**
    * The pin has to be a NEGATIVE `top`, not `bottom: 0`.
@@ -334,12 +444,16 @@ export function FieldNotes() {
             style={{ '--n': crate.length } as CSSProperties}
           >
             {frontVisible && (
-              <li className="album-crate__slot" style={{ '--depth': 0 } as CSSProperties}>
+              <li
+                className={`album-crate__slot${selectedArt === nowPlaying.art ? ' album-crate__slot--selected' : ''}`}
+                style={{ '--depth': 0 } as CSSProperties}
+              >
                 <a
                   className="album-sleeve"
                   href={nowPlaying.url ?? undefined}
                   target="_blank"
                   rel="noreferrer"
+                  onClick={(event) => selectRecord(event, nowPlaying.art)}
                   aria-label={`Open ${nowPlaying.title} by ${nowPlaying.artist} on Spotify`}
                 >
                   <span className="album-sleeve__record" aria-hidden="true">
@@ -365,7 +479,7 @@ export function FieldNotes() {
               return (
                 <li
                   key={r.art}
-                  className={`album-crate__slot${depth > 0 ? ' album-crate__slot--back' : ''}`}
+                  className={`album-crate__slot${depth > 0 ? ' album-crate__slot--back' : ''}${selectedArt === r.art ? ' album-crate__slot--selected' : ''}`}
                   style={{ '--depth': depth } as CSSProperties}
                 >
                   <a
@@ -373,6 +487,7 @@ export function FieldNotes() {
                     href={r.url}
                     target="_blank"
                     rel="noreferrer"
+                    onClick={(event) => selectRecord(event, r.art)}
                     aria-label={`Open ${r.title} by ${r.artist} on Spotify`}
                   >
                     <span className="album-sleeve__jacket">
@@ -393,6 +508,16 @@ export function FieldNotes() {
               )
             })}
           </ul>
+        )}
+        {selected && selected.url && (
+          <div className="album-crate__detail" role="status">
+            <span className="album-crate__cap-status">{selected.label}</span>
+            <span className="album-crate__cap-title">{selected.title}</span>
+            <span className="album-crate__cap-artist">{selected.artist}</span>
+            <a className="album-crate__open" href={selected.url} target="_blank" rel="noreferrer">
+              Open in Spotify <span aria-hidden="true">↗</span>
+            </a>
+          </div>
         )}
       </div>
 
