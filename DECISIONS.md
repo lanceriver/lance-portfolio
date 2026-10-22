@@ -1095,3 +1095,36 @@ lifts it clear and shows its title and artist; covers are never cropped,
 rotated or animated in place. The colophon moved to the top-right corner to
 make room. Its live status comes from a public, read-only endpoint, and
 unavailable status is shown honestly without inventing a track.
+
+## D57 — The Airtable Clone shows its table, and loses its plate
+
+Plate II's tagline is "a million rows, still quick", and the scene showed a
+painted café terrace. It now shows the app's own table, and the slot is still
+the idea.
+
+**Through the slot.** The aperture no longer opens on a painting. It opens on
+the People table at its last rows, 999,982 to 1,000,050, which slide upward as
+the slot widens and arrive at row 1,000,050 exactly as the slot finishes
+opening (both are bound to t 0 → 0.78, linear). The row numbers in the gutter
+make the claim. The table sits at 80% of the frame, inside the 82% open slot,
+so the gutter is never clipped. On a phone and with reduced motion it rests at
+its last rows.
+
+**On plate stock, not a screenshot.** A first pass inverted the table to a
+dark ink negative so the cream title would flip across it. Lance found it too
+dark and out of step with a page of warm plates. The table is now toned to the
+plate stock: white → `--paper`, text → a warm grey, with a tone curve that keeps
+the hairline grid (ffmpeg: `format=gray, curves=all='0/0 0.85/0.70 1/1'`, then
+mapped from #8a7f72 to #fbf6ec). The title inside the slot flips from ink to
+`--rust`, which reads like a printed stamp and sits with the ochre tagline.
+
+**The ruled index.** Beneath the scene, three details on hairline rules, like
+a spec sheet: 01 Views, 02 Filter (Score above 9,900: 9,879 of 1,000,050 rows),
+03 Sort. Numbered, not figures: Worn's screens are figures that drift, and this
+scene does not move except through the slot. True colour, cropped tight to
+the UI, 840w and 1680w WebP, lazy loaded.
+
+**The data.** Every row is fake. The captures come from a local copy of the
+app with 1,000,050 faker contacts in a base called Contacts, signed in with a
+local test session. Nothing was captured from the production app or from
+Lance's own bases. The `lake-terrace` plate files stay in `public/plates/`.

@@ -130,15 +130,18 @@
   clip-path: inset(12% calc(var(--slot) * 1%));
   z-index: 2;
 }
-.aperture__img {
+/* the app's own table, toned to plate stock, slides up through the slot (D57) */
+.aperture__table { position: absolute; inset: 0; background: var(--paper); overflow: hidden; }
+.aperture__rows {
   position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  top: 12%;                       /* the slot's top edge */
+  left: 10%;
+  width: 80%;                     /* the open slot is 82% wide, so the row-number gutter stays inside it */
+  height: auto;
+  will-change: transform;
 }
-/* the same title again, over the plate, clipped to the slot */
-.aperture__title--lit { color: var(--paper); z-index: 3; }
+/* the same title again, over the table, clipped to the slot */
+.aperture__title--lit { color: var(--rust); z-index: 3; }
 
 .aperture__meta {
   display: grid;
@@ -154,6 +157,32 @@
 .aperture__meta .scene__disc { margin: 0; }
 .aperture__meta .scene__blurb { margin: 0; }
 .aperture__meta .scene__link { margin: 0; white-space: nowrap; }
+
+/* the ruled index: three details, numbered, on hairline rules. Static. */
+.ledger {
+  width: var(--shell);
+  margin: clamp(60px, 9vh, 110px) auto 0;
+  padding: 0;
+  list-style: none;
+  border-bottom: 1px solid color-mix(in srgb, var(--ink) 22%, transparent);
+}
+.ledger__row {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr) minmax(0, 620px);
+  gap: clamp(20px, 3vw, 48px);
+  align-items: start;
+  padding: 28px 0;
+  border-top: 1px solid color-mix(in srgb, var(--ink) 22%, transparent);
+}
+.ledger__num { padding-top: 4px; font-variant-numeric: tabular-nums; }
+.ledger__label { display: block; }
+.ledger__text { margin: 10px 0 0; max-width: 34ch; color: var(--ink-soft); }
+.ledger__img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid color-mix(in srgb, var(--ink) 18%, transparent);
+}
 
 /* ── III · REST ────────────────────────────────────────────
    Almost nothing moves. The space is the design. */
@@ -232,6 +261,9 @@
   .aperture { height: 62vh; }
   .aperture__title { font-size: clamp(36px, 10vw, 76px); }
   .aperture__meta { grid-template-columns: 1fr; gap: 18px; padding-top: 34px; }
+  .aperture__rows { top: auto; bottom: 12%; left: 6%; width: 88%; transform: none !important; }
+  .ledger__row { grid-template-columns: 40px minmax(0, 1fr); row-gap: 18px; padding: 24px 0; }
+  .ledger__img { grid-column: 1 / -1; }
 
   .scene--rest { padding: clamp(90px, 14vh, 160px) 0; }
   .rest__inner { row-gap: 40px; }
@@ -266,4 +298,5 @@
   .scene--aperture { height: auto; }
   .scene--aperture .scene__pin { position: relative; height: auto; padding: 80px 0; --slot: 8; }
   .aperture { height: 58vh; }
+  .aperture__rows { top: auto; bottom: 12%; transform: none !important; }
 }
