@@ -1134,9 +1134,7 @@ Lance's own bases. The `lake-terrace` plate files stay in `public/plates/`.
 The nav now tucks on scroll at every width, stays visible under keyboard focus,
 and samples the live page ground through the Crossing and the Hero dissolve.
 Lance has since approved public sharing of Pool Safety's engineering details in
-the About Experience section; its compact Work plate still shows only employer,
-role, dates, and a broad production experience summary. Internal architecture
-and detailed project notes remain out of that plate.
+the About Experience section. Its duplicate Work plate is later removed in D60.
 The Back Cover uses a full-bleed coastal plate over a sampled-sky entrance
 bridge; only the real top edge feathers during the entrance, then the painting
 settles fully opaque. Field Notes' expanded prints use a native modal dialog whose sole control
@@ -1158,5 +1156,12 @@ franchise prototype, multi-tenant PostgreSQL with row-level security, AWS
 services, GoHighLevel sync, Stripe and Xero integrations, and the approximate
 test count and staged CI/CD. This approval supersedes D58's restriction on
 internal architecture and detailed project notes. The section also records
-UNSW CSESoc and Singapore Armed Forces experience from the résumé; the
-existing compact Work plate remains unchanged.
+UNSW CSESoc and Singapore Armed Forces experience from the résumé. The Work
+plate remains broad and role-led at this point; D60 later removes the duplicate.
+
+## D60 — Pool Safety moves to Experience; Work keeps two plates
+
+Pool Safety remains in About's Experience register, so its duplicate Work plate
+has been removed. The Selected Work index now lists two plates: Airtable Clone
+as Plate I and Worn as Plate II. Their existing table aperture, figures, and
+motion remain intact.

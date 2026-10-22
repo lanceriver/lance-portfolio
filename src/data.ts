@@ -10,12 +10,6 @@ export type Plate = {
   tagline: string
   blurb: string
   discipline: string
-  /** The painted plate. Worn has none: its screens are the picture. */
-  src?: string
-  srcSmall?: string
-  alt?: string
-  plateLabel?: string
-  caption?: string
   points?: string[]
   href?: string
   repo?: string
@@ -23,9 +17,9 @@ export type Plate = {
   /** App screens, shown as figures beneath the plate. Real captures, from the
       phone or the Simulator with a seeded diary, cropped below the status bar; `src` is the 480w file, `src2x` the 960w. */
   screens?: Screen[]
-  /** Plate II: the app's own table, toned to plate stock, run through the aperture. DECISIONS D57. */
+  /** Plate I: the app's own table, toned to plate stock, run through the aperture. DECISIONS D57. */
   table?: { src: string; srcSmall: string; width: number; height: number; alt: string }
-  /** Plate II: a ruled index of details beneath the scene, numbered 01, 02, 03. */
+  /** Plate I: a ruled index of details beneath the scene, numbered 01, 02, 03. */
   ledger?: LedgerEntry[]
 }
 
@@ -35,23 +29,6 @@ export type LedgerEntry = { src: string; src2x: string; label: string; text: str
 export const projects: Plate[] = [
   {
     numeral: 'I',
-    name: 'Pool Safety Solutions',
-    tagline: 'Junior Systems Engineer · 2026 to now',
-    discipline: 'Internal tools',
-    blurb: 'I took a franchise-management prototype and made it production software for a network operating across NSW, QLD and VIC.',
-    /* TODO: Restore Pool Safety implementation details when public sharing is approved.
-    points: [
-      'Multi-tenant PostgreSQL with row-level security, so each franchise only ever sees its own data.',
-      'Docker on AWS (Lightsail, ECR, S3, CloudFront) with separate staging and production, plus a Lambda and SQS pipeline that syncs GoHighLevel into Postgres.',
-      'Stripe, Xero and GoHighLevel integrations, and about 470 automated tests gating every release through staging.',
-    ],
-    */
-    status: 'Internal system. No public link.',
-    plateLabel: 'Plate I',
-    caption: 'Franchise operations',
-  },
-  {
-    numeral: 'II',
     name: 'Airtable Clone',
     tagline: 'a million rows, still quick',
     discipline: 'Next.js · TypeScript · tRPC · Prisma · PostgreSQL',
@@ -90,7 +67,7 @@ export const projects: Plate[] = [
     ],
   },
   {
-    numeral: 'III',
+    numeral: 'II',
     name: 'Worn',
     tagline: 'your fit diary',
     discipline: 'Product + engineering',
