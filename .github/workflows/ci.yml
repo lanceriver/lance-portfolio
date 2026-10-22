@@ -13,13 +13,14 @@ jobs:
     env:
       SITE_URL: https://lanceriver.com
       VITE_VISITS_API: ${{ vars.VISITS_API_URL }}
+      VITE_NOW_PLAYING_API: ${{ vars.NOW_PLAYING_API_URL }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: npm
-      - run: npm ci
+      - run: npm ci --fetch-timeout=15000 --fetch-retries=1 --fetch-retry-mintimeout=1000 --fetch-retry-maxtimeout=5000
       - run: npm run build
       - run: npm run verify
       - uses: actions/setup-python@v5

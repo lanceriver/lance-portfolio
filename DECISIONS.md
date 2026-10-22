@@ -1086,5 +1086,6 @@ the colophon and turntable close together below. Each print remains mostly
 visible and opens in the existing lightbox; pointer entry and keyboard focus
 raise the selected print to the top. Phones use a compact overlapping flow with
 the colophon and turntable clear beneath it, so every image stays reachable.
-The turntable label uses one of Lance's photographs until the album art endpoint
-is available.
+The turntable label keeps one of Lance's photographs when Spotify is connected;
+Spotify artwork is not used. Its live status comes from a public, read-only
+endpoint, and unavailable status is shown honestly without inventing a track.
