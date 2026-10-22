@@ -73,8 +73,8 @@ const OBJECTS: Obj[] = [
     stiffness: 150,
     damping: 17,
     src: '/plates/mountain-road-1200.webp',
-    alt: 'A winding road disappearing into mist between steep mountain peaks.',
-    caption: 'Mountain road · May 2026',
+    alt: 'A winding road disappearing into mist between the steep peaks of Tianmen Mountain.',
+    caption: 'Tianmen Mountain · May 2026',
   },
   {
     id: 'coastal-train',
@@ -87,8 +87,8 @@ const OBJECTS: Obj[] = [
     stiffness: 142,
     damping: 18,
     src: '/plates/coastal-train-1200.webp',
-    alt: 'A green train passing through a lush coastal landscape.',
-    caption: 'Coastal train · September 2025',
+    alt: 'A green sky capsule train running along the coast in Busan.',
+    caption: 'Busan, Korea · September 2025',
   },
   {
     id: 'torii-corridor',
@@ -101,8 +101,8 @@ const OBJECTS: Obj[] = [
     stiffness: 156,
     damping: 17,
     src: '/plates/torii-corridor-1200.webp',
-    alt: 'A symmetrical corridor of red torii gates receding into the distance.',
-    caption: 'Torii corridor · February 2024',
+    alt: 'A corridor of red torii gates at Fushimi Inari receding into the distance.',
+    caption: 'Fushimi Inari, Kyoto · February 2024',
   },
   {
     id: 'bamboo-canopy',
@@ -115,8 +115,8 @@ const OBJECTS: Obj[] = [
     stiffness: 166,
     damping: 16,
     src: '/plates/bamboo-canopy-1200.webp',
-    alt: 'Looking up through a dense canopy of bamboo.',
-    caption: 'Bamboo canopy · February 2024',
+    alt: 'Looking up through the bamboo canopy of the Arashiyama forest in Kyoto.',
+    caption: 'Arashiyama, Kyoto · February 2024',
   },
   {
     id: 'army',
