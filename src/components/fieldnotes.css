@@ -113,8 +113,8 @@
 .obj--torii    { left: 60%; top: 720px; width: min(32%, 340px); z-index: 8; }
 .obj--gamcheon  { left: 1%;  top: 900px;  width: min(29%, 300px); z-index: 3; }
 .obj--library   { left: 30%; top: 960px;  width: min(22%, 230px); z-index: 4; }
-.obj--kinkakuji { left: 69%; top: 1030px; width: min(23%, 240px); z-index: 5; }
-.obj--market    { left: 12%; top: 1240px; width: min(22%, 230px); z-index: 6; }
+.obj--kinkakuji { left: 69%; top: 1160px; width: min(23%, 240px); z-index: 5; }
+.obj--market    { left: 6%; top: 1240px; width: min(22%, 230px); z-index: 6; }
 .obj--bakery    { left: 47%; top: 1290px; width: min(22%, 230px); z-index: 7; }
 .obj--colophon { left: 76%; top: 80px; width: min(24%, 250px); z-index: 9; }
 .obj--turntable{ left: 60%; top: auto; bottom: 32px; width: min(22%, 255px); z-index: 10; }
