@@ -114,8 +114,9 @@
 .obj--turntable{ left: 60%; top: auto; bottom: 32px; width: min(22%, 255px); z-index: 10; }
 
 /* The crate, on the desk beside the turntable: the record playing now at the
-   front with its disc half out, up to four earlier albums standing behind it.
-   Hover or focus pulls one up so its whole cover shows. Covers are never
+   front with its disc half out, up to four earlier albums standing behind it,
+   each showing nearly half its cover. Hover or focus lifts one clear of the
+   one in front so its whole cover shows. Covers are never
    cropped, rotated or overlaid; a jacket only ever slides straight up. The
    list's box is one jacket plus its disc, so nothing overflows the surface. */
 .album-crate {
@@ -133,13 +134,13 @@
   position: absolute;
   inset: 0;
   z-index: calc(10 - var(--depth));
-  translate: 0 calc(var(--depth) * -17%);
+  translate: 0 calc(var(--depth) * -44%);
 }
 .album-crate__slot--back .album-sleeve { transition: translate .34s var(--ease-settle); }
 @media (hover: hover) and (pointer: fine) {
-  .album-crate__slot--back:hover .album-sleeve { translate: 0 calc(-104% + var(--depth) * 17%); }
+  .album-crate__slot--back:hover .album-sleeve { translate: 0 -60%; }
 }
-.album-crate__slot--back:focus-within .album-sleeve { translate: 0 calc(-104% + var(--depth) * 17%); }
+.album-crate__slot--back:focus-within .album-sleeve { translate: 0 -60%; }
 @media (prefers-reduced-motion: reduce) {
   .album-crate__slot--back .album-sleeve { transition: none; }
 }
@@ -300,7 +301,7 @@
     width: min(56%, 216px);
     align-self: flex-end;
     /* the back jackets rise above the list; keep them clear of the turntable */
-    margin-top: calc(var(--n) * 0.126 * min(56%, 216px));
+    margin-top: calc(var(--n) * 0.326 * min(56%, 216px));
   }
   .obj + .obj--colophon,
   .obj + .obj--turntable { margin-top: 20px; }
