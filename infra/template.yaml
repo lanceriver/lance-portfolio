@@ -278,7 +278,8 @@ Resources:
         - arm64
       MemorySize: 128
       Timeout: 15
-      ReservedConcurrentExecutions: 1
+      # TODO: re-enable when account quota allows at least 10 unreserved executions.
+      # ReservedConcurrentExecutions: 1
       Policies:
         - Statement:
             - Effect: Allow
