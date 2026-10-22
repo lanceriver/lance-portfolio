@@ -71,7 +71,7 @@ def _response(status: int, payload: dict[str, Any], cache_control: str) -> dict[
 
 
 def _empty_track() -> dict[str, Any]:
-    return {"playing": False, "title": None, "artist": None, "url": None, "art": None}
+    return {"playing": False, "title": None, "artist": None, "url": None, "art": None, "crate": []}
 
 
 def _album_art(item: dict[str, Any]) -> str | None:
@@ -226,17 +226,38 @@ def _track(item: Any, playing: bool) -> dict[str, Any]:
 def _now_playing() -> dict[str, Any]:
     status, _, current = _spotify_get("/me/player/currently-playing")
     is_playing = status == 200 and isinstance(current, dict) and current.get("is_playing") is True
+    front = None
     if is_playing:
-        result = _track(current.get("item"), True)
-        if result["title"] or result["artist"]:
-            return result
+        candidate = _track(current.get("item"), True)
+        if candidate["title"] or candidate["artist"]:
+            front = candidate
 
-    _, _, recent = _spotify_get("/me/player/recently-played?limit=1")
+    _, _, recent = _spotify_get("/me/player/recently-played?limit=20")
     items = recent.get("items") if isinstance(recent, dict) else None
-    if isinstance(items, list) and items:
-        if isinstance(items[0], dict):
-            return _track(items[0].get("track"), False)
-    return _empty_track()
+    if not isinstance(items, list):
+        items = []
+
+    if front is None:
+        front = _empty_track()
+        if items and isinstance(items[0], dict):
+            front = _track(items[0].get("track"), False)
+        items = items[1:]
+
+    seen_art = {front["art"]} if front["art"] else set()
+    crate: list[dict[str, Any]] = []
+    for item in items:
+        if not isinstance(item, dict):
+            continue
+        record = _track(item.get("track"), False)
+        if not all(record[key] for key in ("title", "artist", "url", "art")):
+            continue
+        if record["art"] in seen_art:
+            continue
+        seen_art.add(record["art"])
+        crate.append({key: record[key] for key in ("title", "artist", "url", "art")})
+        if len(crate) == 4:
+            break
+    return {**front, "crate": crate}
 
 
 def handler(_event: dict[str, Any], _context: Any) -> dict[str, Any]:

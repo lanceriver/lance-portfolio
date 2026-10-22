@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type RefObject } from 'react'
+import { useEffect, useRef, useState, type CSSProperties, type RefObject } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 import { useReducedMotion } from '../hooks/useReducedMotion'
 import { useNowPlaying, type NowPlayingState } from '../hooks/useNowPlaying'
@@ -199,11 +199,18 @@ export function FieldNotes() {
   const nowPlaying = useNowPlaying(turntableRef)
   const [open, setOpen] = useState<Obj | null>(null)
   const [failedArtworkUrl, setFailedArtworkUrl] = useState<string | null>(null)
+  const [failedCrateArt, setFailedCrateArt] = useState<string[]>([])
   const sectionRef = useRef<HTMLElement>(null)
   const lift = useLift()
   const [phone] = useState(isPhone)
 
   useEffect(() => { setFailedArtworkUrl(null) }, [nowPlaying.art])
+
+  const frontVisible = Boolean(
+    nowPlaying.art && nowPlaying.url && nowPlaying.title && nowPlaying.artist
+      && failedArtworkUrl !== nowPlaying.art,
+  )
+  const crate = nowPlaying.crate.filter((r) => !failedCrateArt.includes(r.art))
 
   /**
    * The pin has to be a NEGATIVE `top`, not `bottom: 0`.
@@ -320,27 +327,60 @@ export function FieldNotes() {
             </motion.div>
           </div>
         ))}
-        {nowPlaying.art && nowPlaying.url && nowPlaying.title && nowPlaying.artist
-          && failedArtworkUrl !== nowPlaying.art && (
-            <a
-              className="album-sleeve"
-              href={nowPlaying.url}
-              target="_blank"
-              rel="noreferrer"
-              aria-label={`Open ${nowPlaying.title} by ${nowPlaying.artist} on Spotify`}
-            >
-              <span className="album-sleeve__record" aria-hidden="true">
-                <span className="album-sleeve__label" />
-              </span>
-              <span className="album-sleeve__jacket">
-                <img
-                  src={nowPlaying.art}
-                  alt={`Album cover for ${nowPlaying.title} by ${nowPlaying.artist}`}
-                  onError={() => setFailedArtworkUrl(nowPlaying.art)}
-                />
-              </span>
-            </a>
-          )}
+        {(frontVisible || crate.length > 0) && (
+          <ul
+            className="album-crate"
+            aria-label="Recently played records"
+            style={{ '--n': crate.length } as CSSProperties}
+          >
+            {frontVisible && (
+              <li className="album-crate__slot" style={{ '--depth': 0 } as CSSProperties}>
+                <a
+                  className="album-sleeve"
+                  href={nowPlaying.url ?? undefined}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label={`Open ${nowPlaying.title} by ${nowPlaying.artist} on Spotify`}
+                >
+                  <span className="album-sleeve__record" aria-hidden="true">
+                    <span className="album-sleeve__label" />
+                  </span>
+                  <span className="album-sleeve__jacket">
+                    <img
+                      src={nowPlaying.art ?? undefined}
+                      alt={`Album cover for ${nowPlaying.title} by ${nowPlaying.artist}`}
+                      onError={() => setFailedArtworkUrl(nowPlaying.art)}
+                    />
+                  </span>
+                </a>
+              </li>
+            )}
+            {crate.map((r, i) => (
+              <li
+                key={r.art}
+                className="album-crate__slot album-crate__slot--back"
+                style={{ '--depth': i + 1 } as CSSProperties}
+              >
+                <a
+                  className="album-sleeve"
+                  href={r.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label={`Open ${r.title} by ${r.artist} on Spotify`}
+                >
+                  <span className="album-sleeve__jacket">
+                    <img
+                      src={r.art}
+                      alt={`Album cover for ${r.title} by ${r.artist}`}
+                      loading="lazy"
+                      onError={() => setFailedCrateArt((failed) => (failed.includes(r.art) ? failed : [...failed, r.art]))}
+                    />
+                  </span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
 
       </section>

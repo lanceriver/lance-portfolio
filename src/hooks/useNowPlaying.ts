@@ -8,7 +8,10 @@ type NowPlayingRecord = {
   art: string | null
 }
 
+export type CrateRecord = { title: string; artist: string; url: string; art: string }
+
 export type NowPlayingState = NowPlayingRecord & {
+  crate: CrateRecord[]
   available: boolean
 }
 
@@ -20,11 +23,12 @@ const STOPPED: NowPlayingRecord = {
   art: null,
 }
 
-const INITIAL: NowPlayingState = { ...STOPPED, available: false }
+const INITIAL: NowPlayingState = { ...STOPPED, crate: [], available: false }
+const MAX_CRATE = 4
 const POLL_MS = 30_000
 const REQUEST_TIMEOUT_MS = 8_000
 
-function isRecord(value: unknown): value is Omit<NowPlayingRecord, 'art'> & { art?: unknown } {
+function isRecord(value: unknown): value is Omit<NowPlayingRecord, 'art'> & { art?: unknown; crate?: unknown } {
   if (!value || typeof value !== 'object') return false
   const record = value as Record<string, unknown>
   return typeof record.playing === 'boolean'
@@ -65,6 +69,25 @@ function spotifyArtworkUrl(value: unknown): string | null {
   } catch {
     return null
   }
+}
+
+function parseCrate(value: unknown, frontArt: string | null): CrateRecord[] {
+  if (!Array.isArray(value)) return []
+  const seen = new Set<string>(frontArt ? [frontArt] : [])
+  const crate: CrateRecord[] = []
+  for (const entry of value) {
+    if (!entry || typeof entry !== 'object') continue
+    const raw = entry as Record<string, unknown>
+    const title = typeof raw.title === 'string' ? raw.title.trim() : ''
+    const artist = typeof raw.artist === 'string' ? raw.artist.trim() : ''
+    const url = spotifyTrackUrl(typeof raw.url === 'string' ? raw.url : null)
+    const art = spotifyArtworkUrl(raw.art)
+    if (!title || !artist || !url || !art || seen.has(art)) continue
+    seen.add(art)
+    crate.push({ title, artist, url, art })
+    if (crate.length === MAX_CRATE) break
+  }
+  return crate
 }
 
 export function useNowPlaying(targetRef: RefObject<HTMLElement>): NowPlayingState {
@@ -124,6 +147,7 @@ export function useNowPlaying(targetRef: RefObject<HTMLElement>): NowPlayingStat
           artist,
           url,
           art,
+          crate: parseCrate(body.crate, art),
           available: true,
         })
       } catch {
