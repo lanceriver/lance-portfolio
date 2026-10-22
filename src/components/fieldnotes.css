@@ -134,14 +134,14 @@
   inset: 0;
   z-index: calc(10 - var(--depth));
   translate: 0 calc(var(--depth) * -17%);
-  transition: translate .34s var(--ease-settle);
 }
+.album-crate__slot--back .album-sleeve { transition: translate .34s var(--ease-settle); }
 @media (hover: hover) and (pointer: fine) {
-  .album-crate__slot--back:hover { translate: 0 -104%; z-index: 11; }
+  .album-crate__slot--back:hover .album-sleeve { translate: 0 calc(-104% + var(--depth) * 17%); }
 }
-.album-crate__slot--back:focus-within { translate: 0 -104%; z-index: 11; }
+.album-crate__slot--back:focus-within .album-sleeve { translate: 0 calc(-104% + var(--depth) * 17%); }
 @media (prefers-reduced-motion: reduce) {
-  .album-crate__slot { transition: none; }
+  .album-crate__slot--back .album-sleeve { transition: none; }
 }
 .album-sleeve {
   position: absolute;

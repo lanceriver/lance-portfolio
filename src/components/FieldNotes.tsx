@@ -355,11 +355,13 @@ export function FieldNotes() {
                 </a>
               </li>
             )}
-            {crate.map((r, i) => (
+            {crate.map((r, i) => {
+              const depth = i + (frontVisible ? 1 : 0)
+              return (
               <li
                 key={r.art}
-                className="album-crate__slot album-crate__slot--back"
-                style={{ '--depth': i + 1 } as CSSProperties}
+                className={`album-crate__slot${depth > 0 ? ' album-crate__slot--back' : ''}`}
+                style={{ '--depth': depth } as CSSProperties}
               >
                 <a
                   className="album-sleeve"
@@ -378,7 +380,8 @@ export function FieldNotes() {
                   </span>
                 </a>
               </li>
-            ))}
+              )
+            })}
           </ul>
         )}
       </div>
