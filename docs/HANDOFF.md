@@ -3,11 +3,11 @@
 _Last updated 2026-10-22. One living file — rewrite, don't append._
 
 ## TL;DR
-- **Live:** https://lanceriver.com/#notes. PR #13 added four personal travel photos; PR #14 removed the non-photo props and made a tighter pile. Lance approved the final spacing and both PRs are merged and deployed.
-- **Git:** local `main` now includes deployed commit `4861a45`. The pre-existing unpushed handoff/seed-source commit was rebased onto it as `30ad659`. After this handoff is committed, local `main` is **two documentation commits ahead of `origin/main`**, with nothing pushed by this handoff task. Those commits also contain `docs/worn-screens/` seed sources. Do not mistake them for unshipped website changes.
-- **Checks:** final PR #14 typecheck, production build and 34/34 verification checks passed. CI passed for head `aec94f2`. Deployment run **39708045081** passed both test (including infrastructure pytest) and deploy jobs. Live HTML/JS/CSS were checked for all seven photos, removed props, and the approved support-object spacing.
-- **No open PRs or active feature worktrees.** Only the main checkout remains. Temporary previews on ports 5191/5192 were stopped; feature branches were removed locally and remotely.
-- **Next:** investigate the still-unfixed Worn mobile photo movement described below. No new feature request is pending after the approved Field Notes work.
+- **Live:** https://lanceriver.com/#notes. PRs #13 and #14 shipped the approved Field Notes photo pile. PR #15 fixed Worn's mobile swipe-row movement and is merged and deployed.
+- **Git:** local `main` includes deployed commit `2ea61de`. The handoff/seed-source commit was rebased as `6c3cecf`, followed by the previous handoff commit `b0da38a`; after this handoff update is committed, local `main` will be **three documentation commits ahead of `origin/main`**. Nothing from these commits is an unshipped website change. They also contain `docs/worn-screens/` seed sources.
+- **Checks:** PR #15 CI run **39709497721** passed, and deployment run **39709617067** succeeded. Browser QA passed at 390px portrait, 844px landscape, the 900px breakpoint, and 1440px desktop, including live resize and reduced-motion changes. No physical-phone check has happened; Lance plans to do that after the merge. PR #14's final checks and deployment are recorded below.
+- **No open PRs or feature worktrees.** The merged `codex/worn-mobile-motion` branch is retained locally and remotely; automatic review rejected remote branch deletion as unnecessary cleanup. The four pre-existing untracked items below remain untouched.
+- **Next:** Lance's optional physical-phone check of the deployed Worn row. No new feature request is pending.
 - **Untouched, pre-existing untracked files:** `.impeccable/`, `docs/daily-priorities.md`, `assets-source/IMG_7501.JPG`, and `assets-source/Sandstone Pillars and Mountain Pavilion.png`. Leave them alone. The last PNG was previously reported identical to committed `zhangjiajie-pillars.png`; not rechecked here.
 
 ## Where the product is
@@ -17,7 +17,7 @@ _Last updated 2026-10-22. One living file — rewrite, don't append._
 | Field Notes photos | Seven of Lance's own travel photographs. Existing: Zhangjiajie, Furong Ancient Town and Terracotta Army. Added: misty mountain road, coastal train, torii corridor and bamboo canopy. All open through the existing expand/lightbox interaction. |
 | Field Notes composition | **Approved by Lance.** A tighter, overlapping photo pile. Keep the colophon and turntable, with clear space around them below the photographs. Removed: painted alpine band, palette/"Sampled from the desk", Aa/type specimen, ampersand, and "Kept because the blue was right" slip. Do not restore them from older design decisions. Other sections' paintings remain. |
 | Turntable | Still prototype playback data: `Harvest Moon`, Neil Young, `playing: true`. The temporary record label now uses Lance's Zhangjiajie photograph, not the lake painting. Real Spotify integration remains open. |
-| Worn (Plate III) | PR #12 remains live. Six screens in staggered desktop rows; one horizontal swipe row on phones. The mobile movement report below was not worked on this session. |
+| Worn (Plate III) | PR #15 is live. Six screens retain their staggered desktop entrance and drift; on phones all figures are visible and stationary from first layout in one horizontal swipe row. Hover lift is limited to fine-pointer desktop. Lance plans an optional physical-phone check after merge. |
 | Hosting | Existing S3 + CloudFront deployment. Distribution `E1ZCFALE8XHKH7`; hosted zone `Z08238469JD0YFW9R421`. Every push to `main`, including docs-only pushes, triggers deployment. |
 | Old AWS site | Retired earlier on 2026-10-22, documented in `infra/README.md` (`f9e9524`). No infrastructure changes this session. Previous backup: `~/Documents/aws-old-site-backup-2026-10-22/`. Keep the current `lance-portfolio`, `exoplanets-backend` and `aws-sam-cli-managed-default` stacks. |
 
@@ -25,9 +25,11 @@ _Last updated 2026-10-22. One living file — rewrite, don't append._
 
 - **PR #13:** https://github.com/lanceriver/lance-portfolio/pull/13 — merged as `23da8cd`. Added four photos, dated captions, metadata-stripped WebP exports and provenance. Deployment run `39706220238` passed.
 - **PR #14:** https://github.com/lanceriver/lance-portfolio/pull/14 — merged as `4861a45`. Removed props, compacted the pile, added keyboard-focus lifting, and then spaced the turntable/colophon further apart at Lance's request. Final branch head was `aec94f2`; final deployment run `39708045081` passed.
+- **PR #15:** https://github.com/lanceriver/lance-portfolio/pull/15 — merged as `2ea61de`. Mobile Worn figures render visible and stationary, while desktop entrance remains; hover lift follows live fine-pointer capability. CI run `39709497721` passed and deployment run `39709617067` succeeded.
 - **Verification:** browser checks at 1440×1000, 1024×900 and 390×844 confirmed all seven photos load and expand, removed props are absent, keyboard focus raises a print, and there is no horizontal overflow or page error. Final geometry checks confirmed neither support object overlaps a photo or each other at these widths. Phone touch expand/close also passed. These were browser checks, not a physical-phone verification.
 - **Build warnings:** two existing Vite warnings reproduce on baseline main as well as these changes: `__VITE_PUBLIC_ASSET__2179b098__` and `__VITE_PUBLIC_ASSET__5467e91e__`. Build succeeds and those placeholders were not found in final generated output. No unrelated fixes were made.
-- **Left:** real-phone Worn bug investigation, Spotify integration/sign-off, and any further work Lance chooses. No Field Notes repair remains open.
+- **Worn browser QA:** at mobile widths (390px portrait, 844px landscape, 900px boundary), all six figures were visible at `y=0`, scale 1 and opacity 1 in 253 sampled frames. An emulated touch swipe reached `scrollLeft=258` with all figures stationary. At 1440px desktop the entrance remained, and hover reached `y=-10`; changing reduced-motion live cleared the hover. These are browser checks, not a physical-phone check.
+- **Left:** Lance's planned physical-phone check of the deployed Worn row, plus Spotify integration/sign-off and any further work Lance chooses. The Worn fix is merged and does not need to be reproduced again. No Field Notes repair remains open.
 
 ## Key findings and final layout
 
@@ -51,16 +53,11 @@ Originals are gitignored in `assets-source/travel/`; 17 photos are present, seve
 
 Each new image has full/1200/800-width WebP exports. Orientation is baked in; embedded metadata was checked absent from all twelve exports. Captions deliberately describe the scenes rather than guessing place names. `IMG_7501.JPG` is the **bakery photo**, not a mystery image; it was not selected for the site. A duplicate outside `travel/` remains untracked.
 
-## Top next item — Worn mobile swipe-row movement
+## Worn mobile motion fix shipped
 
-Lance's earlier report on a real phone:
-> On mobile the photos move up and down when you first tap them; only after a few seconds do they stay put.
+Baseline reproduction: figures 3–6 started at `y=96` with opacity 0 while offscreen. Swiping to the last figure produced about 700ms of delay followed by a rise and settle that took roughly 1.6 seconds. PR #15 removes the per-figure entrance on mobile: all six figures are visible and stationary immediately, including items that begin offscreen in the horizontal swipe row. Desktop keeps the staggered entrance from `y=96` and the three-depth drift. Hover lift reaches `y=-10` only when the live viewport is non-mobile, reduced motion is off, and the input supports hover with a fine pointer.
 
-**Still not reproduced or fixed.** `Screens()` in `src/components/Work.tsx` still has:
-1. Entrance from `{ y: 96, opacity: 0, scale: 0.96 }` through `whileInView`, `viewport: { once: true, amount: 0.2 }`, spring stiffness 110/damping 20, and delay `i * 0.14`. Screens starting outside the horizontal viewport may rise/settle when first swiped into view. Consider disabling this entrance on phones or animating the whole row once.
-2. `whileHover: { y: -10 }` is not explicitly gated behind `(hover: hover) and (pointer: fine)`. Investigate touch behavior before claiming this is the cause.
-
-Scroll drift is already disabled at ≤900px. Verify the eventual fix on a real phone; emulation alone does not establish iOS touch-hover behavior. Work in a new feature branch/worktree and PR.
+Browser QA covered 390px portrait, 844px landscape, the 900px boundary, and 1440px desktop, plus live resize and reduced-motion changes. The emulated touch swipe moved the row while every figure stayed settled. This does not verify iOS touch-hover behavior on a physical phone; Lance chose to do that check after merge. The fix is deployed, so no further reproduction or implementation is needed before that check.
 
 ## Decisions pending with Lance
 
@@ -95,12 +92,13 @@ Scroll drift is already disabled at ≤900px. Verify the eventual fix on a real 
 - `/private/tmp/photo-pile-{desktop,tablet,mobile}.png`: final layout screenshots. `/private/tmp/review-photo-pile.cjs`: temporary browser QA script. These can disappear; they are not required to rebuild the site.
 - `/private/tmp/travel-contact-sheet.jpg`, `/private/tmp/travel-shortlist.jpg`, `/private/tmp/travel-qa.json`, and `/private/tmp/travel-*.png`: asset-selection/PR #13 evidence, now superseded by the final pile.
 - Both `/private/tmp/lance-portfolio-travel-photos` and `/private/tmp/lance-portfolio-photo-pile` worktrees were removed after deployment. Their feature branches were deleted locally/remotely.
+- The merged `/private/tmp/lance-portfolio-worn-mobile` worktree was removed and previews 5193/5194 were stopped after deployment. Branch `codex/worn-mobile-motion` remains locally and remotely because automatic review rejected remote deletion as unnecessary cleanup.
 - Previous Worn seed/capture scratch: `/private/tmp/claude-501/-Users-lance-Documents-Projects-lance-portfolio-claude/cbd5014b-c388-4334-ab3a-c1c59ca31ba7/scratchpad/`. It may no longer exist. Text sources are preserved in `docs/worn-screens/`; do not copy fictional-person images into the repository.
 - Durable old-site backup: `~/Documents/aws-old-site-backup-2026-10-22/` (carried forward; not revalidated here).
 
 ## Suggested next session
 
-1. Read this handoff; the website changes are already live and approved. Leave the four untracked items alone. The two local documentation commits remain unpushed unless Lance subsequently pushes them.
-2. Reproduce and fix the Worn mobile movement in a new worktree/PR, with a real-phone check before declaring it resolved.
-3. If Lance chooses Spotify instead, obtain the secret-storage approach sign-off, then wire the API after his app setup/sign-in.
+1. Read this handoff; the website changes are already live and approved. Leave the four untracked items alone. After this handoff update is committed, three local documentation commits will remain ahead of `origin/main`; do not push them unless Lance chooses to.
+2. Lance may check the deployed Worn swipe row on his physical phone. Browser emulation passed; no re-reproduction or code change is pending.
+3. Spotify remains optional: get Lance's secret-storage approach sign-off before implementation, then wire the API after his app setup/sign-in.
 4. Only revisit imagery or add more travel photos at Lance's direction. The approved Field Notes pile and the clearly separated turntable/colophon are the current baseline.
