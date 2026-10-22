@@ -37,16 +37,18 @@ export const projects: Plate[] = [
     numeral: 'I',
     name: 'Pool Safety Solutions',
     tagline: 'Junior Systems Engineer · 2026 to now',
-    discipline: 'Production system',
+    discipline: 'Internal tools',
     blurb: 'I took a franchise-management prototype and made it production software for a network operating across NSW, QLD and VIC.',
+    /* TODO: Restore Pool Safety implementation details when public sharing is approved.
     points: [
       'Multi-tenant PostgreSQL with row-level security, so each franchise only ever sees its own data.',
       'Docker on AWS (Lightsail, ECR, S3, CloudFront) with separate staging and production, plus a Lambda and SQS pipeline that syncs GoHighLevel into Postgres.',
       'Stripe, Xero and GoHighLevel integrations, and about 470 automated tests gating every release through staging.',
     ],
+    */
     status: 'Internal system. No public link.',
     plateLabel: 'Plate I',
-    caption: 'Franchise data, kept in sync',
+    caption: 'Franchise operations',
   },
   {
     numeral: 'II',

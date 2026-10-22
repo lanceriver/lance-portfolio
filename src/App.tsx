@@ -68,6 +68,13 @@ export function App() {
 
   useLayoutEffect(() => {
     if (history.scrollRestoration) history.scrollRestoration = 'manual'
+    if (location.hash === '#contact' && document.getElementById('contact')) {
+      restore(() => {
+        const target = document.getElementById('contact')
+        return target ? target.getBoundingClientRect().top + scrollY : 0
+      })
+      return
+    }
     // a reload lands on an entry that may already carry an offset
     if (entryScroll() > 0) restore(entryScroll)
   }, [restore])

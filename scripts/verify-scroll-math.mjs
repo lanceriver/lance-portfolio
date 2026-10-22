@@ -153,6 +153,12 @@ console.log('\n— Back Cover join (BackCover.tsx) —')
   eq('scale within the stated range', scale(0) <= 1.06 ? 1 : 0, 1)
   eq('copy hidden at the join', copy(0), 0)
   eq('copy arrives early in the cover', copy(0.4), 1)
+  const wrapHeight = 1.6 * VH
+  const contactMarker = 0.8 * wrapHeight - 0.8 * VH
+  const settledPoint = 0.8 * (wrapHeight - VH)
+  eq('Contact marker lands at 80% pin progress', contactMarker, settledPoint)
+  eq('Contact copy is fully visible at that point', copy(contactMarker / (wrapHeight - VH)), 1)
+  eq('reduced-motion Contact marker starts at the scene', 0.8 * VH - 0.8 * VH, 0)
 }
 
 console.log(`\n${fail === 0 ? 'ALL PASS' : 'FAILURES'} — ${pass} passed, ${fail} failed\n`)

@@ -67,11 +67,28 @@ export function Crossing() {
   return (
     <section className="crossing" ref={ref} id="about" data-tone="dark" data-ground="page">
       <div className="shell crossing__inner">
-        <p className="eyebrow eyebrow--rule">Sydney</p>
-        <h2 className="display-r crossing__title">About.</h2>
-        <p className="body crossing__note">
-          Software engineer at Pool Safety Solutions in Sydney.
-        </p>
+        <div className="crossing__identity">
+          <h2 className="display-r crossing__title">About.</h2>
+          <p className="crossing__route">Singapore <span aria-hidden="true">→</span><span className="vh">to</span> Sydney</p>
+        </div>
+        <div className="crossing__bio">
+          <p className="body">I’m a final-year computer science student in Sydney, and a Junior Systems Engineer at Pool Safety Solutions.</p>
+          <p className="body">My eye for aesthetics carries into the software I build, especially Worn’s design language.</p>
+        </div>
+        <dl className="crossing__interests" aria-label="A few things I enjoy">
+          <div>
+            <dt>On foot</dt>
+            <dd>Going for walks.</dd>
+          </div>
+          <div>
+            <dt>At the keys</dt>
+            <dd>Learning to play piano.</dd>
+          </div>
+          <div>
+            <dt>Out and about</dt>
+            <dd>Cafés and places with character.</dd>
+          </div>
+        </dl>
       </div>
     </section>
   )

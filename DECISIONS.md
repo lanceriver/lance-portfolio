@@ -1133,8 +1133,9 @@ Lance's own bases. The `lake-terrace` plate files stay in `public/plates/`.
 
 The nav now tucks on scroll at every width, stays visible under keyboard focus,
 and samples the live page ground through the Crossing and the Hero dissolve.
-Pool Safety's first plate is a factual production-flow diagram with an
-approximate test count; the coastal painting is reserved for the Back Cover.
+Pool Safety is private by default: its plate shows only employer, role, dates,
+and a broad production experience summary. Internal architecture and detailed
+project notes stay commented out until public sharing is approved.
 The Back Cover uses a full-bleed coastal plate over a sampled-sky entrance
 bridge; only the real top edge feathers during the entrance, then the painting
 settles fully opaque. Field Notes' expanded prints use a native modal dialog whose sole control
@@ -1143,4 +1144,7 @@ immediately. Its DOM order follows the visual desk. Skip links, focus colors,
 external-tab announcements, Writing contrast, copy, and the hero/back-cover
 lead lengths are tightened while keeping the plate-book world. The phone
 aperture scales the table beyond the slot so the row-number gutter stays legible
-as the rightmost columns crop away.
+as the rightmost columns crop away. Contact anchors target the settled point in
+the pin, so navigation opens on the visible details rather than its bridge.
+About now pairs the Singapore-to-Sydney route with confirmed study, work, and
+interests in a short editorial layout; no portrait is shown without an image.

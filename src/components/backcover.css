@@ -15,6 +15,14 @@
 }
 
 .cover__wrap { height: 160vh; position: relative; }
+/* Native #contact lands when the sticky pin has completed its copy entrance. */
+.cover__contact-target {
+  position: absolute;
+  top: calc(80% - 80vh);
+  left: 0;
+  width: 1px;
+  height: 1px;
+}
 
 .cover__scene {
   --feather: 22vh;

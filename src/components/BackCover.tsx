@@ -58,11 +58,12 @@ export function BackCover() {
   }, !reduced)
 
   return (
-    <section className="cover" id="contact" data-tone="light" data-rule="off">
+    <section className="cover" data-tone="light" data-rule="off">
       {/* the sampled sky in the bridge gives way to the full-bleed painting */}
       <div className="cover__bridge" aria-hidden="true" />
 
       <div className="cover__wrap" ref={wrapRef}>
+        <span className="cover__contact-target" id="contact" aria-hidden="true" />
         <div className="cover__scene" ref={sceneRef}>
           <div
             className="cover__plate"

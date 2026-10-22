@@ -87,10 +87,14 @@ function SceneArrival() {
         viewport={{ once: true, amount: 0.3 }}
         transition={{ type: 'spring', stiffness: 140, damping: 18, mass: 1.1 }}
       >
-        <PoolSafetyFlow />
+        <PoolSafetySummary p={p} />
         <PlateCaption label={p.plateLabel} text={p.caption} />
+        {/* TODO: Restore the Pool Safety production diagram when public sharing is approved.
+        <PoolSafetyFlow />
+        */}
       </motion.figure>
 
+      {/* TODO: Restore detailed Pool Safety project copy when public sharing is approved.
       <div className="scene__caption-block">
         <p className="scene__disc eyebrow">{p.discipline}</p>
         <h3 className="display-r scene__name">{p.name}</h3>
@@ -99,10 +103,26 @@ function SceneArrival() {
         {p.points && <ul className="body scene__points">{p.points.map((point) => <li key={point}>{point}</li>)}</ul>}
         {projectMeta(p)}
       </div>
+      */}
     </article>
   )
 }
 
+function PoolSafetySummary({ p }: { p: (typeof projects)[number] }) {
+  return (
+    <div className="pool-summary">
+      <div className="pool-summary__identity">
+        <p className="eyebrow eyebrow--rule">{p.discipline}</p>
+        <h3 className="display-r pool-summary__name">{p.name}</h3>
+        <p className="pool-summary__role">{p.tagline}</p>
+      </div>
+      <p className="body pool-summary__blurb">{p.blurb}</p>
+    </div>
+  )
+}
+
+/* TODO: Restore the internal architecture and test-count diagram when public
+   sharing is approved.
 function PoolSafetyFlow() {
   return (
     <div className="pool-flow" role="group" aria-label="Pool Safety Solutions production system">
@@ -140,6 +160,7 @@ function FlowArrow() {
     </svg>
   )
 }
+*/
 
 /* ── II · APERTURE ───────────────────────────────────────
    A vertical slot widens across an enormous title. The app's table slides up
