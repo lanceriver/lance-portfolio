@@ -12,7 +12,7 @@ The original four plates originate from the **authorised handoff bundle**:
 | `zhangjiajie-pillars.png` | AI-generated (OpenAI image model) by Lance from his own Zhangjiajie photograph, 2026-10-21; hero plate |
 | `zhangjiajie-pillars-4k.png` | AI upscale (3840x2160) of zhangjiajie-pillars.png by Lance, 2026-10-21; source of the 2x hero export |
 | `mountain-road` (WebP exports) | Lance's `IMG_7332.JPG`; winding mountain road in mist on Tianmen Mountain, photographed 24 May 2026; orientation baked in and metadata stripped by `scripts/ingest-photo.py` |
-| `coastal-train` (WebP exports) | Lance's `IMG_4312.JPG`; green sky capsule train on the Busan coast, photographed 16 September 2025; metadata stripped by `scripts/ingest-photo.py` |
+| `coastal-train` (WebP exports) | Lance's `IMG_4312.JPG`; green train on the Busan coast, photographed 16 September 2025; metadata stripped by `scripts/ingest-photo.py` |
 | `torii-corridor` (WebP exports) | Lance's `DSC_0791.JPG`; torii corridor at Fushimi Inari, Kyoto, photographed 19 February 2024; metadata stripped by `scripts/ingest-photo.py` |
 | `bamboo-canopy` (WebP exports) | Lance's `IMG_8359.JPG`; bamboo canopy, Arashiyama, Kyoto, photographed 20 February 2024; orientation baked in and metadata stripped by `scripts/ingest-photo.py` |
 | `public/spotify-logo.svg` | Official `Full_Logo_Black_RGB.svg`, copied unmodified from Spotify's [2024 full-logo asset archive](https://developer.spotify.com/images/guidelines/design/2024-spotify-full-logo.zip) |

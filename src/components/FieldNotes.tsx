@@ -87,7 +87,7 @@ const OBJECTS: Obj[] = [
     stiffness: 142,
     damping: 18,
     src: '/plates/coastal-train-1200.webp',
-    alt: 'A green sky capsule train running along the coast in Busan.',
+    alt: 'A green train running along the coast in Busan.',
     caption: 'Busan, Korea · September 2025',
   },
   {
