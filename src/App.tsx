@@ -95,9 +95,10 @@ export function App() {
 
   return (
     <>
+      <a className="skip-link" href="#content">Skip to content</a>
       <Nav onOpenIndex={setIndex} />
       <PlateIndex open={index} onClose={closeIndex} />
-      <main>
+      <main id="content" tabIndex={-1}>
         {show('hero') && <Hero />}
         {show('crossing') && <Crossing />}
         {show('work') && <Work />}

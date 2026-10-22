@@ -1128,3 +1128,27 @@ the UI, 840w and 1680w WebP, lazy loaded.
 app with 1,000,050 faker contacts in a base called Contacts, signed in with a
 local test session. Nothing was captured from the production app or from
 Lance's own bases. The `lake-terrace` plate files stay in `public/plates/`.
+
+## D58 — The nav gets out of the way, and the page clears its own contrast
+
+A critique found the masthead colliding at nearly every section join on
+desktop: "LR" over the Pool Safety paragraph, the links through Worn's
+figures and the post titles. It also went cream on cream for a few hundred
+pixels after the hero dissolved.
+
+**Tucked at every width.** The phone's behaviour is now everyone's: the nav
+slides away while the reader scrolls down and returns the moment they scroll
+up, never while a keyboard user is in it. It still has no ground. A scrim or
+bar would be a container, and §-nav says never a container.
+
+**The hero reports its own tone.** The nav already takes its ink from the
+`data-tone` under it. The hero's section stays under the nav after its
+painting has dissolved into the cream ground, so it now flips its own
+`data-tone` to dark once the dissolve passes 0.45.
+
+**Contrast.** The focus ring was ochre on cream, 2.14:1. It is now rust on
+paper and paper on the paintings and slate. Writing's dates and standfirsts
+were 3.1:1 and 3.5:1 on the slate; they are now past 4.5:1. There is a skip
+link, the Field Notes lightbox is a real dialog (focus in, held, restored),
+the desk is tabbed in the order it reads on desktop, and links that open a
+new tab say so.

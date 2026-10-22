@@ -5,7 +5,7 @@
   height: var(--nav-h);
   display: flex;
   align-items: center;
-  transition: color .3s var(--ease-settle);
+  transition: color .3s var(--ease-settle), transform .42s var(--ease-settle);
   pointer-events: none;
 }
 .nav__inner {
@@ -29,6 +29,13 @@
    the section — a scrim there put a hard step between the bridge and the plate. */
 .nav--light { color: var(--paper); text-shadow: 0 1px 16px rgba(8, 26, 44, .55); }
 .nav--dark  { color: var(--ink); }
+
+/* Tucked above the viewport while the reader scrolls down, at every width: on
+   desktop its ink sat on top of body copy and figures. Never while a keyboard
+   user is in it — they must be able to see where focus is. Not
+   `:focus-within`: closing the menu hands focus back to its trigger, and a
+   tap-focused button would then hold the nav down for good. D58. */
+.nav--tucked:not(:has(:focus-visible)) { transform: translateY(-100%); }
 /* .nav--light .nav__inner { border-bottom-color: rgba(251, 246, 236, .26); } */
 /* no rule drawn across a painting */
 /* .nav--norule .nav__inner { border-bottom-color: transparent; } */
@@ -78,13 +85,6 @@
 .nav__menu { display: none; }
 
 @media (max-width: 720px) {
-  .nav { transition: color .3s var(--ease-settle), transform .42s var(--ease-settle); }
-  /* Tucked above the viewport while the reader scrolls down. Never while a
-     keyboard user is in it — they must be able to see where focus is. Not
-     `:focus-within`: closing the menu hands focus back to its trigger, and a
-     tap-focused button would then hold the nav down for good. */
-  .nav--tucked:not(:has(:focus-visible)) { transform: translateY(-100%); }
-
   .nav__links { display: none; }
   /* a 44px target around a 24px mark, without moving the mark off the margin */
   .nav__menu {
@@ -126,6 +126,6 @@
   }
 }
 
-@media (max-width: 720px) and (prefers-reduced-motion: reduce) {
+@media (prefers-reduced-motion: reduce) {
   .nav { transition: color .3s var(--ease-settle); }
 }

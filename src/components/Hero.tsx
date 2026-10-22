@@ -52,6 +52,12 @@ export function Hero() {
 
     return () => {
       hero.style.setProperty('--fade', fade.toFixed(4))
+      // The section stays under the nav after the painting has dissolved into
+      // the cream ground, so it reports dark ink once the dissolve passes .45;
+      // the nav reads data-tone from whatever sits under it. Reduced motion
+      // never gets here and keeps the JSX's 'light'. D58.
+      const tone = fade >= 0.45 ? 'dark' : 'light'
+      if (wrap.dataset.tone !== tone) wrap.dataset.tone = tone
       copy.style.opacity = String(1 - out)
       copy.style.transform = `translate3d(0, ${-24 * out}px, 0)`
     }

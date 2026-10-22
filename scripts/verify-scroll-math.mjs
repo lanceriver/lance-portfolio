@@ -41,6 +41,17 @@ console.log('\n— Hero dissolve (Hero.tsx) —')
   eq('fade is 1 at handoff', fade(L.hero.h - VH), 1)
 }
 
+console.log('\n— Hero tone handoff (Hero.tsx) —')
+{
+  // The nav reads the hero's data-tone; once the painting has dissolved into the
+  // cream ground the hero must report dark ink. 1 = dark, 0 = light.
+  const dark = (p) => (range(p, 0.44, 0.88) >= 0.45 ? 1 : 0)
+  eq('tone is light at load', dark(0), 0)
+  eq('tone still light at p .6 (fade .364)', dark(0.6), 0)
+  eq('tone is dark at p .64 (fade .4545)', dark(0.64), 1)
+  eq('tone is dark at handoff', dark(1), 1)
+}
+
 console.log('\n— Crossing ground warm-up (Crossing.tsx) —')
 {
   const tokenCss = readFileSync(new URL('../src/styles/tokens.css', import.meta.url), 'utf8')

@@ -63,6 +63,34 @@ const OBJECTS: Obj[] = [
     caption: 'Furong Ancient Town · May 2026',
   },
   {
+    id: 'bamboo-canopy',
+    kind: 'print',
+    className: 'obj obj--bamboo',
+    depth: 2.9,
+    rest: 2.8,
+    from: { x: 78, y: 116, rotate: 8, scale: 0.89 },
+    delay: 1.12,
+    stiffness: 166,
+    damping: 16,
+    src: '/plates/bamboo-canopy-1200.webp',
+    alt: 'Looking up through the bamboo canopy of the Arashiyama forest in Kyoto.',
+    caption: 'Arashiyama, Kyoto · February 2024',
+  },
+  {
+    id: 'army',
+    kind: 'print',
+    className: 'obj obj--army',
+    depth: 1.9,
+    rest: 2.2,
+    from: { x: -96, y: 60, rotate: -6, scale: 0.9 },
+    delay: 0.44,
+    stiffness: 138,
+    damping: 17,
+    src: '/plates/terracotta-army-1200.webp',
+    alt: 'Ranks of the Terracotta Army in their excavated pit, every face different.',
+    caption: "Xi'an · May 2026",
+  },
+  {
     id: 'mountain-road',
     kind: 'print',
     className: 'obj obj--mountain-road',
@@ -103,34 +131,6 @@ const OBJECTS: Obj[] = [
     src: '/plates/torii-corridor-1200.webp',
     alt: 'A corridor of red torii gates at Fushimi Inari receding into the distance.',
     caption: 'Fushimi Inari, Kyoto · February 2024',
-  },
-  {
-    id: 'bamboo-canopy',
-    kind: 'print',
-    className: 'obj obj--bamboo',
-    depth: 2.9,
-    rest: 2.8,
-    from: { x: 78, y: 116, rotate: 8, scale: 0.89 },
-    delay: 1.12,
-    stiffness: 166,
-    damping: 16,
-    src: '/plates/bamboo-canopy-1200.webp',
-    alt: 'Looking up through the bamboo canopy of the Arashiyama forest in Kyoto.',
-    caption: 'Arashiyama, Kyoto · February 2024',
-  },
-  {
-    id: 'army',
-    kind: 'print',
-    className: 'obj obj--army',
-    depth: 1.9,
-    rest: 2.2,
-    from: { x: -96, y: 60, rotate: -6, scale: 0.9 },
-    delay: 0.44,
-    stiffness: 138,
-    damping: 17,
-    src: '/plates/terracotta-army-1200.webp',
-    alt: 'Ranks of the Terracotta Army in their excavated pit, every face different.',
-    caption: "Xi'an · May 2026",
   },
   {
     id: 'gamcheon',
@@ -272,6 +272,7 @@ export function FieldNotes() {
   const [failedCrateArt, setFailedCrateArt] = useState<string[]>([])
   const [selectedArt, setSelectedArt] = useState<string | null>(null)
   const sectionRef = useRef<HTMLElement>(null)
+  const closeRef = useRef<HTMLButtonElement>(null)
   const lift = useLift()
   const [phone] = useState(isPhone)
 
@@ -394,12 +395,22 @@ export function FieldNotes() {
     }
   }, [reduced])
 
-  // Escape closes the expanded print
+  // The expanded print is a dialog: Escape closes it, focus moves onto its
+  // close button and is held there (it is the only control), and on the way out
+  // focus returns to the print that opened it. Same pattern as PlateIndex.
   useEffect(() => {
     if (!open) return
-    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setOpen(null) }
+    const restoreTo = document.activeElement as HTMLElement | null
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') { setOpen(null); return }
+      if (e.key === 'Tab') { e.preventDefault(); closeRef.current?.focus() }
+    }
     addEventListener('keydown', onKey)
-    return () => removeEventListener('keydown', onKey)
+    closeRef.current?.focus()
+    return () => {
+      removeEventListener('keydown', onKey)
+      restoreTo?.focus?.()
+    }
   }, [open])
 
   return (
@@ -454,7 +465,7 @@ export function FieldNotes() {
                   target="_blank"
                   rel="noreferrer"
                   onClick={(event) => selectRecord(event, nowPlaying.art)}
-                  aria-label={`Open ${nowPlaying.title} by ${nowPlaying.artist} on Spotify`}
+                  aria-label={`Open ${nowPlaying.title} by ${nowPlaying.artist} on Spotify (opens in a new tab)`}
                 >
                   <span className="album-sleeve__record" aria-hidden="true">
                     <span className="album-sleeve__label" />
@@ -488,7 +499,7 @@ export function FieldNotes() {
                     target="_blank"
                     rel="noreferrer"
                     onClick={(event) => selectRecord(event, r.art)}
-                    aria-label={`Open ${r.title} by ${r.artist} on Spotify`}
+                    aria-label={`Open ${r.title} by ${r.artist} on Spotify (opens in a new tab)`}
                   >
                     <span className="album-sleeve__jacket">
                       <img
@@ -515,7 +526,7 @@ export function FieldNotes() {
             <span className="album-crate__cap-title">{selected.title}</span>
             <span className="album-crate__cap-artist">{selected.artist}</span>
             <a className="album-crate__open" href={selected.url} target="_blank" rel="noreferrer">
-              Open in Spotify <span aria-hidden="true">↗</span>
+              Open in Spotify <span aria-hidden="true">↗</span><span className="vh"> (opens in a new tab)</span>
             </a>
           </div>
         )}
@@ -537,6 +548,9 @@ export function FieldNotes() {
         {open && (
           <motion.div
             className="lightbox"
+            role="dialog"
+            aria-modal="true"
+            aria-label={open.caption}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -550,7 +564,7 @@ export function FieldNotes() {
               className="lightbox__img"
               transition={{ type: 'spring', stiffness: 180, damping: 24 }}
             />
-            <button className="lightbox__close" onClick={() => setOpen(null)}>Close ×</button>
+            <button className="lightbox__close" ref={closeRef} onClick={() => setOpen(null)}>Close ×</button>
           </motion.div>
         )}
       </AnimatePresence>
@@ -600,12 +614,12 @@ function Turntable({ nowPlaying, turntableRef }: {
         {hasTrack && (
           <>
             {url
-              ? <a className="turntable__title" href={url} target="_blank" rel="noreferrer" aria-label={`${title} by ${artist} on Spotify`}>{title}</a>
+              ? <a className="turntable__title" href={url} target="_blank" rel="noreferrer" aria-label={`${title} by ${artist} on Spotify (opens in a new tab)`}>{title}</a>
               : <span className="turntable__title">{title}</span>}
             <span className="turntable__artist">{artist}</span>
           </>
         )}
-        <a className="turntable__spotify" href="https://open.spotify.com" target="_blank" rel="noreferrer" aria-label="Spotify">
+        <a className="turntable__spotify" href="https://open.spotify.com" target="_blank" rel="noreferrer" aria-label="Spotify (opens in a new tab)">
           <img src="/spotify-logo.svg" alt="Spotify" />
         </a>
       </figcaption>

@@ -63,8 +63,8 @@ function projectMeta(p: (typeof projects)[number]) {
   if (!p.href) return null
   return (
     <div className="scene__links">
-      <a className="scene__link" href={p.href} target="_blank" rel="noopener noreferrer">Live demo <span aria-hidden="true">↗</span></a>
-      {p.repo && <a className="scene__link" href={p.repo} target="_blank" rel="noopener noreferrer">Code <span aria-hidden="true">↗</span></a>}
+      <a className="scene__link" href={p.href} target="_blank" rel="noopener noreferrer">Live demo <span aria-hidden="true">↗</span><span className="vh"> (opens in a new tab)</span></a>
+      {p.repo && <a className="scene__link" href={p.repo} target="_blank" rel="noopener noreferrer">Code <span aria-hidden="true">↗</span><span className="vh"> (opens in a new tab)</span></a>}
     </div>
   )
 }

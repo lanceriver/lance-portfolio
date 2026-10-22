@@ -322,13 +322,13 @@
   .obj + .obj { margin-top: -64px; }
   .obj--terrace { width: 92% !important; align-self: flex-start; }
   .obj--night   { width: 76% !important; align-self: flex-end; }
-  .obj--army    { width: 62% !important; align-self: flex-start; }
+  .obj--army    { width: 62% !important; align-self: flex-end; }
   .obj--colophon { width: 88% !important; align-self: flex-start; }
   .obj--turntable { width: 88% !important; align-self: flex-end; }
   .obj--mountain-road { width: 88% !important; align-self: flex-start; }
   .obj--coastal-train { width: 78% !important; align-self: flex-end; }
   .obj--torii { width: 94% !important; align-self: flex-start; }
-  .obj--bamboo { width: 76% !important; align-self: flex-end; }
+  .obj--bamboo { width: 76% !important; align-self: flex-start; }
   .obj--gamcheon  { width: 90% !important; align-self: flex-start; }
   .obj--library   { width: 72% !important; align-self: flex-end; }
   .obj--kinkakuji { width: 74% !important; align-self: flex-start; }

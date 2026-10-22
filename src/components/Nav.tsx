@@ -6,7 +6,7 @@ import './nav.css'
 type Tone = 'light' | 'dark'
 export type IndexMode = 'plates' | 'contents'
 
-/** Scrolled this far past the top before the nav may tuck away on a phone. */
+/** Scrolled this far past the top before the nav may tuck away. */
 const TUCK_AFTER = 120
 /** Ignore scroll jitter smaller than this when deciding direction. */
 const TUCK_SLOP = 6
@@ -21,9 +21,10 @@ const TUCK_SLOP = 6
  * chapters and the back cover beneath it. The mark is two hairlines, the same
  * rule the eyebrows draw, the lower one shorter and hung right: a hamburger
  * a reader recognises, drawn in the site's own line. The nav also tucks away
- * while the reader scrolls down and returns the moment they scroll up, so its
- * ink never sits on top of the type it would otherwise collide with — and it
- * does that without a scrim or a ground.
+ * while the reader scrolls down and returns the moment they scroll up, at every
+ * width: on desktop its ink sat on top of body copy and figures. So its ink
+ * never sits on top of the type it would otherwise collide with — and it does
+ * that without a scrim or a ground. DECISIONS D58.
  */
 export function Nav({ onOpenIndex }: { onOpenIndex: (mode: IndexMode) => void }) {
   const [tone, setTone] = useState<Tone>('light')
@@ -53,8 +54,8 @@ export function Nav({ onOpenIndex }: { onOpenIndex: (mode: IndexMode) => void })
     setTone((cur) => (cur === next ? cur : next))
     setRule((cur) => (cur === nextRule ? cur : nextRule))
 
-    // Direction, not position: down tucks, up returns. Only a phone acts on
-    // it (nav.css); the class is harmless everywhere else.
+    // Direction, not position: down tucks, up returns, at every width (nav.css)
+    // — on desktop the ink sat on top of body copy and figures. DECISIONS D58.
     const delta = scrollY - lastY.current
     if (Math.abs(delta) < TUCK_SLOP) return
     lastY.current = scrollY
