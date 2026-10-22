@@ -1073,3 +1073,18 @@ page renders the same with them and without (a maximum difference of 1/255
 on a few pixels, from compositing), and hit-testing passes straight through.
 If a future Safari stops reading invisible elements, the root ground is
 still cream underneath.
+
+## D56 — Field Notes is a personal photo pile
+
+The seven travel photographs are the desk's main content. At Lance's direction,
+the painted band, swatches, type specimens, ampersand and caption slip have been
+removed; the colophon and turntable remain. This supersedes D51's choice to keep
+the painted band as an anchor.
+
+The desktop arranges the photographs in a centered, overlapping field, with
+the colophon and turntable close together below. Each print remains mostly
+visible and opens in the existing lightbox; pointer entry and keyboard focus
+raise the selected print to the top. Phones use a compact overlapping flow with
+the colophon and turntable clear beneath it, so every image stays reachable.
+The turntable label uses one of Lance's photographs until the album art endpoint
+is available.
