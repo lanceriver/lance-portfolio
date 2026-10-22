@@ -1,13 +1,13 @@
-# Handoff — lance-portfolio, personal photo pile shipped
+# Handoff — lance-portfolio, Spotify connected
 
 _Last updated 2026-10-22. One living file — rewrite, don't append._
 
 ## TL;DR
-- **Live:** https://lanceriver.com/#notes. PRs #13 and #14 shipped the approved Field Notes photo pile. PR #15 fixed Worn's mobile swipe-row movement and is merged and deployed.
-- **Git:** local `main` includes deployed commit `2ea61de`. The handoff/seed-source commit was rebased as `6c3cecf`, followed by the previous handoff commit `b0da38a`; after this handoff update is committed, local `main` will be **three documentation commits ahead of `origin/main`**. Nothing from these commits is an unshipped website change. They also contain `docs/worn-screens/` seed sources.
-- **Checks:** PR #15 CI run **39709497721** passed, and deployment run **39709617067** succeeded. Browser QA passed at 390px portrait, 844px landscape, the 900px breakpoint, and 1440px desktop, including live resize and reduced-motion changes. No physical-phone check has happened; Lance plans to do that after the merge. PR #14's final checks and deployment are recorded below.
-- **No open PRs or feature worktrees.** The merged `codex/worn-mobile-motion` branch is retained locally and remotely; automatic review rejected remote branch deletion as unnecessary cleanup. The four pre-existing untracked items below remain untouched.
-- **Next:** Lance's optional physical-phone check of the deployed Worn row. No new feature request is pending.
+- **Live:** https://lanceriver.com/#notes. PRs #13–#17 are merged and deployed, including the Spotify turntable and its API.
+- **Git:** local `main` includes deployed commit `5542430` and unpushed docs commits `04eb2ba`, `3086287`, and `af33b72`; after this handoff update is committed, it will be four documentation commits ahead of `origin/main`. These are docs-only updates. Merged branches `codex/spotify-turntable` and `codex/spotify-lambda-quota` are retained locally and remotely.
+- **Checks:** PR #17 CI run **39713893035** passed; final website deployment **39714002246** passed tests and deploy. The corrected AWS change set completed successfully. The live API returns HTTP 200 with exactly `playing`, `title`, `artist`, and `url`, and CORS allows `https://lanceriver.com`. The deployed bundle includes the public endpoint and official Spotify logo, excludes the `Harvest Moon` prototype, and the logo returns HTTP 200.
+- **Open work:** No open PRs and no pending deployment or approval. Spotify previews are stopped and its temporary worktree is removed; only the main checkout remains. Merged branches are retained locally and remotely. The four pre-existing untracked items below remain untouched.
+- **Next:** no required work. Lance may do the optional physical-phone check of Worn; restoring Lambda concurrency reservation 1 is optional only after account quota allows at least 10 unreserved slots.
 - **Untouched, pre-existing untracked files:** `.impeccable/`, `docs/daily-priorities.md`, `assets-source/IMG_7501.JPG`, and `assets-source/Sandstone Pillars and Mountain Pavilion.png`. Leave them alone. The last PNG was previously reported identical to committed `zhangjiajie-pillars.png`; not rechecked here.
 
 ## Where the product is
@@ -16,20 +16,27 @@ _Last updated 2026-10-22. One living file — rewrite, don't append._
 |---|---|
 | Field Notes photos | Seven of Lance's own travel photographs. Existing: Zhangjiajie, Furong Ancient Town and Terracotta Army. Added: misty mountain road, coastal train, torii corridor and bamboo canopy. All open through the existing expand/lightbox interaction. |
 | Field Notes composition | **Approved by Lance.** A tighter, overlapping photo pile. Keep the colophon and turntable, with clear space around them below the photographs. Removed: painted alpine band, palette/"Sampled from the desk", Aa/type specimen, ampersand, and "Kept because the blue was right" slip. Do not restore them from older design decisions. Other sections' paintings remain. |
-| Turntable | Still prototype playback data: `Harvest Moon`, Neil Young, `playing: true`. The temporary record label now uses Lance's Zhangjiajie photograph, not the lake painting. Real Spotify integration remains open. |
+| Turntable | Spotify-backed frontend and `GET /now-playing` API are deployed. The corrected Lambda shares account concurrency; the first change set's reservation failure was resolved in PR #17. A refreshed production page visibly showed the real Spotify last-played track and link. The live API returns the four expected fields with production CORS. The record label remains Lance's Zhangjiajie photograph, not album art. |
 | Worn (Plate III) | PR #15 is live. Six screens retain their staggered desktop entrance and drift; on phones all figures are visible and stationary from first layout in one horizontal swipe row. Hover lift is limited to fine-pointer desktop. Lance plans an optional physical-phone check after merge. |
 | Hosting | Existing S3 + CloudFront deployment. Distribution `E1ZCFALE8XHKH7`; hosted zone `Z08238469JD0YFW9R421`. Every push to `main`, including docs-only pushes, triggers deployment. |
-| Old AWS site | Retired earlier on 2026-10-22, documented in `infra/README.md` (`f9e9524`). No infrastructure changes this session. Previous backup: `~/Documents/aws-old-site-backup-2026-10-22/`. Keep the current `lance-portfolio`, `exoplanets-backend` and `aws-sam-cli-managed-default` stacks. |
+| Old AWS site | Retired earlier on 2026-10-22, documented in `infra/README.md` (`f9e9524`). No old-site infrastructure changes this session; the Spotify changeset is deployed. Previous backup: `~/Documents/aws-old-site-backup-2026-10-22/`. Keep the current `lance-portfolio`, `exoplanets-backend` and `aws-sam-cli-managed-default` stacks. |
 
 ## Done / left
 
 - **PR #13:** https://github.com/lanceriver/lance-portfolio/pull/13 — merged as `23da8cd`. Added four photos, dated captions, metadata-stripped WebP exports and provenance. Deployment run `39706220238` passed.
 - **PR #14:** https://github.com/lanceriver/lance-portfolio/pull/14 — merged as `4861a45`. Removed props, compacted the pile, added keyboard-focus lifting, and then spaced the turntable/colophon further apart at Lance's request. Final branch head was `aec94f2`; final deployment run `39708045081` passed.
 - **PR #15:** https://github.com/lanceriver/lance-portfolio/pull/15 — merged as `2ea61de`. Mobile Worn figures render visible and stationary, while desktop entrance remains; hover lift follows live fine-pointer capability. CI run `39709497721` passed and deployment run `39709617067` succeeded.
+- **PR #16:** https://github.com/lanceriver/lance-portfolio/pull/16 — merged as `d5e2349`. CI run `39713297867` and website deployment run `39713411557` passed. This shipped the Spotify-backed turntable frontend.
+- **PR #17:** https://github.com/lanceriver/lance-portfolio/pull/17 — merged as `5542430`. CI run `39713893035` passed; final website deployment run `39714002246` passed tests and deploy. It comments out `ReservedConcurrentExecutions` with the required TODO and documents shared Lambda capacity; no permissions or API code changed. Branch `codex/spotify-lambda-quota` is retained locally and remotely.
+- **Spotify setup:** Lance created the `Lance Portfolio` developer app with loopback redirect `127.0.0.1:8888/callback`, authorized the approved read-only current/recent playback scopes, and completed PKCE bootstrap. `scripts/connect-spotify.py` succeeded. Credentials were saved as an AWS-managed-key SSM `SecureString` at `/lance-portfolio/spotify/credentials`; no token or client secret is in source, logs, frontend, or this handoff. The selected store is standard SSM SecureString, not Secrets Manager. Spotify authorization needs reconnecting after 180 days.
+- **Now-playing service:** PR #16 adds a Python Lambda/API Gateway `GET /now-playing` handler in a separate `infra/spotify` package. It reads the exact SSM parameter, caches metadata for 30 seconds, and caches Spotify access tokens until 60 seconds before expiry (normally about an hour); it retries once after 401 and cools down on 429. Bootstrap validates loopback/state with PKCE; no client secret is needed. The deployed handler returns HTTP 200 with exactly `playing`, `title`, `artist`, and `url`, and CORS allows `https://lanceriver.com`. Its last real response reported a stopped track; this is transient playback metadata, not permanent portfolio content. The frontend polls every 30 seconds only while the document is visible; the song link and official Spotify mark are included. It keeps the travel photo as the record label, uses no album art, and shows an honest unavailable state when playback metadata is unavailable.
+- **GitHub configuration:** repository variable `NOW_PLAYING_API_URL` is set to the public API URL `https://jjplj3vij6.execute-api.us-east-1.amazonaws.com/now-playing`.
+- **AWS deployment:** the initial PR #16 change set rolled back cleanly because total and unreserved Lambda concurrency were both 10; reserving 1 would leave fewer than the required 10 unreserved. PR #17 removed the reservation and documented shared capacity. Corrected changeset `arn:aws:cloudformation:us-east-1:319611139788:changeSet/samcli-deploy1792637627/19d101e2-6e5e-4715-97ae-62cb6e37a14b` was applied successfully; stack update completed. The changeset added the Spotify function, role and invoke permission, and modified the existing API without changing visitor-counter code. Optional TODO: restore reservation 1 only after quota allows at least 10 unreserved concurrency slots.
 - **Verification:** browser checks at 1440×1000, 1024×900 and 390×844 confirmed all seven photos load and expand, removed props are absent, keyboard focus raises a print, and there is no horizontal overflow or page error. Final geometry checks confirmed neither support object overlaps a photo or each other at these widths. Phone touch expand/close also passed. These were browser checks, not a physical-phone verification.
+- **Spotify verification:** local TypeScript/build, 34/34 verification checks, 22 isolated Python tests, and SAM lint/build passed. Desktop and mobile UI states passed for playing, paused, error, empty, long text, and unsafe links. A refreshed production page visibly showed the real Spotify last-played track and link. The deployed bundle contains the public API endpoint and official logo, excludes the `Harvest Moon` prototype, and the logo returns HTTP 200. API verification confirmed the exact response shape and production CORS.
 - **Build warnings:** two existing Vite warnings reproduce on baseline main as well as these changes: `__VITE_PUBLIC_ASSET__2179b098__` and `__VITE_PUBLIC_ASSET__5467e91e__`. Build succeeds and those placeholders were not found in final generated output. No unrelated fixes were made.
 - **Worn browser QA:** at mobile widths (390px portrait, 844px landscape, 900px boundary), all six figures were visible at `y=0`, scale 1 and opacity 1 in 253 sampled frames. An emulated touch swipe reached `scrollLeft=258` with all figures stationary. At 1440px desktop the entrance remained, and hover reached `y=-10`; changing reduced-motion live cleared the hover. These are browser checks, not a physical-phone check.
-- **Left:** Lance's planned physical-phone check of the deployed Worn row, plus Spotify integration/sign-off and any further work Lance chooses. The Worn fix is merged and does not need to be reproduced again. No Field Notes repair remains open.
+- **Left:** no required work. The API and website deployments are verified. Lance may do his planned physical-phone check of Worn; restoring the Lambda concurrency reservation is optional after an account quota increase. No Field Notes repair remains open.
 
 ## Key findings and final layout
 
@@ -59,11 +66,10 @@ Baseline reproduction: figures 3–6 started at `y=96` with opacity 0 while offs
 
 Browser QA covered 390px portrait, 844px landscape, the 900px boundary, and 1440px desktop, plus live resize and reduced-motion changes. The emulated touch swipe moved the row while every figure stayed settled. This does not verify iOS touch-hover behavior on a physical phone; Lance chose to do that check after merge. The fix is deployed, so no further reproduction or implementation is needed before that check.
 
-## Decisions pending with Lance
+## Other decisions pending with Lance
 
-1. **Spotify:** secret-storage approach needs sign-off before implementation (previous proposal: SSM SecureString versus Secrets Manager). Lance then creates the Spotify app and completes the one-time sign-in. Target is a Lambda `GET /now-playing` feeding `Turntable` / `NOW_PLAYING` in `src/components/FieldNotes.tsx`.
-2. **Other paintings:** whether to replace the remaining non-Field-Notes plates with imagery derived from his own trips. Ask before generating new artwork. The Field Notes removal does not authorize changing the hero, Work plates, Writing or Back Cover.
-3. **Airtable Clone screenshot:** still an option for Plate II if Lance wants it; needs a signed-in capture.
+1. **Other paintings:** whether to replace the remaining non-Field-Notes plates with imagery derived from his own trips. Ask before generating new artwork. The Field Notes removal does not authorize changing the hero, Work plates, Writing or Back Cover.
+2. **Airtable Clone screenshot:** still an option for Plate II if Lance wants it; needs a signed-in capture.
 
 ## Workflow / environment notes
 
@@ -84,7 +90,7 @@ Browser QA covered 390px portrait, 844px landscape, the 900px boundary, and 1440
 - Simulator `worn-portfolio`: `22D896FD-B2AD-4C2A-90B5-9A5F14C556C7` (iPhone 17 Pro, iOS 26.5). Previous build: fits-app-workspace `origin/main` `fe24116`, eight fictional fits, Sydney location. This simulator state was not rechecked here.
 - Seeder: copy `Documents/SeedPhotos/*.jpg` and `Documents/SeedCutouts/<stem>_<top|bottom|shoes>.png` into the app container, launch with `-WardrobeSeedDiary YES -WardrobeSeedBuilder YES`. Do not edit SwiftData with sqlite.
 - Prior simulator tooling screenshots lagged an action; use `xcrun simctl io <udid> screenshot`. Taps may need ~1.5 seconds after sheet animations. Leave `worn-trip` (759C…) and iPhone 17e suite simulator (A57A…) alone.
-- AWS SSO, if needed later: `aws sso login --profile admin` requires Lance's browser approval. No AWS credentials or infrastructure were touched in this session.
+- AWS SSO, if needed later: `aws sso login --profile admin` requires Lance's browser approval. Spotify OAuth credentials are stored encrypted in SSM SecureString; its reviewed CloudFormation changeset is deployed.
 
 ## Ephemeral artifacts
 
@@ -93,12 +99,13 @@ Browser QA covered 390px portrait, 844px landscape, the 900px boundary, and 1440
 - `/private/tmp/travel-contact-sheet.jpg`, `/private/tmp/travel-shortlist.jpg`, `/private/tmp/travel-qa.json`, and `/private/tmp/travel-*.png`: asset-selection/PR #13 evidence, now superseded by the final pile.
 - Both `/private/tmp/lance-portfolio-travel-photos` and `/private/tmp/lance-portfolio-photo-pile` worktrees were removed after deployment. Their feature branches were deleted locally/remotely.
 - The merged `/private/tmp/lance-portfolio-worn-mobile` worktree was removed and previews 5193/5194 were stopped after deployment. Branch `codex/worn-mobile-motion` remains locally and remotely because automatic review rejected remote deletion as unnecessary cleanup.
+- Spotify worktree `/private/tmp/lance-portfolio-spotify` was removed and previews at `127.0.0.1:5195` (Vite) and `127.0.0.1:5196` (read-only Spotify handler) were stopped after final browser review. Only the main checkout remains. PRs #16 and #17 are merged; branches `codex/spotify-turntable` and `codex/spotify-lambda-quota` are retained locally and remotely.
 - Previous Worn seed/capture scratch: `/private/tmp/claude-501/-Users-lance-Documents-Projects-lance-portfolio-claude/cbd5014b-c388-4334-ab3a-c1c59ca31ba7/scratchpad/`. It may no longer exist. Text sources are preserved in `docs/worn-screens/`; do not copy fictional-person images into the repository.
 - Durable old-site backup: `~/Documents/aws-old-site-backup-2026-10-22/` (carried forward; not revalidated here).
 
 ## Suggested next session
 
-1. Read this handoff; the website changes are already live and approved. Leave the four untracked items alone. After this handoff update is committed, three local documentation commits will remain ahead of `origin/main`; do not push them unless Lance chooses to.
+1. Read this handoff; PRs #16 and #17 and both deployments are complete. Leave the four untracked items alone. After this handoff update is committed, four local documentation commits will remain ahead of `origin/main`; do not push them unless Lance chooses to.
 2. Lance may check the deployed Worn swipe row on his physical phone. Browser emulation passed; no re-reproduction or code change is pending.
-3. Spotify remains optional: get Lance's secret-storage approach sign-off before implementation, then wire the API after his app setup/sign-in.
+3. No Spotify deployment work remains. Reauthorize after 180 days; consider restoring reserved concurrency 1 only if account quota can leave 10 slots unreserved.
 4. Only revisit imagery or add more travel photos at Lance's direction. The approved Field Notes pile and the clearly separated turntable/colophon are the current baseline.
