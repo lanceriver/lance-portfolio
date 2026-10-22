@@ -26,7 +26,7 @@ jobs:
         with:
           node-version: 20
           cache: npm
-      - run: npm ci
+      - run: npm ci --fetch-timeout=15000 --fetch-retries=1 --fetch-retry-mintimeout=1000 --fetch-retry-maxtimeout=5000
       - run: npm run build
       - run: npm run verify
       - uses: actions/setup-python@v5
