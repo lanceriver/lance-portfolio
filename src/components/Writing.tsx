@@ -98,8 +98,7 @@ export function Writing() {
           <p className="eyebrow eyebrow--rule">Writing</p>
           <h2 className="display-r writing__title">Notes from<br /><em>the margins.</em></h2>
           <p className="body writing__note">
-            The only part of this book that leaves the one-page world. Hover or tap an entry
-            and a new print lands on the pile.
+            On National Service and learning to build software.
           </p>
         </header>
 

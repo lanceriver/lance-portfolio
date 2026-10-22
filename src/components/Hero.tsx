@@ -65,7 +65,7 @@ export function Hero() {
         <Atmosphere reduced={reduced} />
 
         <div className="hero__shade" aria-hidden="true" />
-        <div className="hero__dissolve" aria-hidden="true" />
+        <div className="hero__dissolve" data-tone="dark" data-ground="page" aria-hidden="true" />
         <div className="hero__grain" aria-hidden="true" />
 
         <div className="hero__copy" ref={copyRef}>

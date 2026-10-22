@@ -37,7 +37,7 @@ export function Work() {
     <section className="work" id="work" data-tone="dark">
       <div className="shell work__head">
         <p className="eyebrow eyebrow--rule">Selected Work</p>
-        <h2 className="display-r work__title">Three projects.<br /><em>Room to breathe.</em></h2>
+        <h2 className="display-r work__title">Projects.</h2>
       </div>
 
       <SceneArrival />
@@ -63,8 +63,8 @@ function projectMeta(p: (typeof projects)[number]) {
   if (!p.href) return null
   return (
     <div className="scene__links">
-      <a className="scene__link" href={p.href} target="_blank" rel="noopener noreferrer">Live demo <span aria-hidden="true">↗</span></a>
-      {p.repo && <a className="scene__link" href={p.repo} target="_blank" rel="noopener noreferrer">Code <span aria-hidden="true">↗</span></a>}
+      <a className="scene__link" href={p.href} target="_blank" rel="noopener noreferrer">Live demo <span aria-hidden="true">↗</span><span className="vh"> (opens in a new tab)</span></a>
+      {p.repo && <a className="scene__link" href={p.repo} target="_blank" rel="noopener noreferrer">Code <span aria-hidden="true">↗</span><span className="vh"> (opens in a new tab)</span></a>}
     </div>
   )
 }
@@ -87,7 +87,7 @@ function SceneArrival() {
         viewport={{ once: true, amount: 0.3 }}
         transition={{ type: 'spring', stiffness: 140, damping: 18, mass: 1.1 }}
       >
-        <img src={p.src} alt={p.alt} width={1672} height={941} />
+        <PoolSafetyFlow />
         <PlateCaption label={p.plateLabel} text={p.caption} />
       </motion.figure>
 
@@ -100,6 +100,44 @@ function SceneArrival() {
         {projectMeta(p)}
       </div>
     </article>
+  )
+}
+
+function PoolSafetyFlow() {
+  return (
+    <div className="pool-flow" role="group" aria-label="Pool Safety Solutions production system">
+      <div className="pool-flow__steps">
+        <div className="pool-flow__node">
+          <span className="pool-flow__label">Source</span>
+          <strong>GoHighLevel</strong>
+        </div>
+        <FlowArrow />
+        <div className="pool-flow__node">
+          <span className="pool-flow__label">Sync</span>
+          <strong>Lambda + SQS</strong>
+        </div>
+        <FlowArrow />
+        <div className="pool-flow__node">
+          <span className="pool-flow__label">Store</span>
+          <strong>PostgreSQL</strong>
+        </div>
+        <FlowArrow />
+        <div className="pool-flow__node">
+          <span className="pool-flow__label">Access</span>
+          <strong>Franchise data</strong>
+          <span>Row-level security</span>
+        </div>
+      </div>
+      <p className="pool-flow__proof">About <strong>470</strong> automated tests gate every release through staging.</p>
+    </div>
+  )
+}
+
+function FlowArrow() {
+  return (
+    <svg className="pool-flow__arrow" viewBox="0 0 32 12" aria-hidden="true">
+      <path d="M1 6h27M23 1l5 5-5 5" fill="none" stroke="currentColor" strokeWidth="1.25" />
+    </svg>
   )
 }
 
@@ -152,7 +190,7 @@ function SceneAperture() {
                     className="aperture__rows"
                     src={p.table.src}
                     srcSet={`${p.table.srcSmall} 1000w, ${p.table.src} 1572w`}
-                    sizes="(max-width: 900px) 88vw, 80vw"
+                    sizes="(max-width: 900px) 240vw, 80vw"
                     alt={p.table.alt}
                     width={p.table.width}
                     height={p.table.height}

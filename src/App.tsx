@@ -91,13 +91,14 @@ export function App() {
     restore(() => 0)
   }, [route, restore])
 
-  if (route.name === 'post') return <Post slug={route.slug} />
+  if (route.name === 'post') return <><a className="skip-link" href="#main-content">Skip to main content</a><Post slug={route.slug} /></>
 
   return (
     <>
+      <a className="skip-link" href="#main-content">Skip to main content</a>
       <Nav onOpenIndex={setIndex} />
       <PlateIndex open={index} onClose={closeIndex} />
-      <main>
+      <main id="main-content" tabIndex={-1}>
         {show('hero') && <Hero />}
         {show('crossing') && <Crossing />}
         {show('work') && <Work />}

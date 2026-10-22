@@ -1,4 +1,4 @@
-.hero-wrap { height: 158vh; position: relative; }
+.hero-wrap { height: 130vh; position: relative; }
 
 .hero {
   position: sticky;
@@ -216,7 +216,7 @@
 @keyframes drawRule { to { transform: scaleX(1); } }
 
 @media (max-width: 900px) {
-  .hero-wrap { height: 150vh; }
+  .hero-wrap { height: 120vh; }
   /* `svh`, not `vh`: on iOS Safari 100vh is the screen with the toolbars
      collapsed, so with them showing the bottom of the hero — and the name
      anchored to it — sat under the toolbar, a good 80px lower than composed. */

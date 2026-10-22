@@ -65,15 +65,12 @@ export function Crossing() {
   }, !reduced)
 
   return (
-    <section className="crossing" ref={ref} id="about" data-tone="dark">
+    <section className="crossing" ref={ref} id="about" data-tone="dark" data-ground="page">
       <div className="shell crossing__inner">
         <p className="eyebrow eyebrow--rule">Sydney</p>
-        <h2 className="display-r crossing__title">
-          I build things<br />that feel like <em>somewhere.</em>
-        </h2>
+        <h2 className="display-r crossing__title">About.</h2>
         <p className="body crossing__note">
-          Lance Rivera, software engineer at Pool Safety Solutions in Sydney. What follows is a short book of work: three plates,
-          each with room around it, and a few things from the side of the desk.
+          Software engineer at Pool Safety Solutions in Sydney.
         </p>
       </div>
     </section>

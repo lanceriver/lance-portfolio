@@ -22,12 +22,12 @@ const eq = (name, got, want, tol = 1e-3) => {
 
 // Layout measured from the running page
 const L = {
-  hero:     { top: 0,     h: 1138 },   // 158vh
-  crossing: { top: 1138,  h: 462 },
-  work:     { top: 1600,  h: 6098 },
-  notes:    { top: 7698,  h: 1597 },
-  writing:  { top: 9295,  h: 1278 },
-  cover:    { top: 10573, h: 2059 },
+  hero:     { top: 0, h: 1.3 * VH },   // 130vh
+  crossing: { top: 1.3 * VH, h: 462 },
+  work:     { top: 1.3 * VH + 462, h: 6098 },
+  notes:    { top: 1.3 * VH + 462 + 6098, h: 1597 },
+  writing:  { top: 1.3 * VH + 462 + 6098 + 1597, h: 1278 },
+  cover:    { top: 1.3 * VH + 462 + 6098 + 1597 + 1278, h: 2.08 * VH }, // 48vh bridge + 160vh wrap
 }
 const rectTop = (sec, y) => sec.top - y
 
@@ -143,16 +143,16 @@ console.log('\n— The ascent: Field Notes held while Writing climbs (CSS sticky
 
 console.log('\n— Back Cover join (BackCover.tsx) —')
 {
-  const feather = (t) => lerp(22, 0, range(t, 0, 0.55))
+  const feather = (t) => lerp(22, 8, range(t, 0, 0.55))
   const scale = (t) => lerp(1.06, 1, range(t, 0, 0.72))
-  const copy = (t) => range(t, 0.34, 0.62)
+  const copy = (t) => range(t, 0.12, 0.4)
   eq('feather open at the join', feather(0), 22)
-  eq('feather closed by 55%', feather(0.55), 0)
-  eq('feather stays closed', feather(1), 0)
+  eq('feather softens by 55%', feather(0.55), 8)
+  eq('feather stays soft', feather(1), 8)
   eq('scale settles to exactly 1', scale(0.72), 1)
   eq('scale within the stated range', scale(0) <= 1.06 ? 1 : 0, 1)
   eq('copy hidden at the join', copy(0), 0)
-  eq('copy fully in before settle', copy(0.62), 1)
+  eq('copy arrives early in the cover', copy(0.4), 1)
 }
 
 console.log(`\n${fail === 0 ? 'ALL PASS' : 'FAILURES'} — ${pass} passed, ${fail} failed\n`)

@@ -1128,3 +1128,19 @@ the UI, 840w and 1680w WebP, lazy loaded.
 app with 1,000,050 faker contacts in a base called Contacts, signed in with a
 local test session. Nothing was captured from the production app or from
 Lance's own bases. The `lake-terrace` plate files stay in `public/plates/`.
+
+## D58 — Portfolio refinement handoff
+
+The nav now tucks on scroll at every width, stays visible under keyboard focus,
+and samples the live page ground through the Crossing and the Hero dissolve.
+Pool Safety's first plate is a factual production-flow diagram with an
+approximate test count; the coastal painting is reserved for the Back Cover.
+The Back Cover places its copy in an extension of the plate's sampled sky, with
+the artwork entering below at full opacity and retaining a soft feather at the
+join. Field Notes' expanded prints use a native modal dialog whose sole control
+keeps keyboard focus; dismissal releases scroll lock and restores trigger focus
+immediately. Its DOM order follows the visual desk. Skip links, focus colors,
+external-tab announcements, Writing contrast, copy, and the hero/back-cover
+lead lengths are tightened while keeping the plate-book world. The phone
+aperture scales the table beyond the slot so the row-number gutter stays legible
+as the rightmost columns crop away.

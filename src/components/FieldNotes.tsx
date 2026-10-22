@@ -226,6 +226,13 @@ const OBJECTS: Obj[] = [
   },
 ]
 
+const objectOrder = new Map([
+  'terrace', 'colophon', 'night', 'bamboo-canopy', 'army', 'mountain-road',
+  'coastal-train', 'torii-corridor', 'gamcheon', 'starfield-library',
+  'kinkakuji', 'seoul-market', 'shanghai-bakery', 'turntable',
+].map((id, index) => [id, index]))
+const OBJECTS_IN_READING_ORDER = [...OBJECTS].sort((a, b) => objectOrder.get(a.id)! - objectOrder.get(b.id)!)
+
 /** Where the pile starts, above every authored z-index on the desk. */
 const LIFT_BASE = 40
 
@@ -394,14 +401,6 @@ export function FieldNotes() {
     }
   }, [reduced])
 
-  // Escape closes the expanded print
-  useEffect(() => {
-    if (!open) return
-    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setOpen(null) }
-    addEventListener('keydown', onKey)
-    return () => removeEventListener('keydown', onKey)
-  }, [open])
-
   return (
     <div className="notes-pin">
       <section className="notes" id="notes" data-tone="dark" ref={sectionRef}>
@@ -409,12 +408,12 @@ export function FieldNotes() {
         <p className="eyebrow eyebrow--rule">Field Notes</p>
         <h2 className="display-r notes__title">Things worth<br /><em>coming back to.</em></h2>
         <p className="body notes__note">
-          A looser archive — travel, colour, type, and whatever else earns a place on the desk.
+          Travel, music, and the places worth keeping.
         </p>
       </div>
 
       <div className="notes__surface" ref={surfaceRef}>
-        {OBJECTS.map((o) => (
+        {OBJECTS_IN_READING_ORDER.map((o) => (
           <div className={o.className} key={o.id} style={{ ['--depth' as string]: o.depth }} {...lift}>
             <motion.div
               className="obj__inner"
@@ -454,7 +453,7 @@ export function FieldNotes() {
                   target="_blank"
                   rel="noreferrer"
                   onClick={(event) => selectRecord(event, nowPlaying.art)}
-                  aria-label={`Open ${nowPlaying.title} by ${nowPlaying.artist} on Spotify`}
+                  aria-label={`Open ${nowPlaying.title} by ${nowPlaying.artist} on Spotify (opens in a new tab)`}
                 >
                   <span className="album-sleeve__record" aria-hidden="true">
                     <span className="album-sleeve__label" />
@@ -488,7 +487,7 @@ export function FieldNotes() {
                     target="_blank"
                     rel="noreferrer"
                     onClick={(event) => selectRecord(event, r.art)}
-                    aria-label={`Open ${r.title} by ${r.artist} on Spotify`}
+                    aria-label={`Open ${r.title} by ${r.artist} on Spotify (opens in a new tab)`}
                   >
                     <span className="album-sleeve__jacket">
                       <img
@@ -515,7 +514,7 @@ export function FieldNotes() {
             <span className="album-crate__cap-title">{selected.title}</span>
             <span className="album-crate__cap-artist">{selected.artist}</span>
             <a className="album-crate__open" href={selected.url} target="_blank" rel="noreferrer">
-              Open in Spotify <span aria-hidden="true">↗</span>
+              Open in Spotify <span aria-hidden="true">↗</span><span className="vh"> (opens in a new tab)</span>
             </a>
           </div>
         )}
@@ -534,27 +533,82 @@ export function FieldNotes() {
           context, which would trap this fixed overlay's z-index inside it and
           let the rising Writing section paint straight over the lightbox. */}
       <AnimatePresence>
-        {open && (
-          <motion.div
-            className="lightbox"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.24 }}
-            onClick={() => setOpen(null)}
-          >
-            <motion.img
-              layoutId={`print-${open.id}`}
-              src={open.src}
-              alt={open.alt}
-              className="lightbox__img"
-              transition={{ type: 'spring', stiffness: 180, damping: 24 }}
-            />
-            <button className="lightbox__close" onClick={() => setOpen(null)}>Close ×</button>
-          </motion.div>
-        )}
+        {open && <ExpandedPrint o={open} onClose={() => setOpen(null)} />}
       </AnimatePresence>
     </div>
+  )
+}
+
+function ExpandedPrint({ o, onClose }: { o: Obj; onClose: () => void }) {
+  const dialogRef = useRef<HTMLDialogElement>(null)
+  const closeRef = useRef<HTMLButtonElement>(null)
+  const returnStateRef = useRef<{ overflow: string; returnTo: HTMLElement | null; restored: boolean } | null>(null)
+  const dismissedRef = useRef(false)
+
+  useEffect(() => {
+    const dialog = dialogRef.current
+    if (!dialog) return
+    const state = {
+      overflow: document.body.style.overflow,
+      returnTo: document.activeElement instanceof HTMLElement ? document.activeElement : null,
+      restored: false,
+    }
+    returnStateRef.current = state
+    dialog.showModal()
+    document.body.style.overflow = 'hidden'
+    closeRef.current?.focus()
+    return () => {
+      if (dialog.open) dialog.close()
+      if (!state.restored) {
+        state.restored = true
+        document.body.style.overflow = state.overflow
+        state.returnTo?.focus({ preventScroll: true })
+      }
+      returnStateRef.current = null
+    }
+  }, [])
+
+  const dismiss = () => {
+    if (dismissedRef.current) return
+    dismissedRef.current = true
+    const dialog = dialogRef.current
+    if (dialog?.open) dialog.close()
+    const state = returnStateRef.current
+    if (state && !state.restored) {
+      state.restored = true
+      document.body.style.overflow = state.overflow
+      state.returnTo?.focus({ preventScroll: true })
+    }
+    onClose()
+  }
+
+  return (
+    <motion.dialog
+      ref={dialogRef}
+      className="lightbox"
+      aria-label={`Expanded print: ${o.caption}`}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.24 }}
+      onCancel={(event) => { event.preventDefault(); dismiss() }}
+      onClick={(event) => { if (event.target === event.currentTarget) dismiss() }}
+      onKeyDown={(event) => {
+        if (event.key === 'Tab') {
+          event.preventDefault()
+          closeRef.current?.focus()
+        }
+      }}
+    >
+      <motion.img
+        layoutId={`print-${o.id}`}
+        src={o.src}
+        alt={o.alt}
+        className="lightbox__img"
+        transition={{ type: 'spring', stiffness: 180, damping: 24 }}
+      />
+      <button ref={closeRef} className="lightbox__close" onClick={dismiss}>Close <span aria-hidden="true">×</span></button>
+    </motion.dialog>
   )
 }
 
@@ -600,12 +654,12 @@ function Turntable({ nowPlaying, turntableRef }: {
         {hasTrack && (
           <>
             {url
-              ? <a className="turntable__title" href={url} target="_blank" rel="noreferrer" aria-label={`${title} by ${artist} on Spotify`}>{title}</a>
+              ? <a className="turntable__title" href={url} target="_blank" rel="noreferrer" aria-label={`${title} by ${artist} on Spotify (opens in a new tab)`}>{title}</a>
               : <span className="turntable__title">{title}</span>}
             <span className="turntable__artist">{artist}</span>
           </>
         )}
-        <a className="turntable__spotify" href="https://open.spotify.com" target="_blank" rel="noreferrer" aria-label="Spotify">
+        <a className="turntable__spotify" href="https://open.spotify.com" target="_blank" rel="noreferrer" aria-label="Spotify (opens in a new tab)">
           <img src="/spotify-logo.svg" alt="Spotify" />
         </a>
       </figcaption>

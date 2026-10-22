@@ -39,6 +39,7 @@
   color: var(--ochre-deep);
   margin-top: 10px;
 }
+.scene--arrival .scene__tag { color: var(--ink-soft); }
 .scene__blurb { margin-top: 20px; }
 .scene__points { margin: 16px 0 0; padding-left: 1.2em; }
 .scene__points li + li { margin-top: 8px; }
@@ -79,6 +80,29 @@
   will-change: transform;
 }
 .scene--arrival .scene__plate img { height: min(64vh, 620px); }
+.pool-flow {
+  min-height: min(46vh, 460px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: clamp(20px, 3vh, 34px);
+  padding: clamp(20px, 3vw, 42px);
+  color: var(--ink);
+}
+.pool-flow__steps { display: flex; align-items: center; justify-content: space-between; gap: clamp(10px, 1.6vw, 24px); }
+.pool-flow__node { display: grid; gap: 7px; min-width: 0; }
+.pool-flow__label,
+.pool-flow__node > span:last-child {
+  font-family: var(--sans);
+  font-size: 10px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.pool-flow__node strong { font-family: var(--serif); font-size: clamp(17px, 1.8vw, 25px); font-weight: 400; line-height: 1.08; }
+.pool-flow__arrow { width: clamp(18px, 2.2vw, 32px); height: 12px; flex: 0 0 auto; color: var(--ochre-deep); }
+.pool-flow__proof { display: flex; align-items: baseline; gap: 13px; border-top: 1px solid rgba(27, 42, 51, .22); padding-top: 20px; font-family: var(--serif); font-size: clamp(16px, 1.5vw, 21px); line-height: 1.3; }
+.pool-flow__proof strong { font-size: clamp(42px, 6vw, 76px); font-weight: 400; letter-spacing: -.04em; line-height: .9; }
 /* the printed caption sits at the far end of the strip, clear of the block
    that hangs over the sheet's other corner */
 .scene--arrival .plate-sheet__cap { text-align: right; }
@@ -87,7 +111,7 @@
   justify-self: start;
   width: min(42ch, 88vw);
   margin-left: clamp(20px, 4vw, 72px);
-  margin-top: -132px;             /* hangs over the sheet's bottom-left corner */
+  margin-top: 0;
   position: relative;
   z-index: 2;
   background: var(--page-ground);
@@ -254,14 +278,22 @@
   .scene--arrival { padding-bottom: clamp(80px, 12vh, 140px); }
   .scene--arrival .scene__plate { width: calc(100% - 40px); margin-right: 20px; }
   .scene--arrival .scene__plate img { height: 46vh; }
-  .scene__caption-block { width: auto; margin-right: 20px; margin-top: -40px; padding-right: 20px; }
+  .scene--arrival .pool-flow { min-height: 46vh; padding: 26px 20px; gap: 24px; }
+  .pool-flow__steps { flex-direction: column; align-items: stretch; gap: 10px; }
+  .pool-flow__node { padding-bottom: 10px; border-bottom: 1px solid rgba(27, 42, 51, .16); }
+  .pool-flow__node strong { font-size: 20px; }
+  .pool-flow__arrow { width: 32px; height: 12px; align-self: flex-start; transform: rotate(90deg); margin: -2px 0 -2px 4px; }
+  .pool-flow__proof { font-size: 15px; gap: 9px; }
+  .pool-flow__proof strong { font-size: 48px; }
+  .scene__caption-block { width: auto; margin-right: 20px; margin-top: 0; padding-right: 20px; }
 
   .scene--aperture { height: auto; }
   .scene--aperture .scene__pin { position: relative; height: auto; padding: 70px 0; --slot: 6; }
   .aperture { height: 62vh; }
   .aperture__title { font-size: clamp(36px, 10vw, 76px); }
   .aperture__meta { grid-template-columns: 1fr; gap: 18px; padding-top: 34px; }
-  .aperture__rows { top: auto; bottom: 12%; left: 6%; width: 88%; transform: none !important; }
+  .scene--aperture .scene__pin { --slot: 6 !important; }
+  .aperture__rows { top: auto; bottom: 12%; left: 6%; width: 240vw; max-width: none; transform: none !important; }
   .ledger__row { grid-template-columns: 40px minmax(0, 1fr); row-gap: 18px; padding: 24px 0; }
   .ledger__img { grid-column: 1 / -1; }
 

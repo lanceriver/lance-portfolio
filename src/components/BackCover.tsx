@@ -12,16 +12,13 @@ import './backcover.css'
  *
  *   FLAT PAGE → SKY COLOUR → ACTUAL SKY → FULL COASTAL PLATE
  *
- * The join is a feathered top edge over flat #2F8CE2, the plate's own sampled
- * sky. Where the plate's top edge is sky, feathered sky over identical sky is
- * invisible; where it is lemons or bougainvillea, the feather reads as sunlight
- * on the branch. The plate is never faded, never filtered, never distorted, and
- * the feather resolves to nothing once its top edge leaves the viewport.
+ * A field of the plate's sampled sky extends above the artwork, and its top
+ * edge keeps a small feather as the plate settles so the join stays soft.
+ * The plate is never faded, filtered, or distorted.
  * DECISIONS D18.
  *
- * Composition deliberately differs from the Hero: type sits left-of-centre over
- * the open sea, in cream, with no scrim at all. Scrimmed-vs-unscrimmed is what
- * makes the two paintings rhyme instead of repeat. DECISIONS D10.
+ * Composition deliberately differs from the Hero: type sits left-of-centre in
+ * the open sky above the plate, in cream, with no scrim. DECISIONS D10.
  *
  * No fake sailboat. No CSS-generated object over any illustration.
  */
@@ -47,12 +44,12 @@ export function BackCover() {
     const travel = wrap.offsetHeight - innerHeight
     const t = clamp(-wrap.getBoundingClientRect().top / Math.max(1, travel))
 
-    const feather = `${lerp(22, 0, range(t, 0, 0.55)).toFixed(2)}vh`
+    const feather = `${lerp(22, 8, range(t, 0, 0.55)).toFixed(2)}vh`
     const scale = lerp(1.06, 1, range(t, 0, 0.72)).toFixed(4)
-    const copyIn = range(t, 0.34, 0.62).toFixed(3)
+    const copyIn = range(t, 0.12, 0.4).toFixed(3)
 
     return () => {
-      // the feather closes as the plate's top edge climbs out of view
+      // the plate's top edge settles into a soft feather as it climbs into view
       scene.style.setProperty('--feather', feather)
       // a gentle uniform settle — inside the stated scale range, never a zoom
       scene.style.setProperty('--plate-scale', scale)
@@ -75,10 +72,10 @@ export function BackCover() {
           <div className="cover__grain" aria-hidden="true" />
 
           <div className="cover__copy">
-            <p className="eyebrow eyebrow--rule">Back cover</p>
-            <h2 className="display-r cover__title">Thanks for<br />stopping by.</h2>
+            <p className="eyebrow eyebrow--rule">Contact</p>
+            <h2 className="display-r cover__title">Thanks for stopping by.</h2>
             <p className="cover__lede">
-              For work, projects, or a good conversation about either.
+              Work, projects, or a good conversation.
             </p>
             <a className="cover__mail" href={`mailto:${email}`}>{email}</a>
             <ul className="cover__links">

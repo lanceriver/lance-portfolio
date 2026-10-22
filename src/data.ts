@@ -36,8 +36,8 @@ export const projects: Plate[] = [
   {
     numeral: 'I',
     name: 'Pool Safety Solutions',
-    tagline: 'a franchise network, in production',
-    discipline: 'Junior Systems Engineer · 2026 to now',
+    tagline: 'Junior Systems Engineer · 2026 to now',
+    discipline: 'Production system',
     blurb: 'I took a franchise-management prototype and made it production software for a network operating across NSW, QLD and VIC.',
     points: [
       'Multi-tenant PostgreSQL with row-level security, so each franchise only ever sees its own data.',
@@ -45,11 +45,8 @@ export const projects: Plate[] = [
       'Stripe, Xero and GoHighLevel integrations, and about 470 automated tests gating every release through staging.',
     ],
     status: 'Internal system. No public link.',
-    src: '/plates/coastal-road.webp',
-    srcSmall: '/plates/coastal-road-1200.webp',
-    alt: 'A painted coast road above a harbour, lemons and bougainvillea framing the view.',
     plateLabel: 'Plate I',
-    caption: 'The coast road, late morning',
+    caption: 'Franchise data, kept in sync',
   },
   {
     numeral: 'II',
