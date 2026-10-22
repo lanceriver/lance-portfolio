@@ -11,9 +11,18 @@ The original four plates originate from the **authorised handoff bundle**:
 | `hill-path.png`      | extracted from `lance_portfolio_combined_latest.html` (embedded base64) |
 | `zhangjiajie-pillars.png` | AI-generated (OpenAI image model) by Lance from his own Zhangjiajie photograph, 2026-10-21; hero plate |
 | `zhangjiajie-pillars-4k.png` | AI upscale (3840x2160) of zhangjiajie-pillars.png by Lance, 2026-10-21; source of the 2x hero export |
+| `mountain-road` (WebP exports) | Lance's `IMG_7332.JPG`; winding mountain road in mist, photographed 24 May 2026; orientation baked in and metadata stripped by `scripts/ingest-photo.py` |
+| `coastal-train` (WebP exports) | Lance's `IMG_4312.JPG`; green coastal train, photographed 16 September 2025; metadata stripped by `scripts/ingest-photo.py` |
+| `torii-corridor` (WebP exports) | Lance's `DSC_0791.JPG`; torii corridor, photographed 19 February 2024; metadata stripped by `scripts/ingest-photo.py` |
+| `bamboo-canopy` (WebP exports) | Lance's `IMG_8359.JPG`; bamboo canopy, photographed 20 February 2024; orientation baked in and metadata stripped by `scripts/ingest-photo.py` |
 
-All five are 1672 x 941 PNG. Do not upscale past native resolution. Do not apply CSS filters.
+The four original plate PNGs and `zhangjiajie-pillars.png` are 1672 x 941. The
+separate `zhangjiajie-pillars-4k.png` upscale is 3840 x 2160. Travel photo
+exports retain each original's orientation and aspect ratio. Do not upscale
+past native resolution or apply CSS filters.
 
 **No asset in this project came from any `resume-frontend*` or previous resume-website project.**
 The original four plates came from the approved prototype bundle; the Zhangjiajie
-hero image was generated from Lance's own photograph as recorded above.
+hero image was generated from Lance's own photograph as recorded above. The
+Field Notes travel photographs are Lance's originals; those originals remain in
+his Photos library and are not committed here.

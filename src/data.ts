@@ -279,13 +279,13 @@ export const articles: Article[] = [
  * on the desk. Re-derive it whenever they change. D49.
  */
 export const swatches = [
-  { hex: '#F7E8D5', name: 'Snow, lit' },
-  { hex: '#93B1D5', name: 'Snow shadow' },
-  { hex: '#CE9B5B', name: 'Ochre' },
-  { hex: '#0979E5', name: 'Cobalt' },
-  { hex: '#2D70AF', name: 'Slate' },
-  { hex: '#8F3C20', name: 'Umber' },
-  { hex: '#5C3E25', name: 'Terracotta' },
+  { hex: '#D1D9D5', name: 'Snow drift' },
+  { hex: '#799FBE', name: 'Mid Azure' },
+  { hex: '#A27D52', name: 'Ochre, deep' },
+  { hex: '#117FE4', name: 'Cobalt' },
+  { hex: '#5F5F54', name: 'Olive' },
+  { hex: '#340F03', name: 'Near-Black' },
+  { hex: '#070508', name: 'Near-Black 2' },
 ]
 
 export const navLinks = [

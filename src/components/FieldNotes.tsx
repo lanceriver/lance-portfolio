@@ -74,6 +74,62 @@ const OBJECTS: Obj[] = [
     caption: 'Furong Ancient Town · May 2026',
   },
   {
+    id: 'mountain-road',
+    kind: 'print',
+    className: 'obj obj--mountain-road',
+    depth: 2.6,
+    rest: -2.7,
+    from: { x: -86, y: 104, rotate: 7, scale: 0.9 },
+    delay: 0.7,
+    stiffness: 150,
+    damping: 17,
+    src: '/plates/mountain-road-1200.webp',
+    alt: 'A winding road disappearing into mist between steep mountain peaks.',
+    caption: 'Mountain road · May 2026',
+  },
+  {
+    id: 'coastal-train',
+    kind: 'print',
+    className: 'obj obj--coastal-train',
+    depth: 2.1,
+    rest: 2.1,
+    from: { x: 112, y: 94, rotate: -6, scale: 0.91 },
+    delay: 0.82,
+    stiffness: 142,
+    damping: 18,
+    src: '/plates/coastal-train-1200.webp',
+    alt: 'A green train passing through a lush coastal landscape.',
+    caption: 'Coastal train · September 2025',
+  },
+  {
+    id: 'torii-corridor',
+    kind: 'print',
+    className: 'obj obj--torii',
+    depth: 1.8,
+    rest: -1.6,
+    from: { x: -104, y: 70, rotate: -7, scale: 0.92 },
+    delay: 0.9,
+    stiffness: 156,
+    damping: 17,
+    src: '/plates/torii-corridor-1200.webp',
+    alt: 'A symmetrical corridor of red torii gates receding into the distance.',
+    caption: 'Torii corridor · February 2024',
+  },
+  {
+    id: 'bamboo-canopy',
+    kind: 'print',
+    className: 'obj obj--bamboo',
+    depth: 2.9,
+    rest: 2.8,
+    from: { x: 78, y: 116, rotate: 8, scale: 0.89 },
+    delay: 1.12,
+    stiffness: 166,
+    damping: 16,
+    src: '/plates/bamboo-canopy-1200.webp',
+    alt: 'Looking up through a dense canopy of bamboo.',
+    caption: 'Bamboo canopy · February 2024',
+  },
+  {
     id: 'palette',
     kind: 'palette',
     className: 'obj obj--palette',
@@ -485,7 +541,7 @@ function ObjectBody({ o, onOpen }: { o: Obj; onOpen: () => void }) {
   if (o.kind === 'palette') {
     return (
       <div className="palette">
-        <p className="palette__label eyebrow">Sampled from the plates</p>
+        <p className="palette__label eyebrow">Sampled from the desk</p>
         <ul className="palette__strip">
           {swatches.map((s) => (
             <li key={s.hex} style={{ background: s.hex }}>
@@ -493,7 +549,7 @@ function ObjectBody({ o, onOpen }: { o: Obj; onOpen: () => void }) {
             </li>
           ))}
         </ul>
-        <p className="caption palette__cap">Every colour on this site was lifted from a painting.</p>
+        <p className="caption palette__cap">Colour from the photographs and paintings.</p>
       </div>
     )
   }
