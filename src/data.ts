@@ -23,9 +23,14 @@ export type Plate = {
   /** App screens, shown as figures beneath the plate. Real captures, from the
       phone or the Simulator with a seeded diary, cropped below the status bar; `src` is the 480w file, `src2x` the 960w. */
   screens?: Screen[]
+  /** Plate II: the app's own table, toned to plate stock, run through the aperture. DECISIONS D57. */
+  table?: { src: string; srcSmall: string; width: number; height: number; alt: string }
+  /** Plate II: a ruled index of details beneath the scene, numbered 01, 02, 03. */
+  ledger?: LedgerEntry[]
 }
 
 export type Screen = { src: string; src2x: string; alt: string; caption: string }
+export type LedgerEntry = { src: string; src2x: string; label: string; text: string; alt: string }
 
 export const projects: Plate[] = [
   {
@@ -54,11 +59,36 @@ export const projects: Plate[] = [
     blurb: 'Editable tables, views, filters and sorting. Pagination, memoisation and virtualisation keep a table responsive past a million rows.',
     href: 'https://airtable-clone-lyra.vercel.app/',
     repo: 'https://github.com/lanceriver/airtable-clone-lyra',
-    src: '/plates/lake-terrace.webp',
-    srcSmall: '/plates/lake-terrace-1200.webp',
-    alt: 'A painted café terrace above a lake, striped awning, geraniums, snow peaks beyond.',
-    plateLabel: 'Plate II',
-    caption: 'The terrace, before the afternoon',
+    table: {
+      src: '/airtable/table-1572.webp',
+      srcSmall: '/airtable/table-1000.webp',
+      width: 1572,
+      height: 4352,
+      alt: 'The Airtable Clone’s People table at its last rows, 999,982 to 1,000,050: names, emails, companies and scores.',
+    },
+    ledger: [
+      {
+        src: '/airtable/views-840.webp',
+        src2x: '/airtable/views-1680.webp',
+        label: 'Views',
+        text: 'Named views, each keeping its own filter and sort.',
+        alt: 'The People table with four named views in the sidebar (All contacts, Follow up, By company and High scores), with High scores open and filtered by score.',
+      },
+      {
+        src: '/airtable/filter-840.webp',
+        src2x: '/airtable/filter-1680.webp',
+        label: 'Filter',
+        text: 'Score above 9,900: 9,879 of 1,000,050 rows, filtered in Postgres.',
+        alt: 'The filter editor on the High scores view: where Score is greater than 9900.',
+      },
+      {
+        src: '/airtable/sort-840.webp',
+        src2x: '/airtable/sort-1680.webp',
+        label: 'Sort',
+        text: 'Highest score first, from an index built the first time the sort is asked for.',
+        alt: 'The sort editor: Score, from 9 to 1, with every visible row scoring 9999.',
+      },
+    ],
   },
   {
     numeral: 'III',

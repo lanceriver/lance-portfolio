@@ -93,6 +93,15 @@ console.log('\n— Work II aperture (Work.tsx) —')
   eq('slot fully open by 78%', slot(0.78), 9)
   eq('slot stays open after', slot(1), 9)
   eq('midpoint opens partway', slot(0.45), 41 - 32 * ((0.45 - 0.12) / 0.66))
+  const frame = 0.8 * VH
+  const rowsH = 2400
+  const travel = Math.max(0, rowsH - frame * 0.76)
+  const rows = (t) => -travel * range(t, 0, 0.78)
+  eq('table starts at its first rows', rows(0), 0)
+  eq('table travels halfway at 39%', rows(0.39), -travel / 2)
+  eq('last row arrives at full travel', rows(0.78), -(2400 - frame * 0.76))
+  eq('table stays at the last row after opening', rows(1), -(2400 - frame * 0.76))
+  eq('table completes as the slot finishes opening', slot(0.78) === 9 && rows(0.78) === -travel ? 1 : 0, 1)
   if (sec.h <= VH) { fail++; console.log(' FAIL aperture section must be taller than the viewport to pin') } else pass++
 }
 

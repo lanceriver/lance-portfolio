@@ -104,54 +104,105 @@ function SceneArrival() {
 }
 
 /* ── II · APERTURE ───────────────────────────────────────
-   A vertical slot widens across an enormous title. Where the slot passes over
-   the letterforms they flip from ink to cream, because a second copy of the
-   title is clipped to the slot and sits over the plate.
-   Type-led, mechanical, exact. No springs in this scene. */
+   A vertical slot widens across an enormous title. The app's table slides up
+   through it, and the clipped copy of the title stamps the table in rust.
+   Type-led, mechanical, exact. No springs in this scene. DECISIONS D57. */
 function SceneAperture() {
   const p = projects[1]
   const reduced = useReducedMotion()
   const ref = useRef<HTMLElement>(null)
   const sceneRef = useRef<HTMLDivElement>(null)
+  const apertureRef = useRef<HTMLDivElement>(null)
+  const rowsRef = useRef<HTMLImageElement>(null)
 
   useScrollDriver(() => {
     const el = ref.current
     const scene = sceneRef.current
-    if (!el || !scene) return
-    const travel = el.offsetHeight - innerHeight
-    const t = clamp(-el.getBoundingClientRect().top / Math.max(1, travel))
+    const aperture = apertureRef.current
+    const rows = rowsRef.current
+    if (!el || !scene || !aperture || !rows) return
+    const pinTravel = el.offsetHeight - innerHeight
+    const t = clamp(-el.getBoundingClientRect().top / Math.max(1, pinTravel))
+    const frame = aperture.clientHeight
+    const rowsH = rows.offsetHeight
+    const travel = Math.max(0, rowsH - frame * 0.76)
+    const run = range(t, 0, 0.78)
     // slot half-width, 9% → 42% of the frame. Linear: bound to the hand, not eased.
     const open = range(t, 0.12, 0.78)
-    return () => scene.style.setProperty('--slot', String(41 - 32 * open))
+    return () => {
+      scene.style.setProperty('--slot', String(41 - 32 * open))
+      rows.style.transform = `translate3d(0, ${-travel * run}px, 0)`
+    }
   }, !reduced)
 
   return (
-    <article className="scene scene--aperture" id="plate-ii" ref={ref}>
-      <div className="scene__pin" ref={sceneRef}>
-        <span className="numeral scene__num scene__num--ii" aria-hidden="true">{p.numeral}</span>
+    <>
+      <article className="scene scene--aperture" id="plate-ii" ref={ref}>
+        <div className="scene__pin" ref={sceneRef}>
+          <span className="numeral scene__num scene__num--ii" aria-hidden="true">{p.numeral}</span>
 
-        <div className="aperture">
-          <h3 className="aperture__title display-r" aria-hidden="true">{p.name}</h3>
+          <div className="aperture" ref={apertureRef}>
+            <h3 className="aperture__title display-r" aria-hidden="true">{p.name}</h3>
 
-          <div className="aperture__slot">
-            <img className="aperture__img" src={p.src} alt={p.alt} width={1672} height={941} />
-            <h3 className="aperture__title aperture__title--lit display-r" aria-hidden="true">{p.name}</h3>
+            <div className="aperture__slot">
+              {p.table && (
+                <div className="aperture__table">
+                  <img
+                    ref={rowsRef}
+                    className="aperture__rows"
+                    src={p.table.src}
+                    srcSet={`${p.table.srcSmall} 1000w, ${p.table.src} 1572w`}
+                    sizes="(max-width: 900px) 88vw, 80vw"
+                    alt={p.table.alt}
+                    width={p.table.width}
+                    height={p.table.height}
+                    decoding="async"
+                  />
+                </div>
+              )}
+              <h3 className="aperture__title aperture__title--lit display-r" aria-hidden="true">{p.name}</h3>
+            </div>
+
+            <h3 className="vh">{p.name}</h3>
           </div>
 
-          <h3 className="vh">{p.name}</h3>
-        </div>
-
-        <div className="aperture__meta">
-          <div>
-            <p className="scene__disc eyebrow">{p.discipline}</p>
-            <p className="scene__tag">{p.tagline}</p>
+          <div className="aperture__meta">
+            <div>
+              <p className="scene__disc eyebrow">{p.discipline}</p>
+              <p className="scene__tag">{p.tagline}</p>
+            </div>
+            <p className="body scene__blurb">{p.blurb}</p>
+            {p.points && <ul className="body scene__points">{p.points.map((point) => <li key={point}>{point}</li>)}</ul>}
+            {projectMeta(p)}
           </div>
-          <p className="body scene__blurb">{p.blurb}</p>
-          {p.points && <ul className="body scene__points">{p.points.map((point) => <li key={point}>{point}</li>)}</ul>}
-          {projectMeta(p)}
         </div>
-      </div>
-    </article>
+      </article>
+
+      {p.ledger && (
+        <ol className="ledger" aria-label="Details from the Airtable Clone">
+          {p.ledger.map((d, i) => (
+            <li className="ledger__row" key={d.src}>
+              <span className="plate-cap__label ledger__num">{String(i + 1).padStart(2, '0')}</span>
+              <div className="ledger__copy">
+                <span className="plate-cap__text ledger__label">{d.label}</span>
+                <p className="body ledger__text">{d.text}</p>
+              </div>
+              <img
+                className="ledger__img"
+                src={d.src}
+                srcSet={`${d.src} 840w, ${d.src2x} 1680w`}
+                sizes="(max-width: 900px) calc(100vw - 40px), 620px"
+                alt={d.alt}
+                width={1680}
+                height={720}
+                loading="lazy"
+                decoding="async"
+              />
+            </li>
+          ))}
+        </ol>
+      )}
+    </>
   )
 }
 
