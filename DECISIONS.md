@@ -1135,9 +1135,9 @@ The nav now tucks on scroll at every width, stays visible under keyboard focus,
 and samples the live page ground through the Crossing and the Hero dissolve.
 Pool Safety's first plate is a factual production-flow diagram with an
 approximate test count; the coastal painting is reserved for the Back Cover.
-The Back Cover places its copy in an extension of the plate's sampled sky, with
-the artwork entering below at full opacity and retaining a soft feather at the
-join. Field Notes' expanded prints use a native modal dialog whose sole control
+The Back Cover uses a full-bleed coastal plate over a sampled-sky entrance
+bridge; only the real top edge feathers during the entrance, then the painting
+settles fully opaque. Field Notes' expanded prints use a native modal dialog whose sole control
 keeps keyboard focus; dismissal releases scroll lock and restores trigger focus
 immediately. Its DOM order follows the visual desk. Skip links, focus colors,
 external-tab announcements, Writing contrast, copy, and the hero/back-cover

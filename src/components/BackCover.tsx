@@ -10,15 +10,15 @@ import './backcover.css'
 /**
  * The Back Cover — the reverse of the Hero.
  *
- *   FLAT PAGE → SKY COLOUR → ACTUAL SKY → FULL COASTAL PLATE
+ *   FLAT PAGE → SKY COLOUR → FULL COASTAL PLATE
  *
- * A field of the plate's sampled sky extends above the artwork, and its top
- * edge keeps a small feather as the plate settles so the join stays soft.
- * The plate is never faded, filtered, or distorted.
+ * The full-bleed plate enters over the sampled-sky bridge. Its actual top edge
+ * feathers during the entrance, then the painting settles fully opaque.
+ * The plate is never filtered or distorted.
  * DECISIONS D18.
  *
  * Composition deliberately differs from the Hero: type sits left-of-centre in
- * the open sky above the plate, in cream, with no scrim. DECISIONS D10.
+ * the painting's calmer upper area, in cream, with no scrim. DECISIONS D10.
  *
  * No fake sailboat. No CSS-generated object over any illustration.
  */
@@ -44,12 +44,12 @@ export function BackCover() {
     const travel = wrap.offsetHeight - innerHeight
     const t = clamp(-wrap.getBoundingClientRect().top / Math.max(1, travel))
 
-    const feather = `${lerp(22, 8, range(t, 0, 0.55)).toFixed(2)}vh`
+    const feather = `${lerp(22, 0, range(t, 0, 0.55)).toFixed(2)}vh`
     const scale = lerp(1.06, 1, range(t, 0, 0.72)).toFixed(4)
     const copyIn = range(t, 0.12, 0.4).toFixed(3)
 
     return () => {
-      // the plate's top edge settles into a soft feather as it climbs into view
+      // feather only the plate's real top edge during its entrance
       scene.style.setProperty('--feather', feather)
       // a gentle uniform settle — inside the stated scale range, never a zoom
       scene.style.setProperty('--plate-scale', scale)
@@ -59,7 +59,7 @@ export function BackCover() {
 
   return (
     <section className="cover" id="contact" data-tone="light" data-rule="off">
-      {/* the page becomes the plate's own sky — one colour, no gradient stack */}
+      {/* the sampled sky in the bridge gives way to the full-bleed painting */}
       <div className="cover__bridge" aria-hidden="true" />
 
       <div className="cover__wrap" ref={wrapRef}>

@@ -143,12 +143,12 @@ console.log('\n— The ascent: Field Notes held while Writing climbs (CSS sticky
 
 console.log('\n— Back Cover join (BackCover.tsx) —')
 {
-  const feather = (t) => lerp(22, 8, range(t, 0, 0.55))
+  const feather = (t) => lerp(22, 0, range(t, 0, 0.55))
   const scale = (t) => lerp(1.06, 1, range(t, 0, 0.72))
   const copy = (t) => range(t, 0.12, 0.4)
   eq('feather open at the join', feather(0), 22)
-  eq('feather softens by 55%', feather(0.55), 8)
-  eq('feather stays soft', feather(1), 8)
+  eq('feather resolves at the top edge by 55%', feather(0.55), 0)
+  eq('painting fully opaque after settling', feather(1), 0)
   eq('scale settles to exactly 1', scale(0.72), 1)
   eq('scale within the stated range', scale(0) <= 1.06 ? 1 : 0, 1)
   eq('copy hidden at the join', copy(0), 0)
