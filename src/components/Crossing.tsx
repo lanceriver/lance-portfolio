@@ -15,9 +15,11 @@ import './crossing.css'
  *  (a) the ground warms  hero-exit → snow-lit  across the
  *      section. It is the slowest thing on the site: imperceptible while it
  *      happens, obvious in retrospect. DECISIONS D3.
- *  (b) it is the About anchor, and the one place the page says who this is.
+ *  (b) it anchors About: a brief introduction, interests, and a ruled record
+ *      of experience in the same plate-book voice.
  *
- * Deliberately short — one breath between the painting and the work.
+ * The biography stays brief; the ruled experience register gives the About
+ * section its practical context without changing its plate-book voice.
  */
 export function Crossing() {
   const reduced = useReducedMotion()
@@ -72,7 +74,7 @@ export function Crossing() {
           <p className="crossing__route">Singapore <span aria-hidden="true">→</span><span className="vh">to</span> Sydney</p>
         </div>
         <div className="crossing__bio">
-          <p className="body">I’m a final-year computer science student in Sydney, and a Junior Systems Engineer at Pool Safety Solutions.</p>
+          <p className="body">I’m a final-year computer science student at UNSW in Sydney, finishing in December 2026, and a Junior Systems Engineer at Pool Safety Solutions.</p>
           <p className="body">My eye for aesthetics carries into the software I build, especially Worn’s design language.</p>
         </div>
         <dl className="crossing__interests" aria-label="A few things I enjoy">
@@ -89,6 +91,38 @@ export function Crossing() {
             <dd>Cafés and places with character.</dd>
           </div>
         </dl>
+        <section className="crossing__experience" aria-labelledby="experience-title">
+          <div className="crossing__experience-heading">
+            <h3 id="experience-title" className="crossing__experience-title">Experience</h3>
+            <a className="crossing__resume-link" href="/lance-rivera-resume.pdf">View résumé</a>
+          </div>
+          <ol className="crossing__experience-list">
+            <li className="crossing__experience-entry">
+              <p className="crossing__experience-dates">Mar 2026–present</p>
+              <div className="crossing__experience-role">
+                <h4>Pool Safety Solutions</h4>
+                <p>Junior Systems Engineer</p>
+              </div>
+              <p className="crossing__experience-summary">Productionised a franchise prototype across NSW, Queensland and Victoria, including a multi-tenant PostgreSQL platform with row-level security. Built Docker services on AWS Lightsail, ECR, S3 and CloudFront, plus a Lambda/SQS pipeline syncing GoHighLevel. Integrated Stripe and Xero through APIs and webhooks, with roughly 470 tests and staged CI/CD supporting releases.</p>
+            </li>
+            <li className="crossing__experience-entry">
+              <p className="crossing__experience-dates">Mar–Dec 2025</p>
+              <div className="crossing__experience-role">
+                <h4>UNSW CSESoc</h4>
+                <p>Marketing Subcommittee</p>
+              </div>
+              <p className="crossing__experience-summary">Created content for an audience of 9,000+ followers, with 50,000+ cumulative views.</p>
+            </li>
+            <li className="crossing__experience-entry">
+              <p className="crossing__experience-dates">Nov 2022–Nov 2024</p>
+              <div className="crossing__experience-role">
+                <h4>Singapore Armed Forces</h4>
+                <p>Administrative Assistant · National Service</p>
+              </div>
+              <p className="crossing__experience-summary">Coordinated a VBA automation that reduced processing time by 90%, and built a Telegram bot using JavaScript and Google Apps Script.</p>
+            </li>
+          </ol>
+        </section>
       </div>
     </section>
   )

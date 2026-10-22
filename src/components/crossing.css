@@ -32,6 +32,17 @@
 .crossing__interests > div + div { border-left: 1px solid rgba(27, 42, 51, .18); }
 .crossing__interests dt { color: var(--ink-soft); font-family: var(--sans); font-size: 11.5px; font-weight: 500; letter-spacing: .16em; text-transform: uppercase; }
 .crossing__interests dd { margin: 6px 0 0; color: var(--ink); font-family: var(--serif); font-size: clamp(16px, 1.45vw, 20px); line-height: 1.25; }
+.crossing__experience { grid-column: 1 / -1; margin-top: clamp(14px, 2vw, 24px); }
+.crossing__experience-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 24px; margin-bottom: 12px; }
+.crossing__experience-title { color: var(--ink); font-family: var(--serif); font-size: clamp(30px, 3vw, 40px); font-weight: 400; line-height: 1; letter-spacing: -.025em; }
+.crossing__resume-link { color: var(--ink-soft); font-size: 13px; text-decoration: underline; text-decoration-color: rgba(27, 42, 51, .35); text-underline-offset: 3px; }
+.crossing__resume-link:hover { color: var(--ink); text-decoration-color: currentColor; }
+.crossing__experience-list { margin: 0; padding: 0; list-style: none; border-top: 1px solid rgba(27, 42, 51, .24); }
+.crossing__experience-entry { display: grid; grid-template-columns: minmax(150px, .72fr) minmax(210px, 1.15fr) minmax(0, 2.13fr); column-gap: clamp(20px, 3vw, 42px); align-items: start; padding: 14px 0 15px; border-bottom: 1px solid rgba(27, 42, 51, .24); }
+.crossing__experience-dates { color: var(--ink-soft); font-size: 13px; line-height: 1.45; font-variant-numeric: tabular-nums; }
+.crossing__experience-role h4 { color: var(--ink); font-family: var(--serif); font-size: clamp(17px, 1.55vw, 21px); font-weight: 400; line-height: 1.18; }
+.crossing__experience-role p { margin-top: 3px; color: var(--ink-soft); font-size: 13px; line-height: 1.4; }
+.crossing__experience-summary { max-width: 72ch; color: var(--ink-soft); font-size: 16px; line-height: 1.55; }
 
 @media (max-width: 900px) {
   .crossing__inner { grid-template-columns: minmax(0, 1fr); gap: 26px; align-items: start; }
@@ -42,6 +53,15 @@
   .crossing__interests > div:first-child { padding: 10px 0; }
   .crossing__interests > div + div { border-left: 0; border-top: 1px solid rgba(27, 42, 51, .18); }
   .crossing__interests dd { margin-top: 4px; }
+  .crossing__experience { margin-top: 4px; }
+  .crossing__experience-heading { margin-bottom: 8px; }
+  .crossing__experience-entry { grid-template-columns: minmax(120px, .65fr) minmax(0, 1fr); column-gap: 18px; row-gap: 7px; padding: 13px 0; }
+  .crossing__experience-summary { grid-column: 2; }
+}
+
+@media (max-width: 560px) {
+  .crossing__experience-entry { grid-template-columns: minmax(0, 1fr); row-gap: 5px; }
+  .crossing__experience-summary { grid-column: auto; margin-top: 2px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -1133,9 +1133,10 @@ Lance's own bases. The `lake-terrace` plate files stay in `public/plates/`.
 
 The nav now tucks on scroll at every width, stays visible under keyboard focus,
 and samples the live page ground through the Crossing and the Hero dissolve.
-Pool Safety is private by default: its plate shows only employer, role, dates,
-and a broad production experience summary. Internal architecture and detailed
-project notes stay commented out until public sharing is approved.
+Lance has since approved public sharing of Pool Safety's engineering details in
+the About Experience section; its compact Work plate still shows only employer,
+role, dates, and a broad production experience summary. Internal architecture
+and detailed project notes remain out of that plate.
 The Back Cover uses a full-bleed coastal plate over a sampled-sky entrance
 bridge; only the real top edge feathers during the entrance, then the painting
 settles fully opaque. Field Notes' expanded prints use a native modal dialog whose sole control
@@ -1146,5 +1147,16 @@ lead lengths are tightened while keeping the plate-book world. The phone
 aperture scales the table beyond the slot so the row-number gutter stays legible
 as the rightmost columns crop away. Contact anchors target the settled point in
 the pin, so navigation opens on the visible details rather than its bridge.
-About now pairs the Singapore-to-Sydney route with confirmed study, work, and
-interests in a short editorial layout; no portrait is shown without an image.
+About pairs the Singapore-to-Sydney route and brief biography with interests
+and a compact ruled experience register; no portrait is shown without an image.
+
+## D59 — Experience details are approved for public sharing
+
+Lance approved sharing internal engineering details in a compact Experience
+section beneath About. Pool Safety Solutions now names the productionised
+franchise prototype, multi-tenant PostgreSQL with row-level security, AWS
+services, GoHighLevel sync, Stripe and Xero integrations, and the approximate
+test count and staged CI/CD. This approval supersedes D58's restriction on
+internal architecture and detailed project notes. The section also records
+UNSW CSESoc and Singapore Armed Forces experience from the résumé; the
+existing compact Work plate remains unchanged.
