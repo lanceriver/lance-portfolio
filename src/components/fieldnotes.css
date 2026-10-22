@@ -45,7 +45,7 @@
   position: relative;
   z-index: 100;                    /* every object passes BEHIND the title —
                                       100 clears the whole pile, which with
-                                      ten objects tops out at 49 */
+                                      fourteen objects tops out at 53 */
   display: grid;
   grid-template-columns: minmax(0, 1.1fr) minmax(0, .52fr);
   gap: clamp(30px, 5vw, 80px);
@@ -65,8 +65,8 @@
   position: relative;
   width: var(--shell);
   margin: clamp(18px, 2.6vh, 36px) auto 0;   /* the title clears the first print entirely */
-  height: 120vh;
-  min-height: 1270px;
+  height: max(120vh, 2080px);
+  min-height: 2080px;
 }
 
 .obj {
@@ -111,13 +111,21 @@
 .obj--band     { left: 21%;  top: 49%;  width: min(41%, 530px); z-index: 7; }
 .obj--palette  { right: 4%;  top: 45%;  width: min(27%, 350px); z-index: 5; }
 .obj--colophon { left: 2%;   top: 64%;  width: min(30%, 385px); z-index: 10; }
-.obj--slip     { left: 10%;  top: 86%;  width: min(20%, 255px); z-index: 11; }
+.obj--slip     { right: 4%; top: 65%;  width: min(20%, 255px); z-index: 11; }
 .obj--turntable{ left: 37%;  top: 65%;  width: min(23%, 290px); z-index: 12; }
+.obj--mountain-road { left: 0; top: auto; bottom: 160px; width: min(19%, 250px); z-index: 13; }
+.obj--coastal-train { left: 18%; top: auto; bottom: 0; width: min(19%, 250px); z-index: 14; }
+.obj--torii { left: 43%; top: auto; bottom: 0; width: min(25%, 325px); z-index: 15; }
+.obj--bamboo { right: 0; top: auto; bottom: 160px; width: min(19%, 250px); z-index: 16; }
 
 .obj--terrace .obj__expand img { height: min(46vh, 420px); }
 .obj--night   .obj__expand img { height: min(38vh, 340px); }
 .obj--army    .obj__expand img { height: min(28vh, 250px); }
 .obj--band    .obj__expand img { height: min(19vh, 175px); }
+.obj--mountain-road .obj__expand img,
+.obj--coastal-train .obj__expand img,
+.obj--bamboo .obj__expand img,
+.obj--torii .obj__expand img { width: 100%; height: auto; }
 /* the crop holds the massed ranks, not the pit wall behind them */
 .obj--army    .obj__expand img { object-fit: cover; object-position: 38% 42%; }
 
@@ -252,7 +260,7 @@
   }
   .obj {
     position: relative;
-    left: auto; right: auto; top: auto;
+    left: auto; right: auto; top: auto; bottom: auto;
     width: auto !important;
     transform: none;
   }
@@ -265,11 +273,19 @@
   .obj--glyph   { width: 42% !important; align-self: flex-end; }
   .obj--band    { width: 94% !important; align-self: flex-start; }
   .obj--slip    { width: 56% !important; align-self: flex-end; }
+  .obj--mountain-road { width: 88% !important; align-self: flex-start; }
+  .obj--coastal-train { width: 78% !important; align-self: flex-end; }
+  .obj--torii { width: 94% !important; align-self: flex-start; }
+  .obj--bamboo { width: 76% !important; align-self: flex-end; }
   .obj--band    .obj__expand img { height: 16vh; }
 
   .obj--terrace .obj__expand img { height: 34vh; }
   .obj--night   .obj__expand img { height: 28vh; }
   .obj--army    .obj__expand img { height: 24vh; }
+  .obj--mountain-road .obj__expand img,
+  .obj--coastal-train .obj__expand img,
+  .obj--bamboo .obj__expand img,
+  .obj--torii .obj__expand img { height: auto; }
 }
 
 @media (prefers-reduced-motion: reduce) {
