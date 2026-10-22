@@ -19,6 +19,7 @@ jobs:
     env:
       SITE_URL: https://lanceriver.com
       VITE_VISITS_API: ${{ vars.VISITS_API_URL }}
+      VITE_NOW_PLAYING_API: ${{ vars.NOW_PLAYING_API_URL }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -46,6 +47,7 @@ jobs:
     env:
       SITE_URL: https://lanceriver.com
       VITE_VISITS_API: ${{ vars.VISITS_API_URL }}
+      VITE_NOW_PLAYING_API: ${{ vars.NOW_PLAYING_API_URL }}
       BUCKET: ${{ vars.SITE_BUCKET }}
       CF_DISTRIBUTION_ID: ${{ vars.CF_DISTRIBUTION_ID }}
     steps:

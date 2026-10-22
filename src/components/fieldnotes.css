@@ -245,6 +245,7 @@
   border-radius: 50% !important;
   background-size: cover;
   background-position: center;
+  background-image: url('/plates/zhangjiajie-800.webp');
   box-shadow: 0 0 0 1px rgba(27, 42, 51, .3);
 }
 
@@ -310,16 +311,38 @@
   margin-bottom: 4px;
 }
 .turntable__title {
+  display: block;
   font-family: var(--serif);
   font-size: 19px;
   line-height: 1.2;
   color: var(--ink);
+  overflow-wrap: anywhere;
 }
+.turntable__title[href] { text-decoration-thickness: 1px; text-underline-offset: 3px; }
+.turntable__title[href]:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
 .turntable__artist {
   font-family: var(--serif);
   font-style: italic;
   font-size: 16px;
   color: var(--ink-warm);
+  overflow-wrap: anywhere;
+}
+.turntable__spotify {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  padding: 12.5px 12px;
+  color: var(--ink-soft);
+  text-decoration: none;
+}
+.turntable__spotify img {
+  display: block;
+  width: 70px;
+  height: auto;
+}
+.turntable__spotify:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
 }
 
 @media (prefers-reduced-motion: reduce) {

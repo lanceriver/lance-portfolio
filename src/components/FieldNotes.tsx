@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 import { useReducedMotion } from '../hooks/useReducedMotion'
+import { useNowPlaying } from '../hooks/useNowPlaying'
 import { arrive, clampTravel, isPhone } from '../lib/enter'
 import './fieldnotes.css'
 
@@ -349,20 +350,6 @@ export function FieldNotes() {
 }
 
 /**
- * PROTOTYPE DATA — stands in for the Spotify `currently-playing` response until
- * the function that fetches it exists. The shape is deliberately the shape the
- * real endpoint will return, including the case that happens most of the time:
- * nothing is playing, and the object falls back to the last track instead of
- * going blank. DECISIONS D48.
- */
-const NOW_PLAYING = {
-  playing: true,
-  title: 'Harvest Moon',
-  artist: 'Neil Young',
-  art: '/plates/zhangjiajie-800.webp',   // TODO: replace with album art from the API
-}
-
-/**
  * The turntable is a flat drawing in the same printed language as the desk,
  * with one soft sheen and no 3D rendering.
  *
@@ -372,13 +359,23 @@ const NOW_PLAYING = {
  * record stops and the arm returns to its rest.
  */
 function Turntable() {
-  const { playing, title, artist, art } = NOW_PLAYING
+  const turntableRef = useRef<HTMLElement>(null)
+  const { playing, title, artist, url, available } = useNowPlaying(turntableRef)
+  const hasTrack = Boolean(title && artist)
+  const status = playing
+    ? 'On the turntable'
+    : !available
+      ? 'Listening status unavailable'
+      : hasTrack
+        ? 'Last played'
+        : 'Between records'
+
   return (
-    <figure className="turntable" data-playing={playing || undefined}>
+    <figure className="turntable" ref={turntableRef} data-playing={playing || undefined}>
       <div className="turntable__deck">
         <div className="turntable__platter">
           <div className="turntable__record">
-            <span className="turntable__label" style={{ backgroundImage: `url(${art})` }} />
+            <span className="turntable__label" aria-hidden="true" />
             <span className="turntable__spindle" />
           </div>
         </div>
@@ -388,11 +385,18 @@ function Turntable() {
         </div>
       </div>
       <figcaption className="turntable__cap">
-        <span className="turntable__status">
-          {playing ? 'On the turntable' : 'Last played'}
-        </span>
-        <span className="turntable__title">{title}</span>
-        <span className="turntable__artist">{artist}</span>
+        <span className="turntable__status" aria-live="polite">{status}</span>
+        {hasTrack && (
+          <>
+            {url
+              ? <a className="turntable__title" href={url} target="_blank" rel="noreferrer" aria-label={`${title} by ${artist} on Spotify`}>{title}</a>
+              : <span className="turntable__title">{title}</span>}
+            <span className="turntable__artist">{artist}</span>
+          </>
+        )}
+        <a className="turntable__spotify" href="https://open.spotify.com" target="_blank" rel="noreferrer" aria-label="Spotify">
+          <img src="/spotify-logo.svg" alt="Spotify" />
+        </a>
       </figcaption>
     </figure>
   )

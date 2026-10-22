@@ -15,6 +15,7 @@ The original four plates originate from the **authorised handoff bundle**:
 | `coastal-train` (WebP exports) | Lance's `IMG_4312.JPG`; green coastal train, photographed 16 September 2025; metadata stripped by `scripts/ingest-photo.py` |
 | `torii-corridor` (WebP exports) | Lance's `DSC_0791.JPG`; torii corridor, photographed 19 February 2024; metadata stripped by `scripts/ingest-photo.py` |
 | `bamboo-canopy` (WebP exports) | Lance's `IMG_8359.JPG`; bamboo canopy, photographed 20 February 2024; orientation baked in and metadata stripped by `scripts/ingest-photo.py` |
+| `public/spotify-logo.svg` | Official `Full_Logo_Black_RGB.svg`, copied unmodified from Spotify's [2024 full-logo asset archive](https://developer.spotify.com/images/guidelines/design/2024-spotify-full-logo.zip) |
 
 The four original plate PNGs and `zhangjiajie-pillars.png` are 1672 x 941. The
 separate `zhangjiajie-pillars-4k.png` upscale is 3840 x 2160. Travel photo

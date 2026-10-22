@@ -33,6 +33,31 @@ gh variable set VISITS_API_URL --body '<VisitsApiUrl>' --repo lanceriver/lance-p
 
 Start the first deployment from GitHub Actions with **Deploy site → Run workflow** on `main` (workflow dispatch).
 
+## Connect read-only Spotify now playing
+
+The stack adds `GET /now-playing` to the existing HTTP API and reports the current track, or the most recently played track with `playing: false`. The endpoint only requests `user-read-currently-playing` and `user-read-recently-played`. It returns an empty stopped state when playback is unavailable and never exposes device, account, or token data.
+
+1. In the [Spotify Developer Dashboard](https://developer.spotify.com/dashboard), create an app. In its settings, add exactly `http://127.0.0.1:8888/callback` as a redirect URI. Spotify accepts the loopback IP form; use `127.0.0.1`, not `localhost`.
+2. Copy the app's **Client ID**. It is a public app identifier, not a client secret. This integration uses Authorization Code with PKCE and does not need a client secret.
+3. From the repository root, run the local authorization helper. It opens Spotify sign-in, listens only on `127.0.0.1:8888`, and stores the resulting credentials in Parameter Store after Spotify authorizes the two read-only scopes:
+
+   ```sh
+   python3 scripts/connect-spotify.py --client-id '<SpotifyClientId>'
+   ```
+
+   The command uses the local AWS `admin` profile in `us-east-1`. The browser callback expires after five minutes. OAuth codes and tokens are not printed or logged.
+4. Set the GitHub repository variable `NOW_PLAYING_API_URL` to the stack's `NowPlayingApiUrl` output:
+
+   ```sh
+   gh variable set NOW_PLAYING_API_URL --body '<NowPlayingApiUrl>' --repo lanceriver/lance-portfolio
+   ```
+
+   The first step only applies after a deployment that includes the new stack output. Re-run the helper if Spotify authorization expires (refresh tokens last about six months) or is revoked.
+
+The refresh token and Client ID are stored together as JSON in the Standard SecureString `/lance-portfolio/spotify/credentials`, encrypted by the AWS-managed `aws/ssm` key. The Lambda role can get and replace only that exact parameter; its KMS encrypt/decrypt permissions are restricted to calls through Parameter Store with that parameter's encryption context. The public Client ID is not a secret; the refresh token is. Do not put either token in CloudFormation, Lambda environment variables, source files, logs, or the frontend. The endpoint keeps successful metadata in memory for at most 30 seconds and caches the access token in Lambda memory; Spotify errors return an empty stopped state with HTTP 503 and `Cache-Control: no-store`.
+
+Cost: the Standard Parameter Store value has no storage or standard-throughput API charge. Using the AWS-managed KMS key has no key-storage fee; KMS API usage can be billed under current KMS pricing. Lambda is billed by invocation and execution time (128 MB, with a 15-second maximum); HTTP API requests are also billed. AWS pricing and free-tier eligibility vary by account and can change, so see [Parameter Store pricing](https://aws.amazon.com/systems-manager/pricing/), [KMS pricing](https://aws.amazon.com/kms/pricing/), and [Lambda pricing](https://aws.amazon.com/lambda/pricing/) for current rates. The 30-second cache reduces repeat Spotify calls within a warm execution environment; API Gateway retains its existing 10 requests/second and 20 burst limits.
+
 ## Verify the cutover
 
 Replace `<writing-slug>` with a directory from `dist/writing/` and `<VisitsApiUrl>` with the stack output.
