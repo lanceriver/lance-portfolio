@@ -358,28 +358,28 @@ export function FieldNotes() {
             {crate.map((r, i) => {
               const depth = i + (frontVisible ? 1 : 0)
               return (
-              <li
-                key={r.art}
-                className={`album-crate__slot${depth > 0 ? ' album-crate__slot--back' : ''}`}
-                style={{ '--depth': depth } as CSSProperties}
-              >
-                <a
-                  className="album-sleeve"
-                  href={r.url}
-                  target="_blank"
-                  rel="noreferrer"
-                  aria-label={`Open ${r.title} by ${r.artist} on Spotify`}
+                <li
+                  key={r.art}
+                  className={`album-crate__slot${depth > 0 ? ' album-crate__slot--back' : ''}`}
+                  style={{ '--depth': depth } as CSSProperties}
                 >
-                  <span className="album-sleeve__jacket">
-                    <img
-                      src={r.art}
-                      alt={`Album cover for ${r.title} by ${r.artist}`}
-                      loading="lazy"
-                      onError={() => setFailedCrateArt((failed) => (failed.includes(r.art) ? failed : [...failed, r.art]))}
-                    />
-                  </span>
-                </a>
-              </li>
+                  <a
+                    className="album-sleeve"
+                    href={r.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label={`Open ${r.title} by ${r.artist} on Spotify`}
+                  >
+                    <span className="album-sleeve__jacket">
+                      <img
+                        src={r.art}
+                        alt={`Album cover for ${r.title} by ${r.artist}`}
+                        loading="lazy"
+                        onError={() => setFailedCrateArt((failed) => (failed.includes(r.art) ? failed : [...failed, r.art]))}
+                      />
+                    </span>
+                  </a>
+                </li>
               )
             })}
           </ul>
