@@ -1,71 +1,106 @@
-# Handoff — lance-portfolio, Worn screens + old-site retirement
+# Handoff — lance-portfolio, personal photo pile shipped
 
 _Last updated 2026-10-22. One living file — rewrite, don't append._
 
 ## TL;DR
-- On `main` at `fb5ba9c`, level with `origin/main` (pushing this handoff commit is left to Lance). No open PRs. One worktree: this checkout.
-- **Live at https://lanceriver.com.** Deploy run 39695048694 for PR #12 passed (test and deploy). The live site serves `share/worn-with/piece-960.webp` (200), and its JS bundle contains the new screens.
-- Last observed: `npm run build` clean, `npm run verify` 34/34 (on the PR #12 branch before merge).
-- **Next:** a mobile bug Lance reported in the Worn screens (below). It isn't reproduced yet.
-- Untracked files, not created this session, so leave them unless Lance says otherwise: `.impeccable/`, `docs/daily-priorities.md`, `assets-source/Sandstone Pillars and Mountain Pavilion.png` (identical to the committed `zhangjiajie-pillars.png`), and **`assets-source/IMG_7501.JPG`**, which is new: Lance's photo from 10:32 today, 5.3 MB, purpose unknown.
-
-## Top next item — mobile bug in the Worn swipe row (Lance, 2026-10-22, real phone)
-> On mobile the photos move up and down when you first tap them; only after a few seconds do they stay put.
-
-Not reproduced or verified. Both suspects are in `Screens()` in `src/components/Work.tsx`:
-1. **Late entrance animation.** `motion.figure` uses `initial {y:96, opacity:0, scale:.96}` → `whileInView`, with `viewport {once, amount:.2}` and a spring (stiffness 110, damping 20, delay `i*0.14`). In the horizontal swipe row, figures 3–6 start off-screen, so each one rises and settles as it's swiped in, which reads as "moving up and down". Possible fix: skip the entrance at ≤900px (for example `initial={false}` when `matchMedia('(max-width: 900px)')` matches), or rise once for the whole row.
-2. **Hover on touch.** `whileHover {y:-10}` can fire on a tap on iOS (sticky hover), and the figure springs back later. Possible fix: gate `whileHover` behind `(hover: hover) and (pointer: fine)`, as the CSS shadow already is.
-
-Drift is already off on phones: the scroll driver sets `transform: ''` at ≤900px. Verify on a real phone. The browser pane's emulated viewport doesn't reproduce touch hover.
+- **Live:** https://lanceriver.com/#notes. PR #13 added four personal travel photos; PR #14 removed the non-photo props and made a tighter pile. Lance approved the final spacing and both PRs are merged and deployed.
+- **Git:** local `main` now includes deployed commit `4861a45`. The pre-existing unpushed handoff/seed-source commit was rebased onto it as `30ad659`. After this handoff is committed, local `main` is **two documentation commits ahead of `origin/main`**, with nothing pushed by this handoff task. Those commits also contain `docs/worn-screens/` seed sources. Do not mistake them for unshipped website changes.
+- **Checks:** final PR #14 typecheck, production build and 34/34 verification checks passed. CI passed for head `aec94f2`. Deployment run **39708045081** passed both test (including infrastructure pytest) and deploy jobs. Live HTML/JS/CSS were checked for all seven photos, removed props, and the approved support-object spacing.
+- **No open PRs or active feature worktrees.** Only the main checkout remains. Temporary previews on ports 5191/5192 were stopped; feature branches were removed locally and remotely.
+- **Next:** investigate the still-unfixed Worn mobile photo movement described below. No new feature request is pending after the approved Field Notes work.
+- **Untouched, pre-existing untracked files:** `.impeccable/`, `docs/daily-priorities.md`, `assets-source/IMG_7501.JPG`, and `assets-source/Sandstone Pillars and Mountain Pavilion.png`. Leave them alone. The last PNG was previously reported identical to committed `zhangjiajie-pillars.png`; not rechecked here.
 
 ## Where the product is
-| Area | State |
-|---|---|
-| Worn (Plate III) | PR #12 merged (`fb5ba9c`). On desktop, "Worn", the tagline, the blurb and "In progress" stack in the left column, and the bullets start level in the right; both columns end level. Six figures in two staggered rows of three: The wardrobe, Worn with, Built for tonight, One piece, The numbers, Shared. Depth drift `DRIFT = [160, 40, 100]` cycles per column, plus a stronger entrance and a hover lift. Phones get one swipe row with no drift. |
-| Worn screens | Figs 1, 3 and 5 are from Lance's phone (PR #8). Figs 2, 4 and 6 are simulator captures of a **fictional seeded diary**: AI-generated men's outfit photos around Sydney plus tinted garment templates. They're cropped below the status bar (`cwebp -crop 0 162 1206 2435`) and exported at 480w and 960w to `public/worn/`. |
-| Old AWS site | **Retired 2026-10-22**, recorded in `infra/README.md` (`f9e9524`). Deleted: 6 stacks, 20 Lambdas, 6 HTTP APIs, roles `GitHubAction-AssumeRoleWithAction` (it had AdministratorAccess and trusted `lanceriver/*`) and `LambdaDynamoAPI`, 18 log groups, bucket `lanceriver.com` (5,679 versions), table `lancerivervisitor_counter`, the expired certificate, zone `Z045884510L49TOC5SLX0`, and distribution `EAKMWW6S5Z3KD`. Backup: `~/Documents/aws-old-site-backup-2026-10-22/` (bucket files, table row, old zone records). Kept: `lance-portfolio`, `exoplanets-backend`, `aws-sam-cli-managed-default`. Checked afterwards: apex 200, www 301, blog CNAME, counter. |
-| Hosting/deploy | Unchanged. S3 + CloudFront `E1ZCFALE8XHKH7` + zone `Z08238469JD0YFW9R421`, and the OIDC deploy role. Every push to `main` deploys, including docs-only pushes, which redeploy unchanged content. |
-| Visitor counter | Counted 1374 after a test POST of mine on 2026-10-22, which added 1. |
 
-## Key findings (the why)
-- **Carousel declined (for now).** Lance asked about an endless auto-scrolling strip. I advised against it: with few screens the loop repeats visibly, it fights the drift, and it isn't accessible without a pause control. Revisit if there are many more screens.
-- **Share card over the "diary started" grid.** Lance's call. The grid duplicated the lookbook photos; the share card shows a finished output (title, occasion, note, and pieces with prices). It can't show weather, because seeded fits have none: the app only records weather at capture.
-- **Seeding the Worn simulator.** It uses Worn's DEBUG seeder: put `Documents/SeedPhotos/*.jpg` and `Documents/SeedCutouts/<stem>_<top|bottom|shoes>.png` in the app's data container, then launch with `-WardrobeSeedDiary YES -WardrobeSeedBuilder YES`. The spec, imagegen prompts and processing script are in `docs/worn-screens/`. Never edit the simulator's SwiftData store with sqlite; the classifier blocks it.
-- **Old site's last activity.** The admin role was last used 2026-04-15, the same day as the old bucket's last upload, so it was the old site's own deploy and not another project.
+| Area | Current state |
+|---|---|
+| Field Notes photos | Seven of Lance's own travel photographs. Existing: Zhangjiajie, Furong Ancient Town and Terracotta Army. Added: misty mountain road, coastal train, torii corridor and bamboo canopy. All open through the existing expand/lightbox interaction. |
+| Field Notes composition | **Approved by Lance.** A tighter, overlapping photo pile. Keep the colophon and turntable, with clear space around them below the photographs. Removed: painted alpine band, palette/"Sampled from the desk", Aa/type specimen, ampersand, and "Kept because the blue was right" slip. Do not restore them from older design decisions. Other sections' paintings remain. |
+| Turntable | Still prototype playback data: `Harvest Moon`, Neil Young, `playing: true`. The temporary record label now uses Lance's Zhangjiajie photograph, not the lake painting. Real Spotify integration remains open. |
+| Worn (Plate III) | PR #12 remains live. Six screens in staggered desktop rows; one horizontal swipe row on phones. The mobile movement report below was not worked on this session. |
+| Hosting | Existing S3 + CloudFront deployment. Distribution `E1ZCFALE8XHKH7`; hosted zone `Z08238469JD0YFW9R421`. Every push to `main`, including docs-only pushes, triggers deployment. |
+| Old AWS site | Retired earlier on 2026-10-22, documented in `infra/README.md` (`f9e9524`). No infrastructure changes this session. Previous backup: `~/Documents/aws-old-site-backup-2026-10-22/`. Keep the current `lance-portfolio`, `exoplanets-backend` and `aws-sam-cli-managed-default` stacks. |
+
+## Done / left
+
+- **PR #13:** https://github.com/lanceriver/lance-portfolio/pull/13 — merged as `23da8cd`. Added four photos, dated captions, metadata-stripped WebP exports and provenance. Deployment run `39706220238` passed.
+- **PR #14:** https://github.com/lanceriver/lance-portfolio/pull/14 — merged as `4861a45`. Removed props, compacted the pile, added keyboard-focus lifting, and then spaced the turntable/colophon further apart at Lance's request. Final branch head was `aec94f2`; final deployment run `39708045081` passed.
+- **Verification:** browser checks at 1440×1000, 1024×900 and 390×844 confirmed all seven photos load and expand, removed props are absent, keyboard focus raises a print, and there is no horizontal overflow or page error. Final geometry checks confirmed neither support object overlaps a photo or each other at these widths. Phone touch expand/close also passed. These were browser checks, not a physical-phone verification.
+- **Build warnings:** two existing Vite warnings reproduce on baseline main as well as these changes: `__VITE_PUBLIC_ASSET__2179b098__` and `__VITE_PUBLIC_ASSET__5467e91e__`. Build succeeds and those placeholders were not found in final generated output. No unrelated fixes were made.
+- **Left:** real-phone Worn bug investigation, Spotify integration/sign-off, and any further work Lance chooses. No Field Notes repair remains open.
+
+## Key findings and final layout
+
+- **Source of truth:** `src/components/FieldNotes.tsx`, `src/components/fieldnotes.css`, `DECISIONS.md` D56, and `assets-source/PROVENANCE.md`. Lance's latest direction overrides D51's old instruction to keep the painted band.
+- Desktop pile width is `min(1040px, var(--shell))`. The final surface has a 1400px minimum height. Photo top offsets stay fixed at their approved positions; increasing support-object space must not stretch the whole photo arrangement.
+- Final colophon: `left: 16%`, `top: 1040px`, width `min(34%, 360px)`. Final turntable: `left: 60%`, `bottom: 32px`, width `min(22%, 255px)`. Lance explicitly wanted the turntable clearly visible, separated from the photo pile and colophon.
+- At ≤900px the photographs flow with alternating widths and controlled overlaps: 20px gap plus -64px sibling margin. Colophon and turntable each have an overriding +20px margin, giving 40px breathing room. **Specificity matters:** use `.obj + .obj--colophon` / `.obj + .obj--turntable`; a lone class selector loses to `.obj + .obj`.
+- Pointer entry and keyboard focus both raise the chosen item using the existing persistent stack ordering. Keep all seven photographs reachable when adjusting overlaps.
+- The removed palette's `swatches` export remains in `src/data.ts`; its import/rendering was removed from Field Notes. No need to reintroduce it or clean unrelated data speculatively.
+
+### Travel assets
+
+Originals are gitignored in `assets-source/travel/`; 17 photos are present, seven are now represented on the site and ten remain unused. Do not commit originals. The source library is the archive; the site serves committed derivatives in `public/plates/`.
+
+| Original | New site basename | Date from EXIF |
+|---|---|---|
+| `IMG_7332.JPG` | `mountain-road` | 24 May 2026 |
+| `IMG_4312.JPG` | `coastal-train` | 16 September 2025 |
+| `DSC_0791.JPG` | `torii-corridor` | 19 February 2024 |
+| `IMG_8359.JPG` | `bamboo-canopy` | 20 February 2024 |
+
+Each new image has full/1200/800-width WebP exports. Orientation is baked in; embedded metadata was checked absent from all twelve exports. Captions deliberately describe the scenes rather than guessing place names. `IMG_7501.JPG` is the **bakery photo**, not a mystery image; it was not selected for the site. A duplicate outside `travel/` remains untracked.
+
+## Top next item — Worn mobile swipe-row movement
+
+Lance's earlier report on a real phone:
+> On mobile the photos move up and down when you first tap them; only after a few seconds do they stay put.
+
+**Still not reproduced or fixed.** `Screens()` in `src/components/Work.tsx` still has:
+1. Entrance from `{ y: 96, opacity: 0, scale: 0.96 }` through `whileInView`, `viewport: { once: true, amount: 0.2 }`, spring stiffness 110/damping 20, and delay `i * 0.14`. Screens starting outside the horizontal viewport may rise/settle when first swiped into view. Consider disabling this entrance on phones or animating the whole row once.
+2. `whileHover: { y: -10 }` is not explicitly gated behind `(hover: hover) and (pointer: fine)`. Investigate touch behavior before claiming this is the cause.
+
+Scroll drift is already disabled at ≤900px. Verify the eventual fix on a real phone; emulation alone does not establish iOS touch-hover behavior. Work in a new feature branch/worktree and PR.
 
 ## Decisions pending with Lance
-1. **Spotify secret storage:** SSM SecureString (free, recommended) or Secrets Manager ($0.40/mo, rotation). Then Lance creates the Spotify app and does the one-time sign-in.
-2. **Imagery direction:** the remaining plates (coastal road, lake terrace, hill path, alpine village) are generic AI paintings. The critique recommends regenerating them from his own trips. Ask before generating.
-3. **`assets-source/IMG_7501.JPG`:** what it's for. It's untracked, so don't commit it unless he says.
+
+1. **Spotify:** secret-storage approach needs sign-off before implementation (previous proposal: SSM SecureString versus Secrets Manager). Lance then creates the Spotify app and completes the one-time sign-in. Target is a Lambda `GET /now-playing` feeding `Turntable` / `NOW_PLAYING` in `src/components/FieldNotes.tsx`.
+2. **Other paintings:** whether to replace the remaining non-Field-Notes plates with imagery derived from his own trips. Ask before generating new artwork. The Field Notes removal does not authorize changing the hero, Work plates, Writing or Back Cover.
+3. **Airtable Clone screenshot:** still an option for Plate II if Lance wants it; needs a signed-in capture.
 
 ## Workflow / environment notes
-- Dev: `npm run dev` (5173). To preview another worktree, temporarily add a `.claude/launch.json` entry `npm --prefix ../<worktree> run dev -- --port 5191 --strictPort`, then revert it.
-- Verify: `npx tsc -b && npm run build && npm run verify`.
-- The browser pane often ignores the first `scrollTo` after a load because the smooth-scroll library is still starting. Scroll twice, or wait about 3 s.
-- AWS: `aws sso login --profile admin` must be approved in Lance's browser. A background run times out if he doesn't click Allow, so ask him to run it. Then `AWS_PROFILE=admin`. S3 `delete-objects` takes at most 1,000 keys per call.
-- GitHub: use `GH_TOKEN=$(gh auth token --user lanceriver)` for this repo; the active `gh` account is the work one. `git push` over SSH works as is.
-- Codex: `codex exec --skip-git-repo-check -s workspace-write -C <dir> "$(cat spec)" </dev/null`. `--dangerously-bypass-approvals-and-sandbox` was blocked by the classifier. `--skip-git-repo-check` is needed outside a git repo.
-- **Simulator `worn-portfolio`** (`22D896FD-B2AD-4C2A-90B5-9A5F14C556C7`, iPhone 17 Pro, iOS 26.5): Worn built from fits-app-workspace `origin/main` `fe24116`, seeded with 8 fictional fits, location set to Sydney, and the fit "first warm morning" filled in for the share card. Tap coordinates are device points (402×874).
-  - **The control tool's screenshots lag one action behind.** Capture with `xcrun simctl io <udid> screenshot` instead.
-  - Taps sometimes drop during sheet animations, so wait about 1.5 s between steps.
-  - To reset: `simctl uninstall` / `install`, then `simctl privacy <udid> grant location dev.lanceriver.fits-app-workspace`, re-copy the seed files and relaunch with the seeder args.
-- Leave the other simulators alone. `worn-trip` (759C…) and the iPhone 17e (A57A…, the suite simulator) belong to Worn sessions.
 
-## How we work
-- Feature branch + PR for code; docs-only changes may go straight to main. Worktree per branch; remove the worktree and branch once merged.
-- Opus designs and reviews; implementation goes to Codex or Sonnet. Trivial asset or few-line swaps are done inline. Simulator work stays with Claude.
-- Lance signs off the approach for auth, secrets, payments or access control first. Confirm outward actions (deploys, deletes) per action.
-- Taste: no generic dev-portfolio look; don't add disclosure copy he didn't ask for.
+- User workflow: **Sol orchestrates/reviews/hands off; Luna implements.** Code changes use a feature branch and PR, with an isolated worktree for parallel work. Documentation-only changes may be committed on main. Get the approach approved before auth, access-control, secrets or payment changes. Never connect to the production database.
+- For visual changes, prepare a concrete preview, let Lance approve it, then merge. That was the explicit workflow for PR #14; his final "better, lgtm" authorized its merge.
+- Dev: `npm run dev`. Verify code: `npx tsc -b && npm run build && npm run verify`. No OpenSpec directory or PSS implementation-plan file exists in this repository.
+- Impeccable context setup was run once for this session. This is an existing printed/editorial visual world; preserve it and honor Lance's direction over older design rules. Use bounded desktop/mobile QA rather than repeated polishing.
+- Local feature worktrees under `/private/tmp/` were writable and worked well. A managed worktree under `~/.codex/worktrees/` hit sandbox write restrictions and was archived while still empty; do not restore it for this work. Git metadata writes required normal tool escalation.
+- Connected GitHub tools authenticated as `lanceriver` worked for PRs/merges. CLI fallback: `GH_TOKEN="$(gh auth token --user lanceriver)" gh ...`; never print the token. SSH push works. The commit-workflow connector filters to PR runs, so use CLI to find push-triggered deployment runs, then the connector to inspect their jobs.
+- System `python3` has no Pillow. Bundled Python: `/Users/lance/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3`. Use it for `scripts/ingest-photo.py`; that script rotates correctly and strips metadata.
+- Browser QA used Playwright from `/Users/lance/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright` with Chrome at `/Applications/Google Chrome.app/Contents/MacOS/Google Chrome`, requiring tool escalation. The default Playwright browser version was unavailable. Do not reinstall browsers just for this.
+- `?settled=1` renders arrivals in their final positions for composition checks; reduced-motion contexts also work. The sticky Field Notes/Writing transition measures its own height with `ResizeObserver`; preserve it. Scroll tools may need a second scroll or ~3 seconds after load.
+- For production smoke checks, fetch HTML/JS/CSS and use image HEAD requests when sufficient. Loading the actual page in a browser can increment the visitor counter; do not send test counter POSTs.
+
+### Worn simulator context carried from the previous session
+
+- Worn screens 1/3/5 are phone captures; 2/4/6 are simulator captures from a **fictional seeded diary**, not real outfits belonging to Lance. Seed specs/prompts/processing source are in `docs/worn-screens/`. The share card was chosen over a duplicate diary grid; seeded fits have no captured weather.
+- Simulator `worn-portfolio`: `22D896FD-B2AD-4C2A-90B5-9A5F14C556C7` (iPhone 17 Pro, iOS 26.5). Previous build: fits-app-workspace `origin/main` `fe24116`, eight fictional fits, Sydney location. This simulator state was not rechecked here.
+- Seeder: copy `Documents/SeedPhotos/*.jpg` and `Documents/SeedCutouts/<stem>_<top|bottom|shoes>.png` into the app container, launch with `-WardrobeSeedDiary YES -WardrobeSeedBuilder YES`. Do not edit SwiftData with sqlite.
+- Prior simulator tooling screenshots lagged an action; use `xcrun simctl io <udid> screenshot`. Taps may need ~1.5 seconds after sheet animations. Leave `worn-trip` (759C…) and iPhone 17e suite simulator (A57A…) alone.
+- AWS SSO, if needed later: `aws sso login --profile admin` requires Lance's browser approval. No AWS credentials or infrastructure were touched in this session.
 
 ## Ephemeral artifacts
-Session scratchpad: `/private/tmp/claude-501/-Users-lance-Documents-Projects-lance-portfolio-claude/cbd5014b-c388-4334-ab3a-c1c59ca31ba7/scratchpad/`
-- `worn-seed/`: the 8 AI fit photos (`SeedPhotos/`), 24 cutouts (`SeedCutouts/`), the contact sheets, and `codex.log`. These are images of a fictional person, so they were **not** copied into the repo. The spec, prompts and script are preserved in `docs/worn-screens/` and can regenerate them.
-- `shots/`: full-resolution simulator captures (01–07); the chosen ones are already in `public/worn/`.
-- `dd-worn/`: Worn DerivedData (the simulator `.app`). Safe to delete; needed only to reinstall without rebuilding.
-- Durable: `~/Documents/aws-old-site-backup-2026-10-22/`.
+
+- `/private/tmp/photo-pile-qa.json`: final per-viewport geometry and seven-photo interaction results, including the approved 1400px surface. Key results are preserved above.
+- `/private/tmp/photo-pile-{desktop,tablet,mobile}.png`: final layout screenshots. `/private/tmp/review-photo-pile.cjs`: temporary browser QA script. These can disappear; they are not required to rebuild the site.
+- `/private/tmp/travel-contact-sheet.jpg`, `/private/tmp/travel-shortlist.jpg`, `/private/tmp/travel-qa.json`, and `/private/tmp/travel-*.png`: asset-selection/PR #13 evidence, now superseded by the final pile.
+- Both `/private/tmp/lance-portfolio-travel-photos` and `/private/tmp/lance-portfolio-photo-pile` worktrees were removed after deployment. Their feature branches were deleted locally/remotely.
+- Previous Worn seed/capture scratch: `/private/tmp/claude-501/-Users-lance-Documents-Projects-lance-portfolio-claude/cbd5014b-c388-4334-ab3a-c1c59ca31ba7/scratchpad/`. It may no longer exist. Text sources are preserved in `docs/worn-screens/`; do not copy fictional-person images into the repository.
+- Durable old-site backup: `~/Documents/aws-old-site-backup-2026-10-22/` (carried forward; not revalidated here).
 
 ## Suggested next session
-1. Reproduce the mobile Worn bug on Lance's phone, or ask him which one it looks like. Fix it in a branch (likely suspect 1, maybe both), verify at 390px plus a phone check, then PR.
-2. Ask Lance about `IMG_7501.JPG` and which personal photos and interests to add; plan those sections with him.
-3. Spotify: his sign-off on secret storage, then the Spotify app and one-time sign-in, then a Lambda `GET /now-playing` wired to `Turntable` (`src/components/FieldNotes.tsx`, around line 353).
-4. Airtable clone screenshot (Lance signed in) for Plate II, if he still wants it.
+
+1. Read this handoff; the website changes are already live and approved. Leave the four untracked items alone. The two local documentation commits remain unpushed unless Lance subsequently pushes them.
+2. Reproduce and fix the Worn mobile movement in a new worktree/PR, with a real-phone check before declaring it resolved.
+3. If Lance chooses Spotify instead, obtain the secret-storage approach sign-off, then wire the API after his app setup/sign-in.
+4. Only revisit imagery or add more travel photos at Lance's direction. The approved Field Notes pile and the clearly separated turntable/colophon are the current baseline.
