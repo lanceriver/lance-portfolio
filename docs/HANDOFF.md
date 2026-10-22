@@ -6,10 +6,10 @@ _Last updated 2026-10-22. One living file — rewrite, don't append._
 
 - **Shipped:** [PR #18](https://github.com/lanceriver/lance-portfolio/pull/18) is merged as `4674ef0` and live on https://lanceriver.com/#notes. Field Notes now has a shelf of recent Spotify records beside the turntable, hover captions, and the colophon in the top-right corner.
 - **AWS:** stack `lance-portfolio` reached `UPDATE_COMPLETE` (Spotify Lambda code plus the dependent `VisitsApi` body; nothing replaced). The site deploy run `39722028653` succeeded. No change sets are pending.
-- **Primary git:** `/Users/lance/Documents/Projects/lance-portfolio-claude` is on `main`, **ahead 5 / behind 1** of `origin/main`. The 5 are local docs-only handoff commits (`04eb2ba`, `3086287`, `af33b72`, `63c8616`, `c39b882`); this handoff adds a 6th. The 1 is the PR #18 merge. My `git rebase origin/main` was blocked by the auto-mode classifier, so Lance must rebase or pull these himself. Do not push automatically: every push to main deploys.
+- **Primary git:** `/Users/lance/Documents/Projects/lance-portfolio-claude` is on `main`, **ahead 5 / behind 1** of `origin/main`. The 5 are local docs-only handoff commits (`04eb2ba`, `3086287`, `af33b72`, `63c8616`, `c39b882`); this handoff adds a 6th and 7th. The 1 is the PR #18 merge. My `git rebase origin/main` was blocked by the auto-mode classifier, so Lance must rebase or pull these himself. Do not push automatically: every push to main deploys.
 - **Untracked, pre-existing, untouched:** `.impeccable/`, `docs/daily-priorities.md`, `assets-source/IMG_7501.JPG`, `assets-source/Sandstone Pillars and Mountain Pavilion.png`.
 - **Worktrees:** only the primary checkout. The album worktree and `codex/spotify-album-art` (local and remote) are removed.
-- **Next step:** none blocking. Lance decides on old merged branches and the optional items below.
+- **Next step:** none blocking. Lance decides on the local main rebase and the optional items below.
 
 ## Where the product is
 
@@ -47,11 +47,12 @@ _Last updated 2026-10-22. One living file — rewrite, don't append._
 
 ## Decisions pending with Lance
 
-1. **Old merged branches:** `codex/spotify-lambda-quota` (#17), `codex/spotify-turntable` (#16) and `codex/worn-mobile-motion` (#15) are MERGED but still exist locally and on the remote. CLAUDE.md says to delete them; an earlier auto-review rejected deletion. Recommend deleting them on Lance's yes.
-2. **Local main:** rebase the 6 docs commits onto `origin/main` (it was blocked for me), then decide whether to push. A push deploys the site, with docs only.
-3. **Other paintings:** replace the remaining non-Field-Notes artwork with travel imagery only at Lance's direction.
-4. **Airtable Clone screenshot:** optional Plate II improvement that needs a signed-in capture.
-5. **Optional real-phone checks:** the shelf, and Worn.
+1. **Local main:** rebase the 7 docs commits onto `origin/main` (it was blocked for me), then decide whether to push. A push deploys the site, with docs only.
+2. **Other paintings:** replace the remaining non-Field-Notes artwork with travel imagery only at Lance's direction.
+3. **Airtable Clone screenshot:** optional Plate II improvement that needs a signed-in capture.
+4. **Optional real-phone checks:** the shelf, and Worn.
+
+All merged `codex/*` branches (#15–#18) are deleted locally and on the remote (Lance approved, 2026-10-22). None remain.
 
 ## Workflow / environment notes
 
@@ -79,5 +80,5 @@ _Last updated 2026-10-22. One living file — rewrite, don't append._
 
 ## Suggested next session
 
-1. Read this file. Ask Lance about decisions 1 and 2 (old branches, local main rebase and push).
+1. Read this file. Ask Lance about decision 1 (local main rebase and push).
 2. Otherwise, take Lance's next direction. Don't revisit the shelf design or the unrelated imagery without it.
