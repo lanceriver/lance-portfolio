@@ -7,10 +7,11 @@ _Last updated 2026-10-22. One living file — rewrite, don't append._
 - **Shipped:** [PR #18](https://github.com/lanceriver/lance-portfolio/pull/18) is merged as `4674ef0` and live on https://lanceriver.com/#notes. Field Notes now has a shelf of recent Spotify records beside the turntable, hover captions, and the colophon in the top-right corner.
 - **AWS:** stack `lance-portfolio` reached `UPDATE_COMPLETE` (Spotify Lambda code plus the dependent `VisitsApi` body; nothing replaced). The site deploy run `39722028653` succeeded. No change sets are pending.
 - **Also shipped:** [PR #19](https://github.com/lanceriver/lance-portfolio/pull/19), merged as `3a45816`; site deploy run `39724602545` succeeded. It adds real place names on four captions, five new photographs (12 in total, with the desk now 2150px tall), and tap-to-select records on touch screens. It's front-end only, with no AWS change. The branch and worktree are deleted.
-- **Primary git:** `/Users/lance/Documents/Projects/lance-portfolio-claude` is on `main`, **ahead 8 / behind 2** of `origin/main` after this commit. The 8 are local docs-only handoff commits (`04eb2ba`, `3086287`, `af33b72`, `63c8616`, `c39b882`, `c79aaa1`, `b58cc27`, plus this one). The 2 are the PR #18 and #19 merges. My `git rebase origin/main` was blocked by the auto-mode classifier, so Lance must rebase or pull these himself. Do not push automatically: every push to main deploys.
+- **Primary git:** `/Users/lance/Documents/Projects/lance-portfolio-claude` is on `main`, **ahead 9 / behind 2** of `origin/main` after this commit. The 9 are local docs-only handoff commits (`04eb2ba`, `3086287`, `af33b72`, `63c8616`, `c39b882`, `c79aaa1`, `b58cc27`, `a419828`, plus this one). The 2 are the PR #18 and #19 merges. My `git rebase origin/main` was blocked by the auto-mode classifier, so Lance must rebase or pull these himself. Do not push automatically: every push to main deploys.
 - **Untracked, pre-existing, untouched:** `.impeccable/`, `docs/daily-priorities.md`, `assets-source/IMG_7501.JPG`, `assets-source/Sandstone Pillars and Mountain Pavilion.png`.
 - **Worktrees:** only the primary checkout. The album worktree and `codex/spotify-album-art` (local and remote) are removed.
-- **Next step:** none blocking. Lance decides on the local main rebase and the optional items below.
+- **Next step (Lance asked, not started):** get real screenshots of the Airtable Clone for its Work entry (Plate II). See "Next task" below.
+- **Also open:** Lance decides on the local main rebase and the optional items below.
 
 ## Where the product is
 
@@ -64,10 +65,10 @@ _Last updated 2026-10-22. One living file — rewrite, don't append._
 
 ## Decisions pending with Lance
 
-1. **Local main:** rebase the 8 docs commits onto `origin/main` (it was blocked for me), then decide whether to push. A push deploys the site, with docs only.
+1. **Local main:** rebase the 9 docs commits onto `origin/main` (it was blocked for me), then decide whether to push. A push deploys the site, with docs only.
 2. **Bakery name:** confirm the exact spelling of "Apoli Itabakery" if Lance wants it on the Shanghai caption or alt text.
 3. **Other paintings:** replace the remaining non-Field-Notes artwork with travel imagery only at Lance's direction.
-4. **Airtable Clone screenshot:** optional Plate II improvement that needs a signed-in capture.
+4. **Airtable Clone screenshots:** now requested; see "Next task".
 5. **Optional real-phone checks:** the shelf taps, the new photos, and Worn. All checks so far were emulation only.
 6. **Unused originals:** `assets-source/travel/` still has DSC_0740, IMG_0168, IMG_0345, IMG_3172 and IMG_4004 unused. Lance chose not to add them this round.
 
@@ -99,7 +100,18 @@ All merged `codex/*` branches (#15–#18) are deleted locally and on the remote 
 - **Image venv:** `<scratchpad>/imgvenv` has Pillow and pillow-heif for `scripts/ingest-photo.py`. It will vanish; recreate it with `python3 -m venv <dir> && <dir>/bin/python -m pip install pillow pillow-heif`.
 - **Contact sheet:** `<scratchpad>/contact-sheet.jpg` shows all 17 travel originals. These are personal photos, so never copy it into the repo.
 
+## Next task: Airtable Clone screenshots (requested 2026-10-22, not started)
+
+Lance asked: "for the airtable clone can we get screenshots from it for the portfolio". Nothing has been done yet.
+- **Where it shows:** `src/data.ts`, entry `numeral: 'II'`, `name: 'Airtable Clone'`. Live site https://airtable-clone-lyra.vercel.app/, repo https://github.com/lanceriver/airtable-clone-lyra. It currently shows the painted plate `/plates/lake-terrace.webp` ("Plate II").
+- **Pattern to reuse:** Worn (Plate III) shows real captures through the `screens?: Screen[]` field in `src/data.ts`, rendered as figures in `src/components/Work.tsx` (DECISIONS D54). Read both before designing; decide whether screens replace or sit beneath the plate.
+- **Sign-in:** the app needs one, likely OAuth. Claude must not enter credentials or complete OAuth on the production app. Options: Lance signs in himself in the browser pane or Chrome and Claude captures; Lance takes the screenshots; or Claude runs the repo locally with seeded test data (a local dev host with test credentials is allowed). Ask Lance which.
+- **Content worth showing:** a large table (the "million rows" claim), views, filters and sorting.
+- **Before using any capture:** remove personal data and real emails or names.
+- **How to ship:** feature branch + PR, then merge and the site deploy. Front-end only.
+
 ## Suggested next session
 
-1. Read this file. Ask Lance about decision 1 (local main rebase and push).
-2. Otherwise, take Lance's next direction. Don't revisit the shelf design or the unrelated imagery without it.
+1. Read this file. Brief Lance and ask how to capture the Airtable Clone (sign-in route above).
+2. Ask about decision 1 (local main rebase and push).
+3. Don't revisit the shelf design or the unrelated imagery without Lance's direction.
