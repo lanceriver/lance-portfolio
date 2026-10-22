@@ -1022,12 +1022,12 @@ scene does not).
 
 **Composition.** The copy is a band, not a tower: introduction left, the three
 points and status right, bottom-aligned. Beneath it the figures run from the
-copy's margin to the shell's edge at up to 340px, staggered. They rise in one
-after another (≤56px, inside the phone limit too) and hold still; the scene's
-drift stays with the numeral and the copy. On a phone the copy stacks and the
-figures become a row you swipe, bled to the screen edges, each snapping to the
-margin with the next one showing at the edge. The row scrolls; the page does
-not widen.
+copy's margin to the shell's edge at up to 340px, staggered. On desktop they
+keep their staggered entrance and drift at three depths with the numeral and
+copy. On a phone the copy stacks and the figures become a row you swipe, bled
+to the screen edges, each snapping to the margin with the next one showing at
+the edge. Every figure is visible and stationary from the first layout; the
+row scrolls, and the page does not widen.
 
 **The images.** Cropped below the iOS status bar, the app's own tab bar kept.
 WebP at 480w and 960w, 20–66KB each, lazy loaded. The lookbook screen was left
