@@ -65,8 +65,8 @@
   position: relative;
   width: min(1040px, var(--shell));
   margin: clamp(18px, 2.6vh, 36px) auto 0;   /* the title clears the first print entirely */
-  height: max(120vh, 1200px);
-  min-height: 1200px;
+  height: max(120vh, 1400px);
+  min-height: 1400px;
 }
 
 .obj {
@@ -103,15 +103,15 @@
 
 /* Placement — authored, not generated. A compact scatter gathers the photos
    around the centre, with the two kept objects close beneath them. */
-.obj--terrace  { left: 8%; top: 1%; width: min(42%, 430px); z-index: 2; }
-.obj--night    { left: 39%; top: 13%; width: min(33%, 340px); z-index: 3; }
-.obj--bamboo   { left: 68%; top: 31%; width: min(23%, 255px); z-index: 4; }
-.obj--army     { left: 0; top: 42%; width: min(25%, 270px); z-index: 5; }
-.obj--mountain-road { left: 21%; top: 43%; width: min(23%, 250px); z-index: 6; }
-.obj--coastal-train { left: 42%; top: 47%; width: min(23%, 250px); z-index: 7; }
-.obj--torii    { left: 60%; top: 60%; width: min(32%, 340px); z-index: 8; }
-.obj--colophon { left: 16%; top: 83%; width: min(34%, 360px); z-index: 9; }
-.obj--turntable{ left: 49%; top: auto; bottom: 0; width: min(22%, 255px); z-index: 10; }
+.obj--terrace  { left: 8%; top: 12px; width: min(42%, 430px); z-index: 2; }
+.obj--night    { left: 39%; top: 156px; width: min(33%, 340px); z-index: 3; }
+.obj--bamboo   { left: 68%; top: 372px; width: min(23%, 255px); z-index: 4; }
+.obj--army     { left: 0; top: 504px; width: min(25%, 270px); z-index: 5; }
+.obj--mountain-road { left: 21%; top: 516px; width: min(23%, 250px); z-index: 6; }
+.obj--coastal-train { left: 42%; top: 564px; width: min(23%, 250px); z-index: 7; }
+.obj--torii    { left: 60%; top: 720px; width: min(32%, 340px); z-index: 8; }
+.obj--colophon { left: 16%; top: 1040px; width: min(34%, 360px); z-index: 9; }
+.obj--turntable{ left: 60%; top: auto; bottom: 32px; width: min(22%, 255px); z-index: 10; }
 
 .obj--terrace .obj__expand img { height: min(41vh, 390px); }
 .obj--night   .obj__expand img { height: min(34vh, 310px); }
@@ -197,7 +197,7 @@
   .obj--torii { width: 94% !important; align-self: flex-start; }
   .obj--bamboo { width: 76% !important; align-self: flex-end; }
   .obj + .obj--colophon,
-  .obj + .obj--turntable { margin-top: 0; }
+  .obj + .obj--turntable { margin-top: 20px; }
   .obj--mountain-road .obj__expand img,
   .obj--coastal-train .obj__expand img,
   .obj--bamboo .obj__expand img,
