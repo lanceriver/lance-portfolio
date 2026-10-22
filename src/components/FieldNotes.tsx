@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type CSSProperties, type RefObject } from 'react'
+import { useEffect, useRef, useState, type CSSProperties, type MouseEvent, type RefObject } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 import { useReducedMotion } from '../hooks/useReducedMotion'
 import { useNowPlaying, type NowPlayingState } from '../hooks/useNowPlaying'
@@ -270,6 +270,7 @@ export function FieldNotes() {
   const [open, setOpen] = useState<Obj | null>(null)
   const [failedArtworkUrl, setFailedArtworkUrl] = useState<string | null>(null)
   const [failedCrateArt, setFailedCrateArt] = useState<string[]>([])
+  const [selectedArt, setSelectedArt] = useState<string | null>(null)
   const sectionRef = useRef<HTMLElement>(null)
   const lift = useLift()
   const [phone] = useState(isPhone)
@@ -281,6 +282,45 @@ export function FieldNotes() {
       && failedArtworkUrl !== nowPlaying.art,
   )
   const crate = nowPlaying.crate.filter((r) => !failedCrateArt.includes(r.art))
+
+  // Touch has no hover: the first tap on a record selects it (full cover, name,
+  // an Open link) and a second tap on the same cover follows the link.
+  const selected = selectedArt === null ? null
+    : frontVisible && selectedArt === nowPlaying.art
+      ? {
+        label: nowPlaying.playing ? 'On the turntable' : 'Last played',
+        title: nowPlaying.title,
+        artist: nowPlaying.artist,
+        url: nowPlaying.url,
+      }
+      : (() => {
+        const r = crate.find((entry) => entry.art === selectedArt)
+        return r ? { label: 'Played earlier', title: r.title, artist: r.artist, url: r.url } : null
+      })()
+  const selectRecord = (event: MouseEvent<HTMLAnchorElement>, art: string | null) => {
+    if (!art || selectedArt === art) return
+    if (!window.matchMedia('(hover: none)').matches) return
+    event.preventDefault()
+    setSelectedArt(art)
+  }
+
+  useEffect(() => { if (selectedArt && !selected) setSelectedArt(null) }, [selectedArt, selected])
+
+  useEffect(() => {
+    if (!selectedArt) return
+    const onPointerDown = (event: PointerEvent) => {
+      const target = event.target
+      if (target instanceof Element && target.closest('.album-crate, .album-crate__detail')) return
+      setSelectedArt(null)
+    }
+    const onKeyDown = (event: KeyboardEvent) => { if (event.key === 'Escape') setSelectedArt(null) }
+    document.addEventListener('pointerdown', onPointerDown)
+    document.addEventListener('keydown', onKeyDown)
+    return () => {
+      document.removeEventListener('pointerdown', onPointerDown)
+      document.removeEventListener('keydown', onKeyDown)
+    }
+  }, [selectedArt])
 
   /**
    * The pin has to be a NEGATIVE `top`, not `bottom: 0`.
@@ -404,12 +444,16 @@ export function FieldNotes() {
             style={{ '--n': crate.length } as CSSProperties}
           >
             {frontVisible && (
-              <li className="album-crate__slot" style={{ '--depth': 0 } as CSSProperties}>
+              <li
+                className={`album-crate__slot${selectedArt === nowPlaying.art ? ' album-crate__slot--selected' : ''}`}
+                style={{ '--depth': 0 } as CSSProperties}
+              >
                 <a
                   className="album-sleeve"
                   href={nowPlaying.url ?? undefined}
                   target="_blank"
                   rel="noreferrer"
+                  onClick={(event) => selectRecord(event, nowPlaying.art)}
                   aria-label={`Open ${nowPlaying.title} by ${nowPlaying.artist} on Spotify`}
                 >
                   <span className="album-sleeve__record" aria-hidden="true">
@@ -435,7 +479,7 @@ export function FieldNotes() {
               return (
                 <li
                   key={r.art}
-                  className={`album-crate__slot${depth > 0 ? ' album-crate__slot--back' : ''}`}
+                  className={`album-crate__slot${depth > 0 ? ' album-crate__slot--back' : ''}${selectedArt === r.art ? ' album-crate__slot--selected' : ''}`}
                   style={{ '--depth': depth } as CSSProperties}
                 >
                   <a
@@ -443,6 +487,7 @@ export function FieldNotes() {
                     href={r.url}
                     target="_blank"
                     rel="noreferrer"
+                    onClick={(event) => selectRecord(event, r.art)}
                     aria-label={`Open ${r.title} by ${r.artist} on Spotify`}
                   >
                     <span className="album-sleeve__jacket">
@@ -463,6 +508,16 @@ export function FieldNotes() {
               )
             })}
           </ul>
+        )}
+        {selected && selected.url && (
+          <div className="album-crate__detail" role="status">
+            <span className="album-crate__cap-status">{selected.label}</span>
+            <span className="album-crate__cap-title">{selected.title}</span>
+            <span className="album-crate__cap-artist">{selected.artist}</span>
+            <a className="album-crate__open" href={selected.url} target="_blank" rel="noreferrer">
+              Open in Spotify <span aria-hidden="true">↗</span>
+            </a>
+          </div>
         )}
       </div>
 
