@@ -65,8 +65,8 @@
   position: relative;
   width: min(1040px, var(--shell));
   margin: clamp(18px, 2.6vh, 36px) auto 0;   /* the title clears the first print entirely */
-  height: max(120vh, 1400px);
-  min-height: 1400px;
+  height: max(120vh, 2150px);
+  min-height: 2150px;
 }
 
 .obj {
@@ -101,9 +101,9 @@
 .obj__expand { display: block; width: 100%; cursor: zoom-in; }
 .obj__expand img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
-/* Placement — authored, not generated. A compact scatter gathers the photos
-   around the centre; the turntable sits close beneath them and the colophon
-   takes the empty top-right corner. */
+/* Placement — authored, not generated. A compact scatter gathers the first seven photos
+   around the centre, with a second band of five beneath; the turntable sits
+   below them and the colophon takes the empty top-right corner. */
 .obj--terrace  { left: 8%; top: 12px; width: min(42%, 430px); z-index: 2; }
 .obj--night    { left: 39%; top: 156px; width: min(33%, 340px); z-index: 3; }
 .obj--bamboo   { left: 68%; top: 372px; width: min(23%, 255px); z-index: 4; }
@@ -111,6 +111,11 @@
 .obj--mountain-road { left: 21%; top: 516px; width: min(23%, 250px); z-index: 6; }
 .obj--coastal-train { left: 42%; top: 564px; width: min(23%, 250px); z-index: 7; }
 .obj--torii    { left: 60%; top: 720px; width: min(32%, 340px); z-index: 8; }
+.obj--gamcheon  { left: 1%;  top: 900px;  width: min(29%, 300px); z-index: 3; }
+.obj--library   { left: 30%; top: 960px;  width: min(22%, 230px); z-index: 4; }
+.obj--kinkakuji { left: 69%; top: 1030px; width: min(23%, 240px); z-index: 5; }
+.obj--market    { left: 12%; top: 1240px; width: min(22%, 230px); z-index: 6; }
+.obj--bakery    { left: 47%; top: 1290px; width: min(22%, 230px); z-index: 7; }
 .obj--colophon { left: 76%; top: 80px; width: min(24%, 250px); z-index: 9; }
 .obj--turntable{ left: 60%; top: auto; bottom: 32px; width: min(22%, 255px); z-index: 10; }
 
@@ -238,7 +243,12 @@
 .obj--mountain-road .obj__expand img,
 .obj--coastal-train .obj__expand img,
 .obj--bamboo .obj__expand img,
-.obj--torii .obj__expand img { width: 100%; height: auto; }
+.obj--torii .obj__expand img,
+.obj--gamcheon .obj__expand img,
+.obj--library .obj__expand img,
+.obj--kinkakuji .obj__expand img,
+.obj--market .obj__expand img,
+.obj--bakery .obj__expand img { width: 100%; height: auto; }
 /* Keep the existing crop on the Terracotta Army while the other photos retain
    their complete source compositions. */
 .obj--army .obj__expand img { object-fit: cover; object-position: 38% 42%; }
@@ -315,6 +325,11 @@
   .obj--coastal-train { width: 78% !important; align-self: flex-end; }
   .obj--torii { width: 94% !important; align-self: flex-start; }
   .obj--bamboo { width: 76% !important; align-self: flex-end; }
+  .obj--gamcheon  { width: 90% !important; align-self: flex-start; }
+  .obj--library   { width: 72% !important; align-self: flex-end; }
+  .obj--kinkakuji { width: 74% !important; align-self: flex-start; }
+  .obj--market    { width: 70% !important; align-self: flex-end; }
+  .obj--bakery    { width: 72% !important; align-self: flex-start; }
   .album-crate {
     position: relative;
     left: auto;
@@ -329,7 +344,12 @@
   .obj--mountain-road .obj__expand img,
   .obj--coastal-train .obj__expand img,
   .obj--bamboo .obj__expand img,
-  .obj--torii .obj__expand img { height: auto; }
+  .obj--torii .obj__expand img,
+  .obj--gamcheon .obj__expand img,
+  .obj--library .obj__expand img,
+  .obj--kinkakuji .obj__expand img,
+  .obj--market .obj__expand img,
+  .obj--bakery .obj__expand img { height: auto; }
 }
 
 @media (prefers-reduced-motion: reduce) {

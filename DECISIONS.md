@@ -1076,7 +1076,8 @@ still cream underneath.
 
 ## D56 — Field Notes is a personal photo pile
 
-The seven travel photographs are the desk's main content. At Lance's direction,
+The twelve travel photographs are the desk's main content; the desk grew
+taller to hold a second band of prints. At Lance's direction,
 the painted band, swatches, type specimens, ampersand and caption slip have been
 removed; the colophon and turntable remain. This supersedes D51's choice to keep
 the painted band as an anchor.
