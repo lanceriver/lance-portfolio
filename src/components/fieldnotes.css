@@ -44,8 +44,8 @@
 .notes__head {
   position: relative;
   z-index: 100;                    /* every object passes BEHIND the title —
-                                      100 clears the whole pile, which with
-                                      fourteen objects tops out at 53 */
+                                      100 clears the nine-item pile, whose
+                                      lift order tops out at 48 */
   display: grid;
   grid-template-columns: minmax(0, 1.1fr) minmax(0, .52fr);
   gap: clamp(30px, 5vw, 80px);
@@ -58,15 +58,15 @@
 .notes__note { align-self: end; padding-bottom: .6em; max-width: 30ch; }
 
 /* ── the surface ──────────────────────────────────────────
-   Absolute placement, deliberately irregular. Not masonry, not a grid. */
+   A compact, overlapping scatter, authored one item at a time. */
 .notes__surface {
   --px: 0;
   --py: 0;
   position: relative;
-  width: var(--shell);
+  width: min(1040px, var(--shell));
   margin: clamp(18px, 2.6vh, 36px) auto 0;   /* the title clears the first print entirely */
-  height: max(120vh, 2080px);
-  min-height: 2080px;
+  height: max(120vh, 1400px);
+  min-height: 1400px;
 }
 
 .obj {
@@ -101,107 +101,28 @@
 .obj__expand { display: block; width: 100%; cursor: zoom-in; }
 .obj__expand img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
-/* Placement — authored, not generated. Overlaps are intentional and the
-   z-order is deliberate: prints pass behind the palette and colophon. */
-.obj--terrace  { left: 0;    top: 1%;   width: min(44%, 590px); z-index: 2; }
-.obj--glyph    { left: 47%;  top: 0;    width: min(17%, 220px); z-index: 5; }
-.obj--type     { right: 2%;  top: 8%;   width: min(23%, 300px); z-index: 3; }
-.obj--night    { right: 19%; top: 21%;  width: min(30%, 400px); z-index: 4; }
-.obj--army     { left: 0;    top: 46%;  width: min(23%, 300px); z-index: 8; }
-.obj--band     { left: 21%;  top: 49%;  width: min(41%, 530px); z-index: 7; }
-.obj--palette  { right: 4%;  top: 45%;  width: min(27%, 350px); z-index: 5; }
-.obj--colophon { left: 2%;   top: 64%;  width: min(30%, 385px); z-index: 10; }
-.obj--slip     { right: 4%; top: 65%;  width: min(20%, 255px); z-index: 11; }
-.obj--turntable{ left: 37%;  top: 65%;  width: min(23%, 290px); z-index: 12; }
-.obj--mountain-road { left: 0; top: auto; bottom: 160px; width: min(19%, 250px); z-index: 13; }
-.obj--coastal-train { left: 18%; top: auto; bottom: 0; width: min(19%, 250px); z-index: 14; }
-.obj--torii { left: 43%; top: auto; bottom: 0; width: min(25%, 325px); z-index: 15; }
-.obj--bamboo { right: 0; top: auto; bottom: 160px; width: min(19%, 250px); z-index: 16; }
+/* Placement — authored, not generated. A compact scatter gathers the photos
+   around the centre, with the two kept objects close beneath them. */
+.obj--terrace  { left: 8%; top: 12px; width: min(42%, 430px); z-index: 2; }
+.obj--night    { left: 39%; top: 156px; width: min(33%, 340px); z-index: 3; }
+.obj--bamboo   { left: 68%; top: 372px; width: min(23%, 255px); z-index: 4; }
+.obj--army     { left: 0; top: 504px; width: min(25%, 270px); z-index: 5; }
+.obj--mountain-road { left: 21%; top: 516px; width: min(23%, 250px); z-index: 6; }
+.obj--coastal-train { left: 42%; top: 564px; width: min(23%, 250px); z-index: 7; }
+.obj--torii    { left: 60%; top: 720px; width: min(32%, 340px); z-index: 8; }
+.obj--colophon { left: 16%; top: 1040px; width: min(34%, 360px); z-index: 9; }
+.obj--turntable{ left: 60%; top: auto; bottom: 32px; width: min(22%, 255px); z-index: 10; }
 
-.obj--terrace .obj__expand img { height: min(46vh, 420px); }
-.obj--night   .obj__expand img { height: min(38vh, 340px); }
+.obj--terrace .obj__expand img { height: min(41vh, 390px); }
+.obj--night   .obj__expand img { height: min(34vh, 310px); }
 .obj--army    .obj__expand img { height: min(28vh, 250px); }
-.obj--band    .obj__expand img { height: min(19vh, 175px); }
 .obj--mountain-road .obj__expand img,
 .obj--coastal-train .obj__expand img,
 .obj--bamboo .obj__expand img,
 .obj--torii .obj__expand img { width: 100%; height: auto; }
-/* the crop holds the massed ranks, not the pit wall behind them */
-.obj--army    .obj__expand img { object-fit: cover; object-position: 38% 42%; }
-
-/* ── type specimen ────────────────────────────────────── */
-.specimen {
-  background: var(--ochre);
-  color: var(--ink-warm);
-  padding: 34px 32px 30px;
-}
-.specimen__aa {
-  font-family: var(--serif);
-  font-size: clamp(72px, 8vw, 118px);
-  line-height: .82;
-}
-.specimen__set {
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: 21px;
-  margin-top: 12px;
-}
-.specimen__word {
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: clamp(40px, 4.4vw, 62px);
-  line-height: 1;
-  margin: 18px 0 14px;
-}
-.specimen__meta {
-  font-family: var(--sans);
-  font-size: 11px;
-  letter-spacing: .1em;
-  text-transform: uppercase;
-  opacity: .72;
-}
-
-/* ── palette ──────────────────────────────────────────── */
-.palette { background: var(--paper); padding: 26px 26px 22px; }
-.palette__label { color: var(--ink-soft); }
-.palette__strip {
-  display: flex;
-  list-style: none;
-  padding: 0;
-  margin: 18px 0 16px;
-  height: 92px;
-}
-.palette__strip li { flex: 1; }
-.palette__cap { font-size: 14px; }
-
-/* ── glyph specimen ───────────────────────────────────── */
-.glyph { background: var(--stone); color: var(--ink-warm); padding: 18px 22px 16px; }
-.glyph__mark {
-  font-family: var(--serif);
-  font-style: italic;
-  font-weight: 400;
-  font-size: clamp(64px, 7vw, 104px);
-  line-height: .86;
-}
-.glyph__meta {
-  font-family: var(--sans);
-  font-size: 10px;
-  letter-spacing: .13em;
-  text-transform: uppercase;
-  margin: 8px 0 0;
-  opacity: .74;
-}
-
-/* ── a caption slip ───────────────────────────────────── */
-.slip { background: var(--snow-warm); padding: 20px 22px; }
-.slip p {
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: 19px;
-  line-height: 1.26;
-  margin: 0;
-  color: var(--ink-warm);
-}
+/* Keep the existing crop on the Terracotta Army while the other photos retain
+   their complete source compositions. */
+.obj--army .obj__expand img { object-fit: cover; object-position: 38% 42%; }
 
 /* ── colophon ─────────────────────────────────────────── */
 .colophon {
@@ -251,12 +172,13 @@
   .notes__note { padding-bottom: 0; }
 
   .notes__surface {
+    width: var(--shell);
     height: auto;
     min-height: 0;
     margin-top: 44px;
     display: flex;
     flex-direction: column;
-    gap: 44px;
+    gap: 20px;
   }
   .obj {
     position: relative;
@@ -264,24 +186,18 @@
     width: auto !important;
     transform: none;
   }
+  .obj + .obj { margin-top: -64px; }
   .obj--terrace { width: 92% !important; align-self: flex-start; }
-  .obj--type    { width: 66% !important; align-self: flex-end; }
   .obj--night   { width: 76% !important; align-self: flex-end; }
-  .obj--palette { width: 84% !important; align-self: flex-start; }
   .obj--army    { width: 62% !important; align-self: flex-start; }
   .obj--colophon { width: 88% !important; align-self: flex-start; }
-  .obj--glyph   { width: 42% !important; align-self: flex-end; }
-  .obj--band    { width: 94% !important; align-self: flex-start; }
-  .obj--slip    { width: 56% !important; align-self: flex-end; }
+  .obj--turntable { width: 88% !important; align-self: flex-end; }
   .obj--mountain-road { width: 88% !important; align-self: flex-start; }
   .obj--coastal-train { width: 78% !important; align-self: flex-end; }
   .obj--torii { width: 94% !important; align-self: flex-start; }
   .obj--bamboo { width: 76% !important; align-self: flex-end; }
-  .obj--band    .obj__expand img { height: 16vh; }
-
-  .obj--terrace .obj__expand img { height: 34vh; }
-  .obj--night   .obj__expand img { height: 28vh; }
-  .obj--army    .obj__expand img { height: 24vh; }
+  .obj + .obj--colophon,
+  .obj + .obj--turntable { margin-top: 20px; }
   .obj--mountain-road .obj__expand img,
   .obj--coastal-train .obj__expand img,
   .obj--bamboo .obj__expand img,

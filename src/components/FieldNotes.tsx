@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
-import { swatches } from '../data'
 import { useReducedMotion } from '../hooks/useReducedMotion'
 import { arrive, clampTravel, isPhone } from '../lib/enter'
 import './fieldnotes.css'
@@ -20,7 +19,7 @@ type Enter = { x?: number; y?: number; rotate?: number; scale?: number }
 
 type Obj = {
   id: string
-  kind: 'print' | 'type' | 'palette' | 'detail' | 'colophon' | 'band' | 'glyph' | 'slip' | 'turntable'
+  kind: 'print' | 'colophon' | 'turntable'
   className: string
   depth: number            // cursor-drift multiplier
   rest: number             // resting rotation, degrees
@@ -47,17 +46,6 @@ const OBJECTS: Obj[] = [
     src: '/plates/zhangjiajie-1200.webp',
     alt: 'Sandstone pillars in mist at Zhangjiajie, seen from a viewing platform.',
     caption: 'Zhangjiajie · May 2026',
-  },
-  {
-    id: 'type',
-    kind: 'type',
-    className: 'obj obj--type',
-    depth: 1.7,
-    rest: 2.6,
-    from: { x: 140, y: -46, rotate: 9, scale: 0.9 },
-    delay: 0.06,          // arrives almost with the first — a cluster
-    stiffness: 160,
-    damping: 19,
   },
   {
     id: 'night',
@@ -130,66 +118,8 @@ const OBJECTS: Obj[] = [
     caption: 'Bamboo canopy · February 2024',
   },
   {
-    id: 'palette',
-    kind: 'palette',
-    className: 'obj obj--palette',
-    depth: 2.8,
-    rest: -4.2,
-    from: { x: 40, y: -110, rotate: -11, scale: 0.86 },
-    delay: 0.52,
-    stiffness: 175,
-    damping: 15,          // the loosest — it swings past furthest
-  },
-  {
-    id: 'glyph',
-    kind: 'glyph',
-    className: 'obj obj--glyph',
-    depth: 2.4,
-    rest: -3.4,
-    from: { x: 62, y: -84, rotate: 8, scale: 0.88 },
-    delay: 0.14,
-    stiffness: 168,
-    damping: 16,
-  },
-  {
-    id: 'band',
-    kind: 'band',
-    className: 'obj obj--band',
-    depth: 1.5,
-    rest: 1.4,
-    from: { x: -110, y: 46, rotate: -4.5, scale: 0.92 },
-    delay: 0.62,
-    stiffness: 132,
-    damping: 18,
-    src: '/plates/alpine-village-1200.webp',
-    alt: 'A wide crop of the alpine high street plate, taken as a panoramic band.',
-    caption: 'A long look down the street',
-  },
-  {
-    id: 'turntable',
-    kind: 'turntable',
-    className: 'obj obj--turntable',
-    depth: 1.4,
-    rest: 1.4,
-    from: { x: 96, y: 54, rotate: 6.5, scale: 0.9 },
-    delay: 0.5,
-    stiffness: 140,
-    damping: 18,
-  },
-  {
-    id: 'slip',
-    kind: 'slip',
-    className: 'obj obj--slip',
-    depth: 3.1,
-    rest: 4.6,
-    from: { x: 34, y: 78, rotate: -9, scale: 0.9 },
-    delay: 1.04,          // the very last thing to land
-    stiffness: 190,
-    damping: 15,
-  },
-  {
     id: 'army',
-    kind: 'detail',
+    kind: 'print',
     className: 'obj obj--army',
     depth: 1.9,
     rest: 2.2,
@@ -208,9 +138,20 @@ const OBJECTS: Obj[] = [
     depth: 0.9,
     rest: -2.4,
     from: { x: -58, y: 104, rotate: 5.5, scale: 0.93 },
-    delay: 0.92,          // the last thing to land
+    delay: 0.92,
     stiffness: 115,
     damping: 19,
+  },
+  {
+    id: 'turntable',
+    kind: 'turntable',
+    className: 'obj obj--turntable',
+    depth: 1.4,
+    rest: 1.4,
+    from: { x: 96, y: 54, rotate: 6.5, scale: 0.9 },
+    delay: 0.5,
+    stiffness: 140,
+    damping: 18,
   },
 ]
 
@@ -226,8 +167,8 @@ const LIFT_BASE = 40
  * you have put it down. The object lies flat again — the lift and the
  * straighten both revert — but its place in the stack is now earned.
  *
- * Which also means the caption problem never comes back: once you have touched
- * the Zhangjiajie print, nothing is covering its date again.
+ * A photograph can be picked up without changing the arrangement permanently:
+ * the latest one stays at the top after the pointer moves away.
  *
  * Implemented as an order rather than an ever-climbing counter, so the numbers
  * stay small and mean something: index in the pile. Objects never touched keep
@@ -235,20 +176,18 @@ const LIFT_BASE = 40
  */
 function useLift() {
   const pile = useRef<HTMLElement[]>([])
+  const raise = (el: HTMLElement) => {
+    const p = pile.current
+    const at = p.indexOf(el)
+    if (at !== -1 && at === p.length - 1) return
+    if (at !== -1) p.splice(at, 1)
+    p.push(el)
+    p.forEach((o, i) => { o.style.zIndex = String(LIFT_BASE + i) })
+  }
 
   return {
-    onPointerEnter: (e: React.PointerEvent<HTMLElement>) => {
-      const el = e.currentTarget
-      const p = pile.current
-      const at = p.indexOf(el)
-      // `at !== -1` matters: on an empty pile indexOf is -1 and so is
-      // length - 1, so the guard fired on the very first hover and nothing was
-      // ever added.
-      if (at !== -1 && at === p.length - 1) return   // already on top
-      if (at !== -1) p.splice(at, 1)
-      p.push(el)
-      p.forEach((o, i) => { o.style.zIndex = String(LIFT_BASE + i) })
-    },
+    onPointerEnter: (e: React.PointerEvent<HTMLElement>) => raise(e.currentTarget),
+    onFocus: (e: React.FocusEvent<HTMLElement>) => raise(e.currentTarget),
   }
 }
 
@@ -366,7 +305,7 @@ export function FieldNotes() {
               )}
               whileHover={reduced ? undefined : { rotate: 0, y: -14, scale: 1.02, transition: { type: 'spring', stiffness: 300, damping: 26 } }}
             >
-              <ObjectBody o={o} onOpen={() => (o.kind === 'print' || o.kind === 'detail' || o.kind === 'band') && setOpen(o)} />
+              <ObjectBody o={o} onOpen={() => o.kind === 'print' && setOpen(o)} />
             </motion.div>
           </div>
         ))}
@@ -420,15 +359,12 @@ const NOW_PLAYING = {
   playing: true,
   title: 'Harvest Moon',
   artist: 'Neil Young',
-  art: '/plates/lake-terrace-800.webp',   // TODO: album art from the API
+  art: '/plates/zhangjiajie-800.webp',   // TODO: replace with album art from the API
 }
 
 /**
- * The turntable. A painted object, not a rendering: flat fills, one soft sheen,
- * no 3D and no engine — the page's whole argument is that the paintings and the
- * page are the same object, and a rendered deck would be the one imported thing
- * on it. DESIGN_DIRECTION §7 rejects "WebGL with no purpose"; this is what the
- * idea looks like when it obeys that.
+ * The turntable is a flat drawing in the same printed language as the desk,
+ * with one soft sheen and no 3D rendering.
  *
  * The record turns at a true 33⅓ rpm and ONLY while something is playing. That
  * is the whole reason it escapes MOTION_DIRECTION §8's ban on things that never
@@ -476,56 +412,6 @@ function ObjectBody({ o, onOpen }: { o: Obj; onOpen: () => void }) {
     )
   }
 
-  if (o.kind === 'type') {
-    return (
-      <div className="specimen">
-        <div className="specimen__aa">Aa</div>
-        <div className="specimen__set">Bb Cc Dd Ee Ff</div>
-        <div className="specimen__word">Rivera</div>
-        <div className="specimen__meta">Georgia · display italic</div>
-      </div>
-    )
-  }
-
-  if (o.kind === 'detail') {
-    return (
-      <figure className="plate-sheet obj__print obj__detail">
-        <button className="obj__expand" onClick={onOpen} aria-label={`Expand: ${o.caption}`}>
-          <motion.img layoutId={`print-${o.id}`} src={o.src} alt={o.alt} />
-        </button>
-        <figcaption className="plate-sheet__cap caption">{o.caption}</figcaption>
-      </figure>
-    )
-  }
-
-  if (o.kind === 'band') {
-    return (
-      <figure className="plate-sheet obj__print obj__band">
-        <button className="obj__expand" onClick={onOpen} aria-label={`Expand: ${o.caption}`}>
-          <motion.img layoutId={`print-${o.id}`} src={o.src} alt={o.alt} />
-        </button>
-        <figcaption className="plate-sheet__cap caption">{o.caption}</figcaption>
-      </figure>
-    )
-  }
-
-  if (o.kind === 'glyph') {
-    return (
-      <div className="glyph">
-        <div className="glyph__mark">&amp;</div>
-        <p className="glyph__meta">Ampersand · Georgia italic</p>
-      </div>
-    )
-  }
-
-  if (o.kind === 'slip') {
-    return (
-      <div className="slip">
-        <p>Kept because the blue was right.</p>
-      </div>
-    )
-  }
-
   if (o.kind === 'colophon') {
     return (
       <div className="colophon">
@@ -534,22 +420,6 @@ function ObjectBody({ o, onOpen }: { o: Obj; onOpen: () => void }) {
           Set in <em>Georgia</em>. The photographs are mine. Every
           colour on this site was lifted out of one of the paintings.
         </p>
-      </div>
-    )
-  }
-
-  if (o.kind === 'palette') {
-    return (
-      <div className="palette">
-        <p className="palette__label eyebrow">Sampled from the desk</p>
-        <ul className="palette__strip">
-          {swatches.map((s) => (
-            <li key={s.hex} style={{ background: s.hex }}>
-              <span className="vh">{s.name}</span>
-            </li>
-          ))}
-        </ul>
-        <p className="caption palette__cap">Colour from the photographs and paintings.</p>
       </div>
     )
   }
