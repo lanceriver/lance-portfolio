@@ -329,11 +329,16 @@ export function FieldNotes() {
               rel="noreferrer"
               aria-label={`Open ${nowPlaying.title} by ${nowPlaying.artist} on Spotify`}
             >
-              <img
-                src={nowPlaying.art}
-                alt={`Album cover for ${nowPlaying.title} by ${nowPlaying.artist}`}
-                onError={() => setFailedArtworkUrl(nowPlaying.art)}
-              />
+              <span className="album-sleeve__record" aria-hidden="true">
+                <span className="album-sleeve__label" />
+              </span>
+              <span className="album-sleeve__jacket">
+                <img
+                  src={nowPlaying.art}
+                  alt={`Album cover for ${nowPlaying.title} by ${nowPlaying.artist}`}
+                  onError={() => setFailedArtworkUrl(nowPlaying.art)}
+                />
+              </span>
             </a>
           )}
       </div>
