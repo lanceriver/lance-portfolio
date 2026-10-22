@@ -1,7 +1,7 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, type RefObject } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 import { useReducedMotion } from '../hooks/useReducedMotion'
-import { useNowPlaying } from '../hooks/useNowPlaying'
+import { useNowPlaying, type NowPlayingState } from '../hooks/useNowPlaying'
 import { arrive, clampTravel, isPhone } from '../lib/enter'
 import './fieldnotes.css'
 
@@ -195,10 +195,15 @@ function useLift() {
 export function FieldNotes() {
   const reduced = useReducedMotion()
   const surfaceRef = useRef<HTMLDivElement>(null)
+  const turntableRef = useRef<HTMLElement>(null)
+  const nowPlaying = useNowPlaying(turntableRef)
   const [open, setOpen] = useState<Obj | null>(null)
+  const [failedArtworkUrl, setFailedArtworkUrl] = useState<string | null>(null)
   const sectionRef = useRef<HTMLElement>(null)
   const lift = useLift()
   const [phone] = useState(isPhone)
+
+  useEffect(() => { setFailedArtworkUrl(null) }, [nowPlaying.art])
 
   /**
    * The pin has to be a NEGATIVE `top`, not `bottom: 0`.
@@ -306,10 +311,31 @@ export function FieldNotes() {
               )}
               whileHover={reduced ? undefined : { rotate: 0, y: -14, scale: 1.02, transition: { type: 'spring', stiffness: 300, damping: 26 } }}
             >
-              <ObjectBody o={o} onOpen={() => o.kind === 'print' && setOpen(o)} />
+              <ObjectBody
+                o={o}
+                onOpen={() => o.kind === 'print' && setOpen(o)}
+                nowPlaying={nowPlaying}
+                turntableRef={turntableRef}
+              />
             </motion.div>
           </div>
         ))}
+        {nowPlaying.art && nowPlaying.url && nowPlaying.title && nowPlaying.artist
+          && failedArtworkUrl !== nowPlaying.art && (
+            <a
+              className="album-sleeve"
+              href={nowPlaying.url}
+              target="_blank"
+              rel="noreferrer"
+              aria-label={`Open ${nowPlaying.title} by ${nowPlaying.artist} on Spotify`}
+            >
+              <img
+                src={nowPlaying.art}
+                alt={`Album cover for ${nowPlaying.title} by ${nowPlaying.artist}`}
+                onError={() => setFailedArtworkUrl(nowPlaying.art)}
+              />
+            </a>
+          )}
       </div>
 
       </section>
@@ -358,9 +384,11 @@ export function FieldNotes() {
  * settle: the rotation is a status, not decoration. When the music stops the
  * record stops and the arm returns to its rest.
  */
-function Turntable() {
-  const turntableRef = useRef<HTMLElement>(null)
-  const { playing, title, artist, url, available } = useNowPlaying(turntableRef)
+function Turntable({ nowPlaying, turntableRef }: {
+  nowPlaying: NowPlayingState
+  turntableRef: RefObject<HTMLElement>
+}) {
+  const { playing, title, artist, url, available } = nowPlaying
   const hasTrack = Boolean(title && artist)
   const status = playing
     ? 'On the turntable'
@@ -402,8 +430,13 @@ function Turntable() {
   )
 }
 
-function ObjectBody({ o, onOpen }: { o: Obj; onOpen: () => void }) {
-  if (o.kind === 'turntable') return <Turntable />
+function ObjectBody({ o, onOpen, nowPlaying, turntableRef }: {
+  o: Obj
+  onOpen: () => void
+  nowPlaying: NowPlayingState
+  turntableRef: RefObject<HTMLElement>
+}) {
+  if (o.kind === 'turntable') return <Turntable nowPlaying={nowPlaying} turntableRef={turntableRef} />
 
   if (o.kind === 'print') {
     return (

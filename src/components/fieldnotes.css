@@ -113,6 +113,29 @@
 .obj--colophon { left: 16%; top: 1040px; width: min(34%, 360px); z-index: 9; }
 .obj--turntable{ left: 60%; top: auto; bottom: 32px; width: min(22%, 255px); z-index: 10; }
 
+/* A quiet, complete Spotify sleeve sits on the desk beside the turntable.
+   It stays outside the photographed objects' authored motion. */
+.album-sleeve {
+  position: absolute;
+  left: 84%;
+  bottom: 130px;
+  width: min(14%, 150px);
+  z-index: 12;
+  display: block;
+  line-height: 0;
+}
+.album-sleeve img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  border-radius: 4px;
+}
+.album-sleeve:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 4px;
+}
+
 .obj--terrace .obj__expand img { height: min(41vh, 390px); }
 .obj--night   .obj__expand img { height: min(34vh, 310px); }
 .obj--army    .obj__expand img { height: min(28vh, 250px); }
@@ -196,6 +219,14 @@
   .obj--coastal-train { width: 78% !important; align-self: flex-end; }
   .obj--torii { width: 94% !important; align-self: flex-start; }
   .obj--bamboo { width: 76% !important; align-self: flex-end; }
+  .album-sleeve {
+    position: relative;
+    left: auto;
+    bottom: auto;
+    width: min(42%, 160px);
+    margin-top: 0;
+    align-self: flex-end;
+  }
   .obj + .obj--colophon,
   .obj + .obj--turntable { margin-top: 20px; }
   .obj--mountain-road .obj__expand img,

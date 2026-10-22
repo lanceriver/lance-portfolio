@@ -5,9 +5,10 @@ type NowPlayingRecord = {
   title: string | null
   artist: string | null
   url: string | null
+  art: string | null
 }
 
-type NowPlayingState = NowPlayingRecord & {
+export type NowPlayingState = NowPlayingRecord & {
   available: boolean
 }
 
@@ -16,19 +17,21 @@ const STOPPED: NowPlayingRecord = {
   title: null,
   artist: null,
   url: null,
+  art: null,
 }
 
 const INITIAL: NowPlayingState = { ...STOPPED, available: false }
 const POLL_MS = 30_000
 const REQUEST_TIMEOUT_MS = 8_000
 
-function isRecord(value: unknown): value is NowPlayingRecord {
+function isRecord(value: unknown): value is Omit<NowPlayingRecord, 'art'> & { art?: unknown } {
   if (!value || typeof value !== 'object') return false
   const record = value as Record<string, unknown>
   return typeof record.playing === 'boolean'
     && (typeof record.title === 'string' || record.title === null)
     && (typeof record.artist === 'string' || record.artist === null)
     && (typeof record.url === 'string' || record.url === null)
+    && (!('art' in record) || typeof record.art === 'string' || record.art === null)
 }
 
 function spotifyTrackUrl(value: string | null): string | null {
@@ -45,7 +48,26 @@ function spotifyTrackUrl(value: string | null): string | null {
   }
 }
 
-export function useNowPlaying(targetRef: RefObject<HTMLElement | null>): NowPlayingState {
+function spotifyArtworkUrl(value: unknown): string | null {
+  if (typeof value !== 'string') return null
+  try {
+    const url = new URL(value)
+    return url.protocol === 'https:'
+      && url.hostname === 'i.scdn.co'
+      && !url.username
+      && !url.password
+      && !url.port
+      && /^\/image\/[A-Za-z0-9]+$/.test(url.pathname)
+      && !url.search
+      && !url.hash
+      ? url.href
+      : null
+  } catch {
+    return null
+  }
+}
+
+export function useNowPlaying(targetRef: RefObject<HTMLElement>): NowPlayingState {
   const [state, setState] = useState(INITIAL)
   const [inView, setInView] = useState(false)
   const [documentVisible, setDocumentVisible] = useState(
@@ -93,6 +115,7 @@ export function useNowPlaying(targetRef: RefObject<HTMLElement | null>): NowPlay
         const title = body.title?.trim() || null
         const artist = body.artist?.trim() || null
         const url = spotifyTrackUrl(body.url)
+        const art = spotifyArtworkUrl(body.art)
         if (stopped) return
 
         setState({
@@ -100,6 +123,7 @@ export function useNowPlaying(targetRef: RefObject<HTMLElement | null>): NowPlay
           title,
           artist,
           url,
+          art,
           available: true,
         })
       } catch {
