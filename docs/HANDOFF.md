@@ -1,4 +1,4 @@
-# Handoff — lance-portfolio, Spotify record shelf shipped
+# Handoff — lance-portfolio, record shelf and Field Notes photos shipped
 
 _Last updated 2026-10-22. One living file — rewrite, don't append._
 
@@ -6,7 +6,8 @@ _Last updated 2026-10-22. One living file — rewrite, don't append._
 
 - **Shipped:** [PR #18](https://github.com/lanceriver/lance-portfolio/pull/18) is merged as `4674ef0` and live on https://lanceriver.com/#notes. Field Notes now has a shelf of recent Spotify records beside the turntable, hover captions, and the colophon in the top-right corner.
 - **AWS:** stack `lance-portfolio` reached `UPDATE_COMPLETE` (Spotify Lambda code plus the dependent `VisitsApi` body; nothing replaced). The site deploy run `39722028653` succeeded. No change sets are pending.
-- **Primary git:** `/Users/lance/Documents/Projects/lance-portfolio-claude` is on `main`, **ahead 5 / behind 1** of `origin/main`. The 5 are local docs-only handoff commits (`04eb2ba`, `3086287`, `af33b72`, `63c8616`, `c39b882`); this handoff adds a 6th and 7th. The 1 is the PR #18 merge. My `git rebase origin/main` was blocked by the auto-mode classifier, so Lance must rebase or pull these himself. Do not push automatically: every push to main deploys.
+- **Also shipped:** [PR #19](https://github.com/lanceriver/lance-portfolio/pull/19), merged as `3a45816`; site deploy run `39724602545` succeeded. It adds real place names on four captions, five new photographs (12 in total, with the desk now 2150px tall), and tap-to-select records on touch screens. It's front-end only, with no AWS change. The branch and worktree are deleted.
+- **Primary git:** `/Users/lance/Documents/Projects/lance-portfolio-claude` is on `main`, **ahead 8 / behind 2** of `origin/main` after this commit. The 8 are local docs-only handoff commits (`04eb2ba`, `3086287`, `af33b72`, `63c8616`, `c39b882`, `c79aaa1`, `b58cc27`, plus this one). The 2 are the PR #18 and #19 merges. My `git rebase origin/main` was blocked by the auto-mode classifier, so Lance must rebase or pull these himself. Do not push automatically: every push to main deploys.
 - **Untracked, pre-existing, untouched:** `.impeccable/`, `docs/daily-priorities.md`, `assets-source/IMG_7501.JPG`, `assets-source/Sandstone Pillars and Mountain Pavilion.png`.
 - **Worktrees:** only the primary checkout. The album worktree and `codex/spotify-album-art` (local and remote) are removed.
 - **Next step:** none blocking. Lance decides on the local main rebase and the optional items below.
@@ -19,6 +20,22 @@ _Last updated 2026-10-22. One living file — rewrite, don't append._
 | Worn mobile motion (PR15) | Live. A physical-phone check is optional, with Lance. |
 | Spotify turntable + API (PR16/17) | Live. Read-only endpoint, SSM refresh token. |
 | Record shelf (PR18) | **Live, verified in production** (see below). |
+| Place names, 5 new photos, touch taps (PR19) | **Live, verified in production** (see below). |
+
+**PR19 details:**
+- **Captions:** Tianmen Mountain · Busan, Korea · Fushimi Inari, Kyoto · Arashiyama, Kyoto. The ids and image files keep their old names (`mountain-road`, `coastal-train`, and so on).
+- **New prints:**
+  - `obj--gamcheon` (IMG_0165): "Gamcheon, Busan · September 2025"
+  - `obj--library` (IMG_4013): "Starfield Library, Seoul · September 2025"
+  - `obj--kinkakuji` (IMG_8441): "Kinkaku-ji, Kyoto · February 2024"
+  - `obj--market` (IMG_4127): "Market stall, Seoul · September 2025"
+  - `obj--bakery` (IMG_7501): "Shanghai · May 2026". Lance named the bakery "Apoli Itabakery", but I left the name out pending the exact spelling.
+- **Ingest:** done with `scripts/ingest-photo.py`. It needs Pillow, which isn't installed system-wide; a venv was used (see Ephemeral artifacts).
+- **Desk:** `.notes__surface` is `max(120vh, 2150px)`. A second band of prints sits at y 900–1630. The turntable and shelf are bottom-anchored. Desktop measurements: no print clashes with the colophon, the turntable or the shelf's lift and caption zone at 1440 or 1024.
+- **Touch:** on `(hover: none)`, the first tap on a record selects it (`album-crate__slot--selected`). On phones it comes forward in place and a panel `.album-crate__detail` (label, title, artist, "Open in Spotify ↗") appears below the shelf. A second tap or the link opens Spotify, and a tap outside or Escape dismisses it. Keyboard reveal uses `:has(.album-sleeve:focus-visible)`.
+- **Production check (headless Chrome, visitor POST blocked):**
+  - Desktop: all 9 new or renamed captions are present, no old captions remain, every image loads, the surface is 2150px, and there are no errors.
+  - Phone with touch emulation: a tap selects a record, the panel shows, and its link opened the right Spotify track. No horizontal scroll.
 
 **What the shelf does (PR18):**
 - **Layout:** the current or last-played record sits nearest the turntable, in its jacket with a plain rust-label disc half out. Up to 4 earlier albums trail to the left, each showing 60% of its cover on desktop and 33% on phones.
@@ -47,10 +64,12 @@ _Last updated 2026-10-22. One living file — rewrite, don't append._
 
 ## Decisions pending with Lance
 
-1. **Local main:** rebase the 7 docs commits onto `origin/main` (it was blocked for me), then decide whether to push. A push deploys the site, with docs only.
-2. **Other paintings:** replace the remaining non-Field-Notes artwork with travel imagery only at Lance's direction.
-3. **Airtable Clone screenshot:** optional Plate II improvement that needs a signed-in capture.
-4. **Optional real-phone checks:** the shelf, and Worn.
+1. **Local main:** rebase the 8 docs commits onto `origin/main` (it was blocked for me), then decide whether to push. A push deploys the site, with docs only.
+2. **Bakery name:** confirm the exact spelling of "Apoli Itabakery" if Lance wants it on the Shanghai caption or alt text.
+3. **Other paintings:** replace the remaining non-Field-Notes artwork with travel imagery only at Lance's direction.
+4. **Airtable Clone screenshot:** optional Plate II improvement that needs a signed-in capture.
+5. **Optional real-phone checks:** the shelf taps, the new photos, and Worn. All checks so far were emulation only.
+6. **Unused originals:** `assets-source/travel/` still has DSC_0740, IMG_0168, IMG_0345, IMG_3172 and IMG_4004 unused. Lance chose not to add them this round.
 
 All merged `codex/*` branches (#15–#18) are deleted locally and on the remote (Lance approved, 2026-10-22). None remain.
 
@@ -76,7 +95,9 @@ All merged `codex/*` branches (#15–#18) are deleted locally and on the remote 
 
 - **Scratchpad:** `/private/tmp/claude-501/-Users-lance-Documents-Projects-lance-portfolio-claude/0283ed32-7e68-4497-88f7-47dc149bbbd5/scratchpad/` holds the QA scripts (`shelf-check.cjs`, `click-check.cjs`, `prod-check.cjs`, `proto*.cjs`), the threaded `preview-api.py`, and screenshots (some show album art, so don't copy them into the repo). All will vanish on reboot. The findings are summarised above.
 - **Old previews:** `/private/tmp/album-art-*.png` and `/private/tmp/album-art-preview-api.py` are obsolete.
-- **Servers:** the preview servers on 5195/5196 are stopped.
+- **Servers:** the preview servers on 5195/5196 are stopped. The temporary `.claude/launch.json` entries (`places-site`, `spotify-api`) were removed again.
+- **Image venv:** `<scratchpad>/imgvenv` has Pillow and pillow-heif for `scripts/ingest-photo.py`. It will vanish; recreate it with `python3 -m venv <dir> && <dir>/bin/python -m pip install pillow pillow-heif`.
+- **Contact sheet:** `<scratchpad>/contact-sheet.jpg` shows all 17 travel originals. These are personal photos, so never copy it into the repo.
 
 ## Suggested next session
 
