@@ -1,4 +1,4 @@
-import { useRef, type RefObject } from 'react'
+import { useEffect, useRef, useState, type RefObject } from 'react'
 import { motion } from 'motion/react'
 import { projects, type Screen } from '../data'
 import { useScrollDriver } from '../hooks/useScrollDriver'
@@ -8,6 +8,26 @@ import './work.css'
 
 // Screens sit at three different depths.
 const DRIFT = [160, 40, 100]
+
+function useScreenCapabilities() {
+  const [mobile, setMobile] = useState(() => typeof matchMedia === 'function' && matchMedia('(max-width: 900px)').matches)
+  const [finePointer, setFinePointer] = useState(() => typeof matchMedia === 'function' && matchMedia('(hover: hover) and (pointer: fine)').matches)
+
+  useEffect(() => {
+    const mobileQuery = matchMedia('(max-width: 900px)')
+    const finePointerQuery = matchMedia('(hover: hover) and (pointer: fine)')
+    const onMobileChange = () => setMobile(mobileQuery.matches)
+    const onFinePointerChange = () => setFinePointer(finePointerQuery.matches)
+    mobileQuery.addEventListener('change', onMobileChange)
+    finePointerQuery.addEventListener('change', onFinePointerChange)
+    return () => {
+      mobileQuery.removeEventListener('change', onMobileChange)
+      finePointerQuery.removeEventListener('change', onFinePointerChange)
+    }
+  }, [])
+
+  return { mobile, finePointer }
+}
 
 /**
  * Selected Work: three scenes with three compositional logics.
@@ -149,6 +169,7 @@ function SceneAperture() {
 function SceneRest() {
   const p = projects[2]
   const reduced = useReducedMotion()
+  const { mobile, finePointer } = useScreenCapabilities()
   const ref = useRef<HTMLElement>(null)
   const numRef = useRef<HTMLSpanElement>(null)
   const copyRef = useRef<HTMLDivElement>(null)
@@ -193,7 +214,7 @@ function SceneRest() {
           </div>
         </div>
 
-        {p.screens && <Screens screens={p.screens} reduced={reduced} listRef={listRef} />}
+        {p.screens && <Screens screens={p.screens} reduced={reduced} mobile={mobile} finePointer={finePointer} listRef={listRef} />}
       </div>
     </article>
   )
@@ -204,18 +225,23 @@ function SceneRest() {
    every Work plate, so they keep the rule a collage would break. They rise in
    one after another, then drift at three depths. On a phone they become a row
    you swipe. DECISIONS D54. */
-function Screens({ screens, reduced, listRef }: { screens: Screen[]; reduced: boolean; listRef: RefObject<HTMLDivElement> }) {
+function Screens({ screens, reduced, mobile, finePointer, listRef }: { screens: Screen[]; reduced: boolean; mobile: boolean; finePointer: boolean; listRef: RefObject<HTMLDivElement> }) {
+  const settled = reduced || mobile
+
   return (
     <div className="rest__screens" role="list" aria-label="Screens from Worn" ref={listRef}>
       {screens.map((s, i) => (
         <div key={s.src} role="listitem" className="rest__screen">
           <motion.figure
             className="rest__fig plate-sheet"
-            initial={reduced ? false : { y: 96, opacity: 0, scale: 0.96 }}
-            whileInView={{ y: 0, opacity: 1, scale: 1 }}
-            whileHover={reduced ? undefined : { y: -10 }}
+            initial={settled ? false : { y: 96, opacity: 0, scale: 0.96 }}
+            animate={settled ? { y: 0, opacity: 1, scale: 1 } : undefined}
+            whileInView={settled ? undefined : { y: 0, opacity: 1, scale: 1 }}
+            whileHover={!reduced && !mobile && finePointer ? { y: -10 } : undefined}
             viewport={{ once: true, amount: 0.2 }}
-            transition={{ type: 'spring', stiffness: 110, damping: 20, mass: 1, delay: reduced ? 0 : i * 0.14 }}
+            transition={settled
+              ? { duration: 0 }
+              : { type: 'spring', stiffness: 110, damping: 20, mass: 1, delay: i * 0.14 }}
           >
             <img
               src={s.src}
