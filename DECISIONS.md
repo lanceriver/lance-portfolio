@@ -1087,5 +1087,10 @@ visible and opens in the existing lightbox; pointer entry and keyboard focus
 raise the selected print to the top. Phones use a compact overlapping flow with
 the colophon and turntable clear beneath it, so every image stays reachable.
 The turntable label keeps one of Lance's photographs when Spotify is connected;
-Spotify artwork is not used. Its live status comes from a public, read-only
-endpoint, and unavailable status is shown honestly without inventing a track.
+Spotify artwork appears as a short shelf of records beside the turntable: the
+one playing now nearest the player with a plain disc half out of its jacket,
+and up to four earlier albums trailing to the left. Hovering or focusing one
+lifts it clear and shows its title and artist; covers are never cropped,
+rotated or animated in place. The colophon moved to the top-right corner to
+make room. Its live status comes from a public, read-only endpoint, and
+unavailable status is shown honestly without inventing a track.

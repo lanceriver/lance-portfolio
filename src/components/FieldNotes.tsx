@@ -1,7 +1,7 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, type CSSProperties, type RefObject } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 import { useReducedMotion } from '../hooks/useReducedMotion'
-import { useNowPlaying } from '../hooks/useNowPlaying'
+import { useNowPlaying, type NowPlayingState } from '../hooks/useNowPlaying'
 import { arrive, clampTravel, isPhone } from '../lib/enter'
 import './fieldnotes.css'
 
@@ -195,10 +195,22 @@ function useLift() {
 export function FieldNotes() {
   const reduced = useReducedMotion()
   const surfaceRef = useRef<HTMLDivElement>(null)
+  const turntableRef = useRef<HTMLElement>(null)
+  const nowPlaying = useNowPlaying(turntableRef)
   const [open, setOpen] = useState<Obj | null>(null)
+  const [failedArtworkUrl, setFailedArtworkUrl] = useState<string | null>(null)
+  const [failedCrateArt, setFailedCrateArt] = useState<string[]>([])
   const sectionRef = useRef<HTMLElement>(null)
   const lift = useLift()
   const [phone] = useState(isPhone)
+
+  useEffect(() => { setFailedArtworkUrl(null) }, [nowPlaying.art])
+
+  const frontVisible = Boolean(
+    nowPlaying.art && nowPlaying.url && nowPlaying.title && nowPlaying.artist
+      && failedArtworkUrl !== nowPlaying.art,
+  )
+  const crate = nowPlaying.crate.filter((r) => !failedCrateArt.includes(r.art))
 
   /**
    * The pin has to be a NEGATIVE `top`, not `bottom: 0`.
@@ -306,10 +318,82 @@ export function FieldNotes() {
               )}
               whileHover={reduced ? undefined : { rotate: 0, y: -14, scale: 1.02, transition: { type: 'spring', stiffness: 300, damping: 26 } }}
             >
-              <ObjectBody o={o} onOpen={() => o.kind === 'print' && setOpen(o)} />
+              <ObjectBody
+                o={o}
+                onOpen={() => o.kind === 'print' && setOpen(o)}
+                nowPlaying={nowPlaying}
+                turntableRef={turntableRef}
+              />
             </motion.div>
           </div>
         ))}
+        {(frontVisible || crate.length > 0) && (
+          <ul
+            className="album-crate"
+            aria-label="Recently played records"
+            style={{ '--n': crate.length } as CSSProperties}
+          >
+            {frontVisible && (
+              <li className="album-crate__slot" style={{ '--depth': 0 } as CSSProperties}>
+                <a
+                  className="album-sleeve"
+                  href={nowPlaying.url ?? undefined}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label={`Open ${nowPlaying.title} by ${nowPlaying.artist} on Spotify`}
+                >
+                  <span className="album-sleeve__record" aria-hidden="true">
+                    <span className="album-sleeve__label" />
+                  </span>
+                  <span className="album-sleeve__jacket">
+                    <img
+                      src={nowPlaying.art ?? undefined}
+                      alt={`Album cover for ${nowPlaying.title} by ${nowPlaying.artist}`}
+                      onError={() => setFailedArtworkUrl(nowPlaying.art)}
+                    />
+                  </span>
+                </a>
+                <span className="album-crate__cap" aria-hidden="true">
+                  <span className="album-crate__cap-status">{nowPlaying.playing ? 'On the turntable' : 'Last played'}</span>
+                  <span className="album-crate__cap-title">{nowPlaying.title}</span>
+                  <span className="album-crate__cap-artist">{nowPlaying.artist}</span>
+                </span>
+              </li>
+            )}
+            {crate.map((r, i) => {
+              const depth = i + (frontVisible ? 1 : 0)
+              return (
+                <li
+                  key={r.art}
+                  className={`album-crate__slot${depth > 0 ? ' album-crate__slot--back' : ''}`}
+                  style={{ '--depth': depth } as CSSProperties}
+                >
+                  <a
+                    className="album-sleeve"
+                    href={r.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label={`Open ${r.title} by ${r.artist} on Spotify`}
+                  >
+                    <span className="album-sleeve__jacket">
+                      <img
+                        src={r.art}
+                        alt={`Album cover for ${r.title} by ${r.artist}`}
+                        loading="lazy"
+                        onError={() => setFailedCrateArt((failed) => (failed.includes(r.art) ? failed : [...failed, r.art]))}
+                      />
+                    </span>
+                  </a>
+                  <span className="album-crate__cap" aria-hidden="true">
+                    <span className="album-crate__cap-status">Played earlier</span>
+                    <span className="album-crate__cap-title">{r.title}</span>
+                    <span className="album-crate__cap-artist">{r.artist}</span>
+                  </span>
+                </li>
+              )
+            })}
+          </ul>
+        )}
       </div>
 
       </section>
@@ -358,9 +442,11 @@ export function FieldNotes() {
  * settle: the rotation is a status, not decoration. When the music stops the
  * record stops and the arm returns to its rest.
  */
-function Turntable() {
-  const turntableRef = useRef<HTMLElement>(null)
-  const { playing, title, artist, url, available } = useNowPlaying(turntableRef)
+function Turntable({ nowPlaying, turntableRef }: {
+  nowPlaying: NowPlayingState
+  turntableRef: RefObject<HTMLElement>
+}) {
+  const { playing, title, artist, url, available } = nowPlaying
   const hasTrack = Boolean(title && artist)
   const status = playing
     ? 'On the turntable'
@@ -402,8 +488,13 @@ function Turntable() {
   )
 }
 
-function ObjectBody({ o, onOpen }: { o: Obj; onOpen: () => void }) {
-  if (o.kind === 'turntable') return <Turntable />
+function ObjectBody({ o, onOpen, nowPlaying, turntableRef }: {
+  o: Obj
+  onOpen: () => void
+  nowPlaying: NowPlayingState
+  turntableRef: RefObject<HTMLElement>
+}) {
+  if (o.kind === 'turntable') return <Turntable nowPlaying={nowPlaying} turntableRef={turntableRef} />
 
   if (o.kind === 'print') {
     return (

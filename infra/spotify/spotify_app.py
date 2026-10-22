@@ -6,7 +6,7 @@ import re
 import time
 from typing import Any
 from urllib.error import HTTPError, URLError
-from urllib.parse import urlencode
+from urllib.parse import urlencode, urlsplit
 from urllib.request import Request, urlopen
 
 import boto3
@@ -22,6 +22,7 @@ TOKEN_URL = "https://accounts.spotify.com/api/token"
 REQUEST_TIMEOUT = 1.5
 CACHE_SECONDS = 30
 TRACK_ID = re.compile(r"^[A-Za-z0-9]{22}$")
+SPOTIFY_ART_PATH = re.compile(r"^/image/[A-Za-z0-9]+$")
 
 ssm = boto3.client(
     "ssm",
@@ -70,7 +71,35 @@ def _response(status: int, payload: dict[str, Any], cache_control: str) -> dict[
 
 
 def _empty_track() -> dict[str, Any]:
-    return {"playing": False, "title": None, "artist": None, "url": None}
+    return {"playing": False, "title": None, "artist": None, "url": None, "art": None, "crate": []}
+
+
+def _album_art(item: dict[str, Any]) -> str | None:
+    album = item.get("album")
+    images = album.get("images") if isinstance(album, dict) else None
+    if not isinstance(images, list):
+        return None
+    for image in images:
+        candidate = image.get("url") if isinstance(image, dict) else None
+        if not isinstance(candidate, str):
+            continue
+        try:
+            parsed = urlsplit(candidate)
+            if (
+                parsed.scheme.lower() == "https"
+                and parsed.hostname == "i.scdn.co"
+                and parsed.username is None
+                and parsed.password is None
+                and parsed.port is None
+                and parsed.netloc.lower() == "i.scdn.co"
+                and not parsed.query
+                and not parsed.fragment
+                and SPOTIFY_ART_PATH.fullmatch(parsed.path)
+            ):
+                return candidate
+        except ValueError:
+            continue
+    return None
 
 
 def _request(url: str, *, method: str = "GET", headers=None, data=None):
@@ -191,23 +220,44 @@ def _track(item: Any, playing: bool) -> dict[str, Any]:
     url = f"https://open.spotify.com/track/{track_id}" if isinstance(track_id, str) and TRACK_ID.fullmatch(track_id) else None
     if title is None and artist is None:
         return _empty_track()
-    return {"playing": playing, "title": title, "artist": artist, "url": url}
+    return {"playing": playing, "title": title, "artist": artist, "url": url, "art": _album_art(item)}
 
 
 def _now_playing() -> dict[str, Any]:
     status, _, current = _spotify_get("/me/player/currently-playing")
     is_playing = status == 200 and isinstance(current, dict) and current.get("is_playing") is True
+    front = None
     if is_playing:
-        result = _track(current.get("item"), True)
-        if result["title"] or result["artist"]:
-            return result
+        candidate = _track(current.get("item"), True)
+        if candidate["title"] or candidate["artist"]:
+            front = candidate
 
-    _, _, recent = _spotify_get("/me/player/recently-played?limit=1")
+    _, _, recent = _spotify_get("/me/player/recently-played?limit=20")
     items = recent.get("items") if isinstance(recent, dict) else None
-    if isinstance(items, list) and items:
-        if isinstance(items[0], dict):
-            return _track(items[0].get("track"), False)
-    return _empty_track()
+    if not isinstance(items, list):
+        items = []
+
+    if front is None:
+        front = _empty_track()
+        if items and isinstance(items[0], dict):
+            front = _track(items[0].get("track"), False)
+        items = items[1:]
+
+    seen_art = {front["art"]} if front["art"] else set()
+    crate: list[dict[str, Any]] = []
+    for item in items:
+        if not isinstance(item, dict):
+            continue
+        record = _track(item.get("track"), False)
+        if not all(record[key] for key in ("title", "artist", "url", "art")):
+            continue
+        if record["art"] in seen_art:
+            continue
+        seen_art.add(record["art"])
+        crate.append({key: record[key] for key in ("title", "artist", "url", "art")})
+        if len(crate) == 4:
+            break
+    return {**front, "crate": crate}
 
 
 def handler(_event: dict[str, Any], _context: Any) -> dict[str, Any]:

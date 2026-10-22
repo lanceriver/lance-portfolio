@@ -44,6 +44,9 @@ def reset_module_state(monkeypatch):
     monkeypatch.setattr(spotify_app, "_rate_limited_until", 0)
 
 
+EMPTY_TRACK = {"playing": False, "title": None, "artist": None, "url": None, "art": None, "crate": []}
+
+
 def response_body(response):
     return json.loads(response["body"])
 
@@ -64,6 +67,7 @@ def test_currently_playing_returns_only_safe_track_metadata(monkeypatch):
                     "id": "0123456789012345678901",
                     "name": "Harvest Moon",
                     "artists": [{"name": "Neil Young"}],
+                    "album": {"images": [{"url": "https://i.scdn.co/image/ab67616d0000b2731234567890abcdef"}]},
                 },
             },
         ),
@@ -74,6 +78,8 @@ def test_currently_playing_returns_only_safe_track_metadata(monkeypatch):
         "title": "Harvest Moon",
         "artist": "Neil Young",
         "url": "https://open.spotify.com/track/0123456789012345678901",
+        "art": "https://i.scdn.co/image/ab67616d0000b2731234567890abcdef",
+        "crate": [],
     }
 
 
@@ -86,7 +92,7 @@ def test_empty_current_playback_falls_back_to_recent_track_as_stopped(monkeypatc
         if url.endswith("currently-playing"):
             return 204, {}, None
         return 200, {}, {
-            "items": [{"track": {"type": "track", "id": "0123456789012345678901", "name": "Harvest Moon", "artists": [{"name": "Neil Young"}]}}]
+            "items": [{"track": {"type": "track", "id": "0123456789012345678901", "name": "Harvest Moon", "artists": [{"name": "Neil Young"}], "album": {"images": [{"url": "https://i.scdn.co/image/abc123"}]}}}]
         }
 
     monkeypatch.setattr(spotify_app, "_request", request)
@@ -95,10 +101,12 @@ def test_empty_current_playback_falls_back_to_recent_track_as_stopped(monkeypatc
         "title": "Harvest Moon",
         "artist": "Neil Young",
         "url": "https://open.spotify.com/track/0123456789012345678901",
+        "art": "https://i.scdn.co/image/abc123",
+        "crate": [],
     }
     assert calls == [
         "https://api.spotify.com/v1/me/player/currently-playing",
-        "https://api.spotify.com/v1/me/player/recently-played?limit=1",
+        "https://api.spotify.com/v1/me/player/recently-played?limit=20",
     ]
 
 
@@ -109,7 +117,178 @@ def test_malformed_recent_history_returns_empty_stopped_state(monkeypatch):
         "_request",
         lambda url, **_kwargs: (204, {}, None) if url.endswith("currently-playing") else (200, {}, {"items": [None]}),
     )
-    assert spotify_app._now_playing() == {"playing": False, "title": None, "artist": None, "url": None}
+    assert spotify_app._now_playing() == EMPTY_TRACK
+
+
+def track_id(n):
+    return f"{n:022d}"
+
+
+def history_track(n, *, art="auto", title="auto", artist="auto", tid="auto"):
+    """A recently-played item; `n` makes id, title, artist and (by default) album art unique."""
+    return {
+        "track": {
+            "type": "track",
+            "id": track_id(n) if tid == "auto" else tid,
+            "name": f"Song {n}" if title == "auto" else title,
+            "artists": [{"name": f"Artist {n}"}] if artist == "auto" else artist,
+            "album": {"images": [{"url": f"https://i.scdn.co/image/album{n}"}] if art == "auto" else art},
+        }
+    }
+
+
+def stub_spotify(monkeypatch, *, playing=None, history=None):
+    monkeypatch.setattr(spotify_app, "_token", lambda force_refresh=False: "temporary-token")
+    calls = []
+
+    def request(url, **_kwargs):
+        calls.append(url)
+        if url.endswith("currently-playing"):
+            if playing is None:
+                return 204, {}, None
+            return 200, {}, {"is_playing": True, "item": playing["track"]}
+        return 200, {}, history
+
+    monkeypatch.setattr(spotify_app, "_request", request)
+    return calls
+
+
+def crate_entry(n):
+    return {
+        "title": f"Song {n}",
+        "artist": f"Artist {n}",
+        "url": f"https://open.spotify.com/track/{track_id(n)}",
+        "art": f"https://i.scdn.co/image/album{n}",
+    }
+
+
+def test_playing_builds_crate_from_history_excluding_playing_album(monkeypatch):
+    calls = stub_spotify(
+        monkeypatch,
+        playing=history_track(1),
+        history={"items": [history_track(2), history_track(3, art=history_track(1)["track"]["album"]["images"]), history_track(4)]},
+    )
+    result = spotify_app._now_playing()
+    assert result["playing"] is True
+    assert result["title"] == "Song 1"
+    assert result["crate"] == [crate_entry(2), crate_entry(4)]
+    assert calls[-1] == "https://api.spotify.com/v1/me/player/recently-played?limit=20"
+
+
+def test_playing_crate_does_not_skip_first_history_item(monkeypatch):
+    stub_spotify(monkeypatch, playing=history_track(1), history={"items": [history_track(2), history_track(3)]})
+    assert spotify_app._now_playing()["crate"] == [crate_entry(2), crate_entry(3)]
+
+
+def test_crate_dedupes_albums_and_keeps_newest_first(monkeypatch):
+    same_album = [{"url": "https://i.scdn.co/image/album2"}]
+    stub_spotify(
+        monkeypatch,
+        playing=history_track(1),
+        history={"items": [history_track(2), history_track(22, art=same_album), history_track(3), history_track(2)]},
+    )
+    assert spotify_app._now_playing()["crate"] == [crate_entry(2), crate_entry(3)]
+
+
+def test_crate_is_capped_at_four_records(monkeypatch):
+    stub_spotify(
+        monkeypatch,
+        playing=history_track(1),
+        history={"items": [history_track(n) for n in range(2, 12)]},
+    )
+    assert spotify_app._now_playing()["crate"] == [crate_entry(n) for n in (2, 3, 4, 5)]
+
+
+def test_stopped_front_is_newest_history_item_and_crate_follows_it(monkeypatch):
+    same_album_as_front = [{"url": "https://i.scdn.co/image/album2"}]
+    stub_spotify(
+        monkeypatch,
+        history={"items": [history_track(2), history_track(22, art=same_album_as_front), history_track(3), history_track(4)]},
+    )
+    result = spotify_app._now_playing()
+    assert result == {**crate_entry(2), "playing": False, "crate": [crate_entry(3), crate_entry(4)]}
+
+
+def test_crate_entries_have_only_safe_public_fields(monkeypatch):
+    stub_spotify(monkeypatch, playing=history_track(1), history={"items": [history_track(2)]})
+    assert set(spotify_app._now_playing()["crate"][0]) == {"title", "artist", "url", "art"}
+
+
+@pytest.mark.parametrize(
+    "bad",
+    [
+        history_track(9, art=None),
+        history_track(9, art=[{"url": "https://example.com/image/abc"}]),
+        history_track(9, art=[{"url": "http://i.scdn.co/image/abc"}]),
+        history_track(9, art=[{"url": "https://i.scdn.co/image/abc?width=640"}]),
+        history_track(9, title=None),
+        history_track(9, artist=None),
+        history_track(9, artist=[]),
+        history_track(9, tid=None),
+        history_track(9, tid="not-a-track-id"),
+        {"track": None},
+        {"track": {"type": "episode", "name": "Podcast"}},
+        None,
+        "not-an-item",
+    ],
+)
+def test_incomplete_or_unsafe_history_entries_are_skipped(monkeypatch, bad):
+    stub_spotify(monkeypatch, playing=history_track(1), history={"items": [bad, history_track(2)]})
+    assert spotify_app._now_playing()["crate"] == [crate_entry(2)]
+
+
+@pytest.mark.parametrize("history", [None, {}, {"items": []}, {"items": None}, {"items": "nope"}, {"items": [None]}, []])
+def test_empty_or_malformed_history_leaves_crate_empty(monkeypatch, history):
+    stub_spotify(monkeypatch, playing=history_track(1), history=history)
+    assert spotify_app._now_playing()["crate"] == []
+    stub_spotify(monkeypatch, history=history)
+    assert spotify_app._now_playing()["crate"] == []
+
+
+def test_unavailable_response_body_includes_empty_crate(monkeypatch):
+    def unavailable(*_args, **_kwargs):
+        raise spotify_app.SpotifyUnavailable
+
+    monkeypatch.setattr(spotify_app, "_request", unavailable)
+    monkeypatch.setattr(spotify_app, "_token", lambda force_refresh=False: "temporary-token")
+    response = spotify_app.handler({}, None)
+    assert response["statusCode"] == 503
+    assert response_body(response)["crate"] == []
+
+
+@pytest.mark.parametrize(
+    "images",
+    [
+        None,
+        "not-an-image-list",
+        [None, {"url": 42}, {"url": "https://example.com/image/abc"}],
+        [{"url": "http://i.scdn.co/image/abc"}],
+        [{"url": "https://user@i.scdn.co/image/abc"}],
+        [{"url": "https://i.scdn.co:443/image/abc"}],
+        [{"url": "https://i.scdn.co.evil.example/image/abc"}],
+        [{"url": "https://i.scdn.co/other/abc"}],
+        [{"url": "https://i.scdn.co/image/abc-def"}],
+        [{"url": "https://i.scdn.co/image/abc?width=640"}],
+        [{"url": "https://i.scdn.co/image/abc#fragment"}],
+        [{"url": "https://[invalid/image/abc"}],
+    ],
+)
+def test_malformed_or_untrusted_album_art_is_omitted(images):
+    assert spotify_app._track(
+        {"type": "track", "name": "Track", "album": {"images": images}}, True
+    )["art"] is None
+
+
+def test_album_art_uses_first_valid_spotify_image():
+    expected = "https://i.scdn.co/image/valid123"
+    assert spotify_app._track(
+        {
+            "type": "track",
+            "name": "Track",
+            "album": {"images": [{"url": "https://example.com/image/nope"}, {"url": expected}, {"url": "https://i.scdn.co/image/later"}]},
+        },
+        True,
+    )["art"] == expected
 
 
 def test_successful_response_cache_avoids_repeat_upstream_calls(monkeypatch):
@@ -125,10 +304,12 @@ def test_successful_response_cache_avoids_repeat_upstream_calls(monkeypatch):
 
     monkeypatch.setattr(spotify_app, "_request", request)
     first = spotify_app.handler({}, None)
+    calls_after_first = len(calls)
     second = spotify_app.handler({}, None)
     assert response_body(first) == response_body(second)
     assert first["headers"]["cache-control"] == "public, max-age=30"
-    assert len(calls) == 1
+    assert calls_after_first == 2  # currently-playing + recently-played
+    assert len(calls) == calls_after_first
 
 
 def test_expired_playing_cache_does_not_survive_failed_refresh(monkeypatch):
@@ -156,7 +337,7 @@ def test_expired_playing_cache_does_not_survive_failed_refresh(monkeypatch):
     stopped = spotify_app.handler({}, None)
     assert stopped["statusCode"] == 503
     assert stopped["headers"]["cache-control"] == "no-store"
-    assert response_body(stopped) == {"playing": False, "title": None, "artist": None, "url": None}
+    assert response_body(stopped) == EMPTY_TRACK
 
 
 def test_missing_parameter_returns_safe_unavailable_response(monkeypatch):
@@ -164,14 +345,14 @@ def test_missing_parameter_returns_safe_unavailable_response(monkeypatch):
     response = spotify_app.handler({}, None)
     assert response["statusCode"] == 503
     assert response["headers"]["cache-control"] == "no-store"
-    assert response_body(response) == {"playing": False, "title": None, "artist": None, "url": None}
+    assert response_body(response) == EMPTY_TRACK
 
 
 def test_non_object_credentials_return_unavailable(monkeypatch):
     monkeypatch.setattr(spotify_app, "ssm", FakeSsm("[]"))
     response = spotify_app.handler({}, None)
     assert response["statusCode"] == 503
-    assert response_body(response) == {"playing": False, "title": None, "artist": None, "url": None}
+    assert response_body(response) == EMPTY_TRACK
 
 
 def test_invalid_token_expiry_returns_unavailable(monkeypatch):
@@ -183,7 +364,7 @@ def test_invalid_token_expiry_returns_unavailable(monkeypatch):
     )
     response = spotify_app.handler({}, None)
     assert response["statusCode"] == 503
-    assert response_body(response) == {"playing": False, "title": None, "artist": None, "url": None}
+    assert response_body(response) == EMPTY_TRACK
 
 
 def test_rotated_refresh_token_is_replaced_as_standard_secure_string(monkeypatch):
@@ -238,7 +419,7 @@ def test_rate_limit_cooldown_blocks_next_handler_without_upstream_call(monkeypat
     assert first["statusCode"] == second["statusCode"] == 503
     assert first["headers"]["retry-after"] == "30"
     assert second["headers"]["retry-after"] == "30"
-    assert response_body(first) == response_body(second) == {"playing": False, "title": None, "artist": None, "url": None}
+    assert response_body(first) == response_body(second) == EMPTY_TRACK
     assert len(calls) == 1
 
 
