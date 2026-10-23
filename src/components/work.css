@@ -63,38 +63,7 @@
   .scene__link::before { content: ""; position: absolute; inset: -10px -6px; }
 }
 
-/* ── I · ARRIVAL ──────────────────────────────────────────
-   The plate dominates. The copy is a caption hung below-left, not a column. */
-.scene--arrival {
-  padding: clamp(40px, 6vh, 90px) 0 clamp(120px, 18vh, 240px);
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  justify-items: end;
-}
-.scene__num--i { left: -.06em; top: -.1em; }
-
-.scene--arrival .scene__plate {
-  width: min(74vw, 1080px);
-  margin-right: clamp(20px, 4vw, 72px);
-  will-change: transform;
-}
-.scene--arrival .scene__plate img { height: min(64vh, 620px); }
-/* the printed caption sits at the far end of the strip, clear of the block
-   that hangs over the sheet's other corner */
-.scene--arrival .plate-sheet__cap { text-align: right; }
-
-.scene__caption-block {
-  justify-self: start;
-  width: min(42ch, 88vw);
-  margin-left: clamp(20px, 4vw, 72px);
-  margin-top: -132px;             /* hangs over the sheet's bottom-left corner */
-  position: relative;
-  z-index: 2;
-  background: var(--page-ground);
-  padding: 34px 42px 36px 0;
-}
-
-/* ── II · APERTURE ────────────────────────────────────────
+/* ── II · APERTURE ─────────────────────────────────────────
    A slot widens across the title. Mechanical — no springs, no overshoot. */
 .scene--aperture { height: 260vh; }
 .scene--aperture .scene__pin {
@@ -103,7 +72,7 @@
   grid-template-rows: 1fr auto;
   align-items: center;
 }
-.scene__num--ii { right: -.20em; bottom: -.18em; opacity: .04; }
+.scene__num--i { right: -.20em; bottom: -.18em; opacity: .04; }
 
 .aperture { position: relative; display: grid; place-items: center; height: 100%; }
 
@@ -184,7 +153,7 @@
   border: 1px solid color-mix(in srgb, var(--ink) 18%, transparent);
 }
 
-/* ── III · REST ────────────────────────────────────────────
+/* ── I · REST ─────────────────────────────────────────────
    Almost nothing moves. The space is the design. */
 .scene--rest {
   position: relative;
@@ -194,7 +163,7 @@
   align-content: center;
   overflow: hidden;
 }
-.scene__num--iii {
+.scene__num--ii {
   left: -.08em;
   top: 50%;
   transform: translateY(-46%);
@@ -251,17 +220,13 @@
    Mobile simplifies the long pin and keeps the
    plates, the numerals and the asymmetry. */
 @media (max-width: 900px) {
-  .scene--arrival { padding-bottom: clamp(80px, 12vh, 140px); }
-  .scene--arrival .scene__plate { width: calc(100% - 40px); margin-right: 20px; }
-  .scene--arrival .scene__plate img { height: 46vh; }
-  .scene__caption-block { width: auto; margin-right: 20px; margin-top: -40px; padding-right: 20px; }
-
   .scene--aperture { height: auto; }
   .scene--aperture .scene__pin { position: relative; height: auto; padding: 70px 0; --slot: 6; }
   .aperture { height: 62vh; }
   .aperture__title { font-size: clamp(36px, 10vw, 76px); }
   .aperture__meta { grid-template-columns: 1fr; gap: 18px; padding-top: 34px; }
-  .aperture__rows { top: auto; bottom: 12%; left: 6%; width: 88%; transform: none !important; }
+  .scene--aperture .scene__pin { --slot: 6 !important; }
+  .aperture__rows { top: auto; bottom: 12%; left: 6%; width: 240vw; max-width: none; transform: none !important; }
   .ledger__row { grid-template-columns: 40px minmax(0, 1fr); row-gap: 18px; padding: 24px 0; }
   .ledger__img { grid-column: 1 / -1; }
 
@@ -270,7 +235,7 @@
   .rest__copy { padding-left: 0; grid-template-columns: 1fr; gap: 0; }
   .rest__detail .scene__points { margin-top: 16px; }
   .scene--rest { min-height: 0; }
-  .scene__num--iii { font-size: 300px; opacity: .04; }
+  .scene__num--ii { font-size: 300px; opacity: .04; }
 
   /* A row you swipe, bled to the screen edges, each figure snapping to the
      margin. Contained: the row scrolls, the page never widens. */
@@ -294,7 +259,7 @@
    Pinned scenes become static compositions in document order. Nothing is lost. */
 @media (prefers-reduced-motion: reduce) {
   .scene--rest { min-height: 0; }
-  .scene__num--iii, .rest__copy, .rest__screen { transform: none !important; }
+  .scene__num--ii, .rest__copy, .rest__screen { transform: none !important; }
   .scene--aperture { height: auto; }
   .scene--aperture .scene__pin { position: relative; height: auto; padding: 80px 0; --slot: 8; }
   .aperture { height: 58vh; }

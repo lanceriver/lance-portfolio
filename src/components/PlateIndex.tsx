@@ -140,7 +140,7 @@ export function PlateIndex({ open, onClose }: { open: IndexMode | null; onClose:
               </>
             ) : (
               <p className="plateindex__foot caption">
-                Three plates. Pick one, or keep scrolling.
+                Two plates. Pick one, or keep scrolling.
               </p>
             )}
           </div>

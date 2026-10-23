@@ -1129,6 +1129,43 @@ app with 1,000,050 faker contacts in a base called Contacts, signed in with a
 local test session. Nothing was captured from the production app or from
 Lance's own bases. The `lake-terrace` plate files stay in `public/plates/`.
 
+## D58 — Portfolio refinement handoff
+
+The nav now tucks on scroll at every width, stays visible under keyboard focus,
+and samples the live page ground through the Crossing and the Hero dissolve.
+Lance has since approved public sharing of Pool Safety's engineering details in
+the About Experience section. Its duplicate Work plate is later removed in D60.
+The Back Cover uses a full-bleed coastal plate over a sampled-sky entrance
+bridge; only the real top edge feathers during the entrance, then the painting
+settles fully opaque. Field Notes' expanded prints use a native modal dialog whose sole control
+keeps keyboard focus; dismissal releases scroll lock and restores trigger focus
+immediately. Its DOM order follows the visual desk. Skip links, focus colors,
+external-tab announcements, Writing contrast, copy, and the hero/back-cover
+lead lengths are tightened while keeping the plate-book world. The phone
+aperture scales the table beyond the slot so the row-number gutter stays legible
+as the rightmost columns crop away. Contact anchors target the settled point in
+the pin, so navigation opens on the visible details rather than its bridge.
+About pairs the Singapore-to-Sydney route and brief biography with interests
+and a compact ruled experience register; no portrait is shown without an image.
+
+## D59 — Experience details are approved for public sharing
+
+Lance approved sharing internal engineering details in a compact Experience
+section beneath About. Pool Safety Solutions now names the productionised
+franchise prototype, multi-tenant PostgreSQL with row-level security, AWS
+services, GoHighLevel sync, Stripe and Xero integrations, and the approximate
+test count and staged CI/CD. This approval supersedes D58's restriction on
+internal architecture and detailed project notes. The section also records
+UNSW CSESoc and Singapore Armed Forces experience from the résumé. The Work
+plate remains broad and role-led at this point; D60 later removes the duplicate.
+
+## D60 — Pool Safety moves to Experience; Work keeps two plates
+
+Pool Safety remains in About's Experience register, so its duplicate Work plate
+has been removed. The Selected Work index now lists two plates: Airtable Clone
+as Plate I and Worn as Plate II. Their existing table aperture, figures, and
+motion remain intact.
+
 ## D61 — Search engines and link previews get real pages
 
 The site was shipping an empty `#root` shell. It had no `robots.txt`, sitemap,
@@ -1151,3 +1188,31 @@ post was 4.2 seconds; removing that wasted request fixes the cause.
 The home share image is `public/og/home.jpg`, a 1200 × 630 painting of
 Zhangjiajie's sandstone pillars. The favicon and touch icon are served from the
 matching files in `public/`.
+
+## D62 — About becomes a pinned sidebar; Experience is organised like brittanychiang.com
+
+Lance turned down every earlier Experience direction (Codex's options, then
+mocks A–E and several layout rounds, recorded in `docs/experience-mocks/`)
+and asked for brittanychiang.com's organisation, set in this site's language.
+About is now two columns. The left column is one sidebar, pinned
+while the right column scrolls (only at ≥901px wide and ≥680px tall, where it
+fits): "About." and the route, the interests under an "Interests" label, then
+the degree and the résumé link. The right column holds the bio and the roles.
+
+Each role is its dates, then role · employer in Georgia, an optional note and
+the summary. There is no visible "Experience" heading — a hidden h3 keeps the
+list labelled — because Impeccable bans eyebrow labels and the dated role lines
+already say what they are. Hovering a role turns its title italic (D46's
+signal, sized by a hidden italic copy as in D47) and dims the others.
+
+The section's type is three steps: 13px metadata, 17px reading (the site's
+.body), 21px titles, plus 11.5px labels and the display title. Removed: the
+tech tags, the interest labels (ON FOOT, AT THE KEYS, OUT AND ABOUT, which
+restated each line) and the full-width interests strip. On phones the section
+is one column in reading order: title, bio, interests, roles, education.
+
+## D63 — Worn leads Selected Work
+
+Worn is now Plate I and the Airtable Clone Plate II. Worn is Lance's own
+product and the bio ends on "Worn's design language", so it comes first. Each
+scene keeps its own logic: Worn's still scene opens Work, then the aperture.

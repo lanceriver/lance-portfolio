@@ -10,18 +10,15 @@ import './backcover.css'
 /**
  * The Back Cover — the reverse of the Hero.
  *
- *   FLAT PAGE → SKY COLOUR → ACTUAL SKY → FULL COASTAL PLATE
+ *   FLAT PAGE → SKY COLOUR → FULL COASTAL PLATE
  *
- * The join is a feathered top edge over flat #2F8CE2, the plate's own sampled
- * sky. Where the plate's top edge is sky, feathered sky over identical sky is
- * invisible; where it is lemons or bougainvillea, the feather reads as sunlight
- * on the branch. The plate is never faded, never filtered, never distorted, and
- * the feather resolves to nothing once its top edge leaves the viewport.
+ * The full-bleed plate enters over the sampled-sky bridge. Its actual top edge
+ * feathers during the entrance, then the painting settles fully opaque.
+ * The plate is never filtered or distorted.
  * DECISIONS D18.
  *
- * Composition deliberately differs from the Hero: type sits left-of-centre over
- * the open sea, in cream, with no scrim at all. Scrimmed-vs-unscrimmed is what
- * makes the two paintings rhyme instead of repeat. DECISIONS D10.
+ * Composition deliberately differs from the Hero: type sits left-of-centre in
+ * the painting's calmer upper area, in cream, with no scrim. DECISIONS D10.
  *
  * No fake sailboat. No CSS-generated object over any illustration.
  */
@@ -49,10 +46,10 @@ export function BackCover() {
 
     const feather = `${lerp(22, 0, range(t, 0, 0.55)).toFixed(2)}vh`
     const scale = lerp(1.06, 1, range(t, 0, 0.72)).toFixed(4)
-    const copyIn = range(t, 0.34, 0.62).toFixed(3)
+    const copyIn = range(t, 0.12, 0.4).toFixed(3)
 
     return () => {
-      // the feather closes as the plate's top edge climbs out of view
+      // feather only the plate's real top edge during its entrance
       scene.style.setProperty('--feather', feather)
       // a gentle uniform settle — inside the stated scale range, never a zoom
       scene.style.setProperty('--plate-scale', scale)
@@ -61,11 +58,12 @@ export function BackCover() {
   }, !reduced)
 
   return (
-    <section className="cover" id="contact" data-tone="light" data-rule="off">
-      {/* the page becomes the plate's own sky — one colour, no gradient stack */}
+    <section className="cover" data-tone="light" data-rule="off">
+      {/* the sampled sky in the bridge gives way to the full-bleed painting */}
       <div className="cover__bridge" aria-hidden="true" />
 
       <div className="cover__wrap" ref={wrapRef}>
+        <span className="cover__contact-target" id="contact" aria-hidden="true" />
         <div className="cover__scene" ref={sceneRef}>
           <div
             className="cover__plate"
@@ -75,10 +73,10 @@ export function BackCover() {
           <div className="cover__grain" aria-hidden="true" />
 
           <div className="cover__copy">
-            <p className="eyebrow eyebrow--rule">Back cover</p>
-            <h2 className="display-r cover__title">Thanks for<br />stopping by.</h2>
+            <p className="eyebrow eyebrow--rule">Contact</p>
+            <h2 className="display-r cover__title">Thanks for stopping by.</h2>
             <p className="cover__lede">
-              For work, projects, or a good conversation about either.
+              Work, projects, or a good conversation.
             </p>
             <a className="cover__mail" href={`mailto:${email}`}>{email}</a>
             <ul className="cover__links">

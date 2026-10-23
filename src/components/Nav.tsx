@@ -6,7 +6,7 @@ import './nav.css'
 type Tone = 'light' | 'dark'
 export type IndexMode = 'plates' | 'contents'
 
-/** Scrolled this far past the top before the nav may tuck away on a phone. */
+/** Scrolled this far past the top before the nav may tuck away. */
 const TUCK_AFTER = 120
 /** Ignore scroll jitter smaller than this when deciding direction. */
 const TUCK_SLOP = 6
@@ -48,13 +48,14 @@ export function Nav({ onOpenIndex }: { onOpenIndex: (mode: IndexMode) => void })
     const y = h ? h * 0.58 : 8
     const probe = (document.elementsFromPoint(innerWidth / 2, y) as HTMLElement[])
       .find((el) => el.dataset && el.dataset.tone)
-    const next = (probe?.dataset.tone as Tone) ?? 'light'
+    const next = probe?.dataset.ground === 'page'
+      ? toneForGround(getComputedStyle(document.documentElement).getPropertyValue('--page-ground'))
+      : (probe?.dataset.tone as Tone) ?? 'light'
     const nextRule = probe?.dataset.rule !== 'off'
     setTone((cur) => (cur === next ? cur : next))
     setRule((cur) => (cur === nextRule ? cur : nextRule))
 
-    // Direction, not position: down tucks, up returns. Only a phone acts on
-    // it (nav.css); the class is harmless everywhere else.
+    // Direction, not position: down tucks, up returns.
     const delta = scrollY - lastY.current
     if (Math.abs(delta) < TUCK_SLOP) return
     lastY.current = scrollY
@@ -88,4 +89,15 @@ export function Nav({ onOpenIndex }: { onOpenIndex: (mode: IndexMode) => void })
       </div>
     </nav>
   )
+}
+
+function toneForGround(value: string): Tone {
+  const channels = value.trim().match(/^#([\da-f]{2})([\da-f]{2})([\da-f]{2})$/i)
+  if (!channels) return 'dark'
+  const linear = channels.slice(1).map((part) => {
+    const channel = Number.parseInt(part, 16) / 255
+    return channel <= 0.04045 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4
+  })
+  const luminance = 0.2126 * linear[0] + 0.7152 * linear[1] + 0.0722 * linear[2]
+  return luminance > 0.2 ? 'dark' : 'light'
 }

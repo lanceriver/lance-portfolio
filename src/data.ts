@@ -10,12 +10,6 @@ export type Plate = {
   tagline: string
   blurb: string
   discipline: string
-  /** The painted plate. Worn has none: its screens are the picture. */
-  src?: string
-  srcSmall?: string
-  alt?: string
-  plateLabel?: string
-  caption?: string
   points?: string[]
   href?: string
   repo?: string
@@ -35,63 +29,6 @@ export type LedgerEntry = { src: string; src2x: string; label: string; text: str
 export const projects: Plate[] = [
   {
     numeral: 'I',
-    name: 'Pool Safety Solutions',
-    tagline: 'a franchise network, in production',
-    discipline: 'Junior Systems Engineer · 2026 to now',
-    blurb: 'I took a franchise-management prototype and made it production software for a network operating across NSW, QLD and VIC.',
-    points: [
-      'Multi-tenant PostgreSQL with row-level security, so each franchise only ever sees its own data.',
-      'Docker on AWS (Lightsail, ECR, S3, CloudFront) with separate staging and production, plus a Lambda and SQS pipeline that syncs GoHighLevel into Postgres.',
-      'Stripe, Xero and GoHighLevel integrations, and about 470 automated tests gating every release through staging.',
-    ],
-    status: 'Internal system. No public link.',
-    src: '/plates/coastal-road.webp',
-    srcSmall: '/plates/coastal-road-1200.webp',
-    alt: 'A painted coast road above a harbour, lemons and bougainvillea framing the view.',
-    plateLabel: 'Plate I',
-    caption: 'The coast road, late morning',
-  },
-  {
-    numeral: 'II',
-    name: 'Airtable Clone',
-    tagline: 'a million rows, still quick',
-    discipline: 'Next.js · TypeScript · tRPC · Prisma · PostgreSQL',
-    blurb: 'Editable tables, views, filters and sorting. Pagination, memoisation and virtualisation keep a table responsive past a million rows.',
-    href: 'https://airtable-clone-lyra.vercel.app/',
-    repo: 'https://github.com/lanceriver/airtable-clone-lyra',
-    table: {
-      src: '/airtable/table-1572.webp',
-      srcSmall: '/airtable/table-1000.webp',
-      width: 1572,
-      height: 4352,
-      alt: 'The Airtable Clone’s People table at its last rows, 999,982 to 1,000,050: names, emails, companies and scores.',
-    },
-    ledger: [
-      {
-        src: '/airtable/views-840.webp',
-        src2x: '/airtable/views-1680.webp',
-        label: 'Views',
-        text: 'Named views, each keeping its own filter and sort.',
-        alt: 'The People table with four named views in the sidebar (All contacts, Follow up, By company and High scores), with High scores open and filtered by score.',
-      },
-      {
-        src: '/airtable/filter-840.webp',
-        src2x: '/airtable/filter-1680.webp',
-        label: 'Filter',
-        text: 'Score above 9,900: 9,879 of 1,000,050 rows, filtered in Postgres.',
-        alt: 'The filter editor on the High scores view: where Score is greater than 9900.',
-      },
-      {
-        src: '/airtable/sort-840.webp',
-        src2x: '/airtable/sort-1680.webp',
-        label: 'Sort',
-        text: 'Highest score first, from an index built the first time the sort is asked for.',
-        alt: 'The sort editor: Score, from 9 to 1, with every visible row scoring 9999.',
-      },
-    ],
-  },
-  {
-    numeral: 'III',
     name: 'Worn',
     tagline: 'your fit diary',
     discipline: 'Product + engineering',
@@ -138,6 +75,45 @@ export const projects: Plate[] = [
         src2x: '/worn/share-960.webp',
         alt: 'Worn’s share card for a fit called “first warm morning”: the photo, a casual tag, a note about coffee and the ferry, and what each piece cost — charcoal trousers $120, white tee $35, white court sneakers $160.',
         caption: 'Shared',
+      },
+    ],
+  },
+  {
+    numeral: 'II',
+    name: 'Airtable Clone',
+    tagline: 'a million rows, still quick',
+    discipline: 'Next.js · TypeScript · tRPC · Prisma · PostgreSQL',
+    blurb: 'Editable tables, views, filters and sorting. Pagination, memoisation and virtualisation keep a table responsive past a million rows.',
+    href: 'https://airtable-clone-lyra.vercel.app/',
+    repo: 'https://github.com/lanceriver/airtable-clone-lyra',
+    table: {
+      src: '/airtable/table-1572.webp',
+      srcSmall: '/airtable/table-1000.webp',
+      width: 1572,
+      height: 4352,
+      alt: 'The Airtable Clone’s People table at its last rows, 999,982 to 1,000,050: names, emails, companies and scores.',
+    },
+    ledger: [
+      {
+        src: '/airtable/views-840.webp',
+        src2x: '/airtable/views-1680.webp',
+        label: 'Views',
+        text: 'Named views, each keeping its own filter and sort.',
+        alt: 'The People table with four named views in the sidebar (All contacts, Follow up, By company and High scores), with High scores open and filtered by score.',
+      },
+      {
+        src: '/airtable/filter-840.webp',
+        src2x: '/airtable/filter-1680.webp',
+        label: 'Filter',
+        text: 'Score above 9,900: 9,879 of 1,000,050 rows, filtered in Postgres.',
+        alt: 'The filter editor on the High scores view: where Score is greater than 9900.',
+      },
+      {
+        src: '/airtable/sort-840.webp',
+        src2x: '/airtable/sort-1680.webp',
+        label: 'Sort',
+        text: 'Highest score first, from an index built the first time the sort is asked for.',
+        alt: 'The sort editor: Score, from 9 to 1, with every visible row scoring 9999.',
       },
     ],
   },

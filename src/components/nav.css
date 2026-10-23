@@ -5,7 +5,7 @@
   height: var(--nav-h);
   display: flex;
   align-items: center;
-  transition: color .3s var(--ease-settle);
+  transition: color .3s var(--ease-settle), transform .42s var(--ease-settle);
   pointer-events: none;
 }
 .nav__inner {
@@ -77,14 +77,11 @@
 /* The phone's single trigger. Hidden until there is no room for the row. */
 .nav__menu { display: none; }
 
-@media (max-width: 720px) {
-  .nav { transition: color .3s var(--ease-settle), transform .42s var(--ease-settle); }
-  /* Tucked above the viewport while the reader scrolls down. Never while a
-     keyboard user is in it — they must be able to see where focus is. Not
-     `:focus-within`: closing the menu hands focus back to its trigger, and a
-     tap-focused button would then hold the nav down for good. */
-  .nav--tucked:not(:has(:focus-visible)) { transform: translateY(-100%); }
+/* The same direction-based hide/show behaviour is used at every width.
+   Keyboard focus always wins over the tucked state. */
+.nav--tucked:not(:has(:focus-visible)) { transform: translateY(-100%); }
 
+@media (max-width: 720px) {
   .nav__links { display: none; }
   /* a 44px target around a 24px mark, without moving the mark off the margin */
   .nav__menu {
@@ -127,5 +124,5 @@
 }
 
 @media (max-width: 720px) and (prefers-reduced-motion: reduce) {
-  .nav { transition: color .3s var(--ease-settle); }
+  .nav { transition: color .3s var(--ease-settle), transform .001ms; }
 }

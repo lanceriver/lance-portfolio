@@ -57,6 +57,7 @@ export function Post({ slug }: { slug: string }) {
   if (!a) return <NotFound />
 
   return (
+    <main id="main-content" tabIndex={-1}>
     <article className={`post${reduced ? ' post--still' : ''}`}>
       <Masthead />
 
@@ -97,6 +98,7 @@ export function Post({ slug }: { slug: string }) {
         </Link>
       </div>
     </article>
+    </main>
   )
 }
 
@@ -118,6 +120,7 @@ function NotFound() {
   }, [])
 
   return (
+    <main id="main-content" tabIndex={-1}>
     <article className="post post--missing post--still">
       <Masthead />
 
@@ -134,5 +137,6 @@ function NotFound() {
         </Link>
       </div>
     </article>
+    </main>
   )
 }

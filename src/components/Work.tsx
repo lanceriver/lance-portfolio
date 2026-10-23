@@ -30,19 +30,18 @@ function useScreenCapabilities() {
 }
 
 /**
- * Selected Work: three scenes with three compositional logics.
+ * Selected Work: two scenes with distinct compositional logics.
  */
 export function Work() {
   return (
     <section className="work" id="work" data-tone="dark">
       <div className="shell work__head">
         <p className="eyebrow eyebrow--rule">Selected Work</p>
-        <h2 className="display-r work__title">Three projects.<br /><em>Room to breathe.</em></h2>
+        <h2 className="display-r work__title">Projects.</h2>
       </div>
 
-      <SceneArrival />
-      <SceneAperture />
       <SceneRest />
+      <SceneAperture />
     </section>
   )
 }
@@ -63,47 +62,13 @@ function projectMeta(p: (typeof projects)[number]) {
   if (!p.href) return null
   return (
     <div className="scene__links">
-      <a className="scene__link" href={p.href} target="_blank" rel="noopener noreferrer">Live demo <span aria-hidden="true">↗</span></a>
-      {p.repo && <a className="scene__link" href={p.repo} target="_blank" rel="noopener noreferrer">Code <span aria-hidden="true">↗</span></a>}
+      <a className="scene__link" href={p.href} target="_blank" rel="noopener noreferrer">Live demo <span aria-hidden="true">↗</span><span className="vh"> (opens in a new tab)</span></a>
+      {p.repo && <a className="scene__link" href={p.repo} target="_blank" rel="noopener noreferrer">Code <span aria-hidden="true">↗</span><span className="vh"> (opens in a new tab)</span></a>}
     </div>
   )
 }
 
-/* ── I · ARRIVAL ─────────────────────────────────────────
-   The most physical moment on the site. A spring, not a scroll-link — it should
-   feel like a real object landing, with mass and a settle. */
-function SceneArrival() {
-  const p = projects[0]
-  const reduced = useReducedMotion()
-
-  return (
-    <article className="scene scene--arrival" id="plate-i">
-      <span className="numeral scene__num scene__num--i" aria-hidden="true">{p.numeral}</span>
-
-      <motion.figure
-        className="scene__plate plate-sheet"
-        initial={reduced ? false : { x: -54, y: 92, rotate: -2.8, scale: 0.94 }}
-        whileInView={{ x: 0, y: 0, rotate: 0, scale: 1 }}
-        viewport={{ once: true, amount: 0.3 }}
-        transition={{ type: 'spring', stiffness: 140, damping: 18, mass: 1.1 }}
-      >
-        <img src={p.src} alt={p.alt} width={1672} height={941} />
-        <PlateCaption label={p.plateLabel} text={p.caption} />
-      </motion.figure>
-
-      <div className="scene__caption-block">
-        <p className="scene__disc eyebrow">{p.discipline}</p>
-        <h3 className="display-r scene__name">{p.name}</h3>
-        <p className="scene__tag">{p.tagline}</p>
-        <p className="body scene__blurb">{p.blurb}</p>
-        {p.points && <ul className="body scene__points">{p.points.map((point) => <li key={point}>{point}</li>)}</ul>}
-        {projectMeta(p)}
-      </div>
-    </article>
-  )
-}
-
-/* ── II · APERTURE ───────────────────────────────────────
+/* ── II · APERTURE ─────────────────────────────────────────
    A vertical slot widens across an enormous title. The app's table slides up
    through it, and the clipped copy of the title stamps the table in rust.
    Type-led, mechanical, exact. No springs in this scene. DECISIONS D57. */
@@ -139,7 +104,7 @@ function SceneAperture() {
     <>
       <article className="scene scene--aperture" id="plate-ii" ref={ref}>
         <div className="scene__pin" ref={sceneRef}>
-          <span className="numeral scene__num scene__num--ii" aria-hidden="true">{p.numeral}</span>
+          <span className="numeral scene__num scene__num--i" aria-hidden="true">{p.numeral}</span>
 
           <div className="aperture" ref={apertureRef}>
             <h3 className="aperture__title display-r" aria-hidden="true">{p.name}</h3>
@@ -152,7 +117,7 @@ function SceneAperture() {
                     className="aperture__rows"
                     src={p.table.src}
                     srcSet={`${p.table.srcSmall} 1000w, ${p.table.src} 1572w`}
-                    sizes="(max-width: 900px) 88vw, 80vw"
+                    sizes="(max-width: 900px) 240vw, 80vw"
                     alt={p.table.alt}
                     width={p.table.width}
                     height={p.table.height}
@@ -206,19 +171,19 @@ function SceneAperture() {
   )
 }
 
-/* ── III · REST ───────────────────────────────────────────
+/* ── I · REST ────────────────────────────────────────────
    The quiet beat before Field Notes — but quiet is not the same as dead.
 
-   This scene first had only a one-shot entrance spring while the other two
-   ran on continuous scroll-linked motion, so it read as a page that had stopped
-   rather than one holding its breath. It drifts: the numeral and the copy
-   travel, very slowly and at different rates, for as long as you are inside
+   An earlier version gave this scene only a one-shot entrance spring while
+   the Airtable scene ran on continuous scroll-linked motion, so it read as a
+   page that had stopped rather than one holding its breath. It drifts: the
+   numeral and the copy travel, very slowly and at different rates, for as long as you are inside
    it. Nothing overshoots, nothing is clever — it simply breathes. DECISIONS D35.
 
    It has no painted plate. Worn is the one project with a product to show, so
    its screens are the picture. DECISIONS D54. */
 function SceneRest() {
-  const p = projects[2]
+  const p = projects[0]
   const reduced = useReducedMotion()
   const { mobile, finePointer } = useScreenCapabilities()
   const ref = useRef<HTMLElement>(null)
@@ -246,8 +211,8 @@ function SceneRest() {
   }, !reduced)
 
   return (
-    <article className="scene scene--rest" id="plate-iii" ref={ref}>
-      <span className="numeral scene__num scene__num--iii" aria-hidden="true" ref={numRef}>{p.numeral}</span>
+    <article className="scene scene--rest" id="plate-i" ref={ref}>
+      <span className="numeral scene__num scene__num--ii" aria-hidden="true" ref={numRef}>{p.numeral}</span>
 
       <div className="rest__inner">
         <div className="rest__copy" ref={copyRef}>

@@ -68,6 +68,13 @@ export function App() {
 
   useLayoutEffect(() => {
     if (history.scrollRestoration) history.scrollRestoration = 'manual'
+    if (location.hash === '#contact' && document.getElementById('contact')) {
+      restore(() => {
+        const target = document.getElementById('contact')
+        return target ? target.getBoundingClientRect().top + scrollY : 0
+      })
+      return
+    }
     // a reload lands on an entry that may already carry an offset
     if (entryScroll() > 0) restore(entryScroll)
   }, [restore])
@@ -91,13 +98,14 @@ export function App() {
     restore(() => 0)
   }, [route, restore])
 
-  if (route.name === 'post') return <Post slug={route.slug} />
+  if (route.name === 'post') return <><a className="skip-link" href="#main-content">Skip to main content</a><Post slug={route.slug} /></>
 
   return (
     <>
+      <a className="skip-link" href="#main-content">Skip to main content</a>
       <Nav onOpenIndex={setIndex} />
       <PlateIndex open={index} onClose={closeIndex} />
-      <main>
+      <main id="main-content" tabIndex={-1}>
         {show('hero') && <Hero />}
         {show('crossing') && <Crossing />}
         {show('work') && <Work />}
