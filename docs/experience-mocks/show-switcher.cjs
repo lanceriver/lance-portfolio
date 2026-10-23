@@ -1,8 +1,18 @@
+// Usage: node show-switcher.cjs "D · Inside About=mock-d-inside-about.js" "E · By place=mock-e-by-place.js"
+// Each argument is "label=path". A "Current" tab (no mock, the live register) is always added.
 const { chromium } = require('/Users/lance/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
 const fs = require('fs');
-const [a, b, c] = process.argv.slice(2).map((p) => fs.readFileSync(p, 'utf8'));
-const mocks = { a, b, c };
-const labels = { a: 'A · Lead entry', b: 'B · Unfolding index', c: 'C · Prose + notes' };
+const mocks = {};
+const labels = {};
+process.argv.slice(2).forEach((arg, i) => {
+  const [label, file] = arg.split('=');
+  const k = `m${i}`;
+  labels[k] = label;
+  mocks[k] = fs.readFileSync(file, 'utf8');
+});
+labels.cur = 'Current';
+mocks.cur = "'current register'";
+const first = Object.keys(labels)[0];
 const SWITCHER = (cur, labels) => {
   document.getElementById('xswitch')?.remove();
   const bar = document.createElement('div');
@@ -27,11 +37,14 @@ const SWITCHER = (cur, labels) => {
   page.on('load', async () => {
     try {
       await page.waitForTimeout(1500);
-      const k = (await page.evaluate(() => sessionStorage.getItem('xmock'))) || 'a';
+      const stored = await page.evaluate(() => sessionStorage.getItem('xmock'));
+      const k = stored in mocks ? stored : first;
       console.log(k, await page.evaluate(mocks[k]));
-      await page.evaluate(SWITCHER, k, labels).catch(() => {});
       await page.evaluate(`(${SWITCHER})(${JSON.stringify(k)}, ${JSON.stringify(labels)})`);
-      await page.evaluate(() => { document.querySelector('.crossing__experience').scrollIntoView({ block: 'start', behavior: 'instant' }); scrollBy(0, -80); });
+      await page.evaluate(() => {
+        document.documentElement.style.scrollBehavior = 'auto';
+        document.querySelector('#about').scrollIntoView({ block: 'start' });
+      });
     } catch (e) { console.log('apply failed', e.message); }
   });
   await page.goto('http://127.0.0.1:5197/#about', { waitUntil: 'networkidle' });
