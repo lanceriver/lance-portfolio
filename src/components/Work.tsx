@@ -40,8 +40,8 @@ export function Work() {
         <h2 className="display-r work__title">Projects.</h2>
       </div>
 
-      <SceneAperture />
       <SceneRest />
+      <SceneAperture />
     </section>
   )
 }
@@ -68,12 +68,12 @@ function projectMeta(p: (typeof projects)[number]) {
   )
 }
 
-/* ── I · APERTURE ─────────────────────────────────────────
+/* ── II · APERTURE ─────────────────────────────────────────
    A vertical slot widens across an enormous title. The app's table slides up
    through it, and the clipped copy of the title stamps the table in rust.
    Type-led, mechanical, exact. No springs in this scene. DECISIONS D57. */
 function SceneAperture() {
-  const p = projects[0]
+  const p = projects[1]
   const reduced = useReducedMotion()
   const ref = useRef<HTMLElement>(null)
   const sceneRef = useRef<HTMLDivElement>(null)
@@ -102,7 +102,7 @@ function SceneAperture() {
 
   return (
     <>
-      <article className="scene scene--aperture" id="plate-i" ref={ref}>
+      <article className="scene scene--aperture" id="plate-ii" ref={ref}>
         <div className="scene__pin" ref={sceneRef}>
           <span className="numeral scene__num scene__num--i" aria-hidden="true">{p.numeral}</span>
 
@@ -171,7 +171,7 @@ function SceneAperture() {
   )
 }
 
-/* ── II · REST ────────────────────────────────────────────
+/* ── I · REST ────────────────────────────────────────────
    The quiet beat before Field Notes — but quiet is not the same as dead.
 
    An earlier version gave this scene only a one-shot entrance spring while
@@ -183,7 +183,7 @@ function SceneAperture() {
    It has no painted plate. Worn is the one project with a product to show, so
    its screens are the picture. DECISIONS D54. */
 function SceneRest() {
-  const p = projects[1]
+  const p = projects[0]
   const reduced = useReducedMotion()
   const { mobile, finePointer } = useScreenCapabilities()
   const ref = useRef<HTMLElement>(null)
@@ -211,7 +211,7 @@ function SceneRest() {
   }, !reduced)
 
   return (
-    <article className="scene scene--rest" id="plate-ii" ref={ref}>
+    <article className="scene scene--rest" id="plate-i" ref={ref}>
       <span className="numeral scene__num scene__num--ii" aria-hidden="true" ref={numRef}>{p.numeral}</span>
 
       <div className="rest__inner">

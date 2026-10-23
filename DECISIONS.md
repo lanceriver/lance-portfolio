@@ -1210,3 +1210,9 @@ The section's type is three steps: 13px metadata, 17px reading (the site's
 tech tags, the interest labels (ON FOOT, AT THE KEYS, OUT AND ABOUT, which
 restated each line) and the full-width interests strip. On phones the section
 is one column in reading order: title, bio, interests, roles, education.
+
+## D63 — Worn leads Selected Work
+
+Worn is now Plate I and the Airtable Clone Plate II. Worn is Lance's own
+product and the bio ends on "Worn's design language", so it comes first. Each
+scene keeps its own logic: Worn's still scene opens Work, then the aperture.

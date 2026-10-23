@@ -105,7 +105,7 @@ console.log('\n— Work II aperture (Work.tsx) —')
   if (sec.h <= VH) { fail++; console.log(' FAIL aperture section must be taller than the viewport to pin') } else pass++
 }
 
-console.log('\nWork III drift (Work.tsx)')
+console.log('\nWork I drift (Work.tsx)')
 {
   const sec = { top: 0, h: 1.18 * VH }
   const t = (y) => clamp((VH - (sec.top - y)) / (VH + sec.h))
