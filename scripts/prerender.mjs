@@ -46,7 +46,7 @@ const prerenderStyle = `<style>
 .prerender h3 { font-weight: 400; font-size: 21px; margin: 20px 0 4px; }
 .prerender p, .prerender li { margin: 0 0 12px; }
 .prerender ul { list-style: none; padding: 0; margin: 0; }
-.prerender a { color: inherit; text-underline-offset: 3px; }
+.prerender a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
 .prerender time { font-family: system-ui, sans-serif; font-size: 13px; color: #5c6b73; }
 .prerender blockquote { margin: 24px 0; padding-left: 18px; border-left: 1px solid rgba(27, 42, 51, .3); font-style: italic; }
 </style>`
