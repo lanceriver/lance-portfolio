@@ -1165,3 +1165,25 @@ Pool Safety remains in About's Experience register, so its duplicate Work plate
 has been removed. The Selected Work index now lists two plates: Airtable Clone
 as Plate I and Worn as Plate II. Their existing table aperture, figures, and
 motion remain intact.
+
+## D62 — About becomes a pinned sidebar; Experience is organised like brittanychiang.com
+
+Lance turned down every earlier Experience direction (Codex's options, then
+mocks A–E and several layout rounds; all kept in `docs/experience-mocks/` on
+main) and asked for brittanychiang.com's organisation, set in this site's
+language. About is now two columns. The left column is one sidebar, pinned
+while the right column scrolls (only at ≥901px wide and ≥680px tall, where it
+fits): "About." and the route, the interests under an "Interests" label, then
+the degree and the résumé link. The right column holds the bio and the roles.
+
+Each role is its dates, then role · employer in Georgia, an optional note and
+the summary. There is no visible "Experience" heading — a hidden h3 keeps the
+list labelled — because Impeccable bans eyebrow labels and the dated role lines
+already say what they are. Hovering a role turns its title italic (D46's
+signal, sized by a hidden italic copy as in D47) and dims the others.
+
+The section's type is three steps: 13px metadata, 17px reading (the site's
+.body), 21px titles, plus 11.5px labels and the display title. Removed: the
+tech tags, the interest labels (ON FOOT, AT THE KEYS, OUT AND ABOUT, which
+restated each line) and the full-width interests strip. On phones the section
+is one column in reading order: title, bio, interests, roles, education.

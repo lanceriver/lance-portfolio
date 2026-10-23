@@ -8,8 +8,7 @@
   display: grid;
   grid-template-columns: minmax(250px, .78fr) minmax(0, 1.22fr);
   column-gap: clamp(40px, 7vw, 100px);
-  row-gap: clamp(28px, 4vw, 48px);
-  align-items: center;
+  align-items: start;
 }
 .crossing__identity .eyebrow { color: var(--ink-soft); }
 .crossing__title { margin: 14px 0 0; max-width: 8ch; font-size: clamp(64px, 7vw, 100px); }
@@ -18,50 +17,75 @@
 .crossing__bio { max-width: 62ch; }
 .crossing__bio p { max-width: 52ch; margin: 0; }
 .crossing__bio p + p { margin-top: 14px; }
-.crossing__interests {
-  grid-column: 1 / -1;
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  margin: 0;
-  padding: 16px 0 18px;
-  border-top: 1px solid rgba(27, 42, 51, .24);
-  border-bottom: 1px solid rgba(27, 42, 51, .24);
+
+.crossing__aside,
+.crossing__main { min-width: 0; }
+
+/* the sidebar holds while the roles scroll — only where it fits on screen */
+@media (min-width: 901px) and (min-height: 680px) {
+  .crossing__aside { position: sticky; top: calc(var(--nav-h) + 8px); }
 }
-.crossing__interests > div { min-width: 0; padding-inline: clamp(14px, 2.4vw, 34px); }
-.crossing__interests > div:first-child { padding-left: 0; }
-.crossing__interests > div + div { border-left: 1px solid rgba(27, 42, 51, .18); }
-.crossing__interests dt { color: var(--ink-soft); font-family: var(--sans); font-size: 11.5px; font-weight: 500; letter-spacing: .16em; text-transform: uppercase; }
-.crossing__interests dd { margin: 6px 0 0; color: var(--ink); font-family: var(--serif); font-size: clamp(16px, 1.45vw, 20px); line-height: 1.25; }
-.crossing__experience { grid-column: 1 / -1; margin-top: clamp(14px, 2vw, 24px); }
-.crossing__experience-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 24px; margin-bottom: 12px; }
-.crossing__experience-title { color: var(--ink); font-family: var(--serif); font-size: clamp(30px, 3vw, 40px); font-weight: 400; line-height: 1; letter-spacing: -.025em; }
-.crossing__resume-link { color: var(--ink-soft); font-size: 13px; text-decoration: underline; text-decoration-color: rgba(27, 42, 51, .35); text-underline-offset: 3px; }
-.crossing__resume-link:hover { color: var(--ink); text-decoration-color: currentColor; }
-.crossing__experience-list { margin: 0; padding: 0; list-style: none; border-top: 1px solid rgba(27, 42, 51, .24); }
-.crossing__experience-entry { display: grid; grid-template-columns: minmax(150px, .72fr) minmax(210px, 1.15fr) minmax(0, 2.13fr); column-gap: clamp(20px, 3vw, 42px); align-items: start; padding: 14px 0 15px; border-bottom: 1px solid rgba(27, 42, 51, .24); }
-.crossing__experience-dates { color: var(--ink-soft); font-size: 13px; line-height: 1.45; font-variant-numeric: tabular-nums; }
-.crossing__experience-role h4 { color: var(--ink); font-family: var(--serif); font-size: clamp(17px, 1.55vw, 21px); font-weight: 400; line-height: 1.18; }
-.crossing__experience-role p { margin-top: 3px; color: var(--ink-soft); font-size: 13px; line-height: 1.4; }
-.crossing__experience-summary { max-width: 72ch; color: var(--ink-soft); font-size: 16px; line-height: 1.55; }
+
+.crossing__label { margin: 0; color: var(--ink-soft); font-family: var(--sans); font-size: 11.5px; font-weight: 500; letter-spacing: .16em; text-transform: uppercase; }
+
+.crossing__interests { margin-top: clamp(36px, 4vw, 52px); max-width: 300px; }
+.crossing__interests .crossing__label { margin-bottom: 10px; }
+.crossing__interests-list { margin: 0; padding: 0; list-style: none; }
+.crossing__interests-list li { padding: 11px 0 12px; border-top: 1px solid rgba(27, 42, 51, .24); color: var(--ink); font-family: var(--serif); font-size: 21px; line-height: 1.25; }
+.crossing__interests-list li:last-child { border-bottom: 1px solid rgba(27, 42, 51, .24); }
+
+.crossing__education { margin-top: 28px; max-width: 300px; }
+.crossing__degree { margin: 0; }
+.crossing__degree dd { margin: 6px 0 0; }
+.crossing__degree-name { display: block; color: var(--ink); font-family: var(--serif); font-size: 21px; line-height: 1.25; }
+.crossing__degree-where { display: block; margin-top: 3px; color: var(--ink-soft); font-size: 13px; }
+.crossing__resume-link { display: inline-block; margin-top: 18px; color: var(--ink); font-size: 13px; text-decoration: none; }
+.crossing__resume-text { text-decoration: underline; text-decoration-color: rgba(27, 42, 51, .35); text-underline-offset: 3px; }
+.crossing__resume-arrow { display: inline-block; transition: transform .34s var(--ease-settle); }
+.crossing__resume-link:hover .crossing__resume-text,
+.crossing__resume-link:focus-visible .crossing__resume-text { text-decoration-color: currentColor; }
+.crossing__resume-link:hover .crossing__resume-arrow,
+.crossing__resume-link:focus-visible .crossing__resume-arrow { transform: translateX(5px); }
+
+.crossing__experience { margin-top: clamp(52px, 6vw, 84px); }
+.crossing__experience-list { max-width: 740px; margin: 0; padding: 0; list-style: none; }
+.crossing__role { display: grid; grid-template-columns: 148px minmax(0, 1fr); column-gap: 20px; transition: opacity .34s var(--ease-settle); }
+.crossing__role + .crossing__role { margin-top: clamp(36px, 4vw, 48px); }
+.crossing__role-dates { margin: 0; padding-top: 4px; color: var(--ink-soft); font-size: 13px; line-height: 1.5; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.crossing__role-title { display: grid; margin: 0; color: var(--ink); font-family: var(--serif); font-size: 21px; font-weight: 400; line-height: 1.25; letter-spacing: -.005em; }
+.crossing__role-title > span { grid-area: 1 / 1; }
+.crossing__role-sizer { font-style: italic; visibility: hidden; }
+.crossing__role-dot { padding-inline: .3em; color: var(--ink-soft); }
+.crossing__role-note { margin: 4px 0 0; color: var(--ink-soft); font-size: 13px; line-height: 1.4; }
+.crossing__role-summary { margin: 10px 0 0; color: var(--ink-soft); font-size: 17px; line-height: 1.6; }
+
+/* hovering a role turns its title italic (D46's signal) and quiets the rest */
+@media (hover: hover) and (min-width: 1024px) {
+  .crossing__experience-list:hover .crossing__role { opacity: .45; }
+  .crossing__experience-list .crossing__role:hover { opacity: 1; }
+  .crossing__role:hover .crossing__role-shown { font-style: italic; }
+}
 
 @media (max-width: 900px) {
-  .crossing__inner { grid-template-columns: minmax(0, 1fr); gap: 26px; align-items: start; }
+  .crossing__inner { grid-template-columns: minmax(0, 1fr); row-gap: 26px; }
+  /* one column in reading order: title, bio, interests, roles, education */
+  .crossing__aside,
+  .crossing__main { display: contents; }
+  .crossing__identity { order: 1; }
+  .crossing__bio { order: 2; }
+  .crossing__interests { order: 3; margin-top: 6px; max-width: none; }
+  .crossing__experience { order: 4; margin-top: 20px; }
+  .crossing__education { order: 5; margin-top: 8px; max-width: none; }
   .crossing__title { font-size: clamp(58px, 10vw, 82px); }
   .crossing__bio { max-width: 54ch; }
-  .crossing__interests { grid-template-columns: 1fr; padding: 8px 0; }
-  .crossing__interests > div,
-  .crossing__interests > div:first-child { padding: 10px 0; }
-  .crossing__interests > div + div { border-left: 0; border-top: 1px solid rgba(27, 42, 51, .18); }
-  .crossing__interests dd { margin-top: 4px; }
-  .crossing__experience { margin-top: 4px; }
-  .crossing__experience-heading { margin-bottom: 8px; }
-  .crossing__experience-entry { grid-template-columns: minmax(120px, .65fr) minmax(0, 1fr); column-gap: 18px; row-gap: 7px; padding: 13px 0; }
-  .crossing__experience-summary { grid-column: 2; }
 }
 
-@media (max-width: 560px) {
-  .crossing__experience-entry { grid-template-columns: minmax(0, 1fr); row-gap: 5px; }
-  .crossing__experience-summary { grid-column: auto; margin-top: 2px; }
+@media (max-width: 600px) {
+  .crossing__role { grid-template-columns: minmax(0, 1fr); }
+  .crossing__role-dates { margin-bottom: 6px; padding-top: 0; }
+  .crossing__role-title,
+  .crossing__interests-list li,
+  .crossing__degree-name { font-size: 20px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -72,4 +96,5 @@
       var(--hero-exit) 0%,
       var(--snow-lit) 100%);
   }
+  .crossing__role, .crossing__resume-arrow { transition: none; }
 }
