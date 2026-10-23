@@ -1166,12 +1166,35 @@ has been removed. The Selected Work index now lists two plates: Airtable Clone
 as Plate I and Worn as Plate II. Their existing table aperture, figures, and
 motion remain intact.
 
+## D61 — Search engines and link previews get real pages
+
+The site was shipping an empty `#root` shell. It had no `robots.txt`, sitemap,
+favicon, home Open Graph tags or structured data. Search crawlers that do not
+run JavaScript had no page text to read, and link previews had no useful home
+image to show.
+
+The build now writes the site's real content into the home and post HTML. The
+home page includes its work, writing and contact details; each post includes
+its title, date, standfirst and body. This is safe because React's
+`createRoot(...).render` replaces the container's children on mount. It is not
+cloaking: everyone sees the same content, with JavaScript readers moving on to
+the app.
+
+Post pages now preload only their own lead image. Previously the first preload
+was replaced but the retina home-hero preload survived, so retina phones fetched
+a 554KB image that a post never showed. The measured throttled mobile LCP on a
+post was 4.2 seconds; removing that wasted request fixes the cause.
+
+The home share image is `public/og/home.jpg`, a 1200 × 630 painting of
+Zhangjiajie's sandstone pillars. The favicon and touch icon are served from the
+matching files in `public/`.
+
 ## D62 — About becomes a pinned sidebar; Experience is organised like brittanychiang.com
 
 Lance turned down every earlier Experience direction (Codex's options, then
-mocks A–E and several layout rounds; all kept in `docs/experience-mocks/` on
-main) and asked for brittanychiang.com's organisation, set in this site's
-language. About is now two columns. The left column is one sidebar, pinned
+mocks A–E and several layout rounds, recorded in `docs/experience-mocks/`)
+and asked for brittanychiang.com's organisation, set in this site's language.
+About is now two columns. The left column is one sidebar, pinned
 while the right column scrolls (only at ≥901px wide and ≥680px tall, where it
 fits): "About." and the route, the interests under an "Interests" label, then
 the degree and the résumé link. The right column holds the bio and the roles.
