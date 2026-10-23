@@ -1128,3 +1128,26 @@ the UI, 840w and 1680w WebP, lazy loaded.
 app with 1,000,050 faker contacts in a base called Contacts, signed in with a
 local test session. Nothing was captured from the production app or from
 Lance's own bases. The `lake-terrace` plate files stay in `public/plates/`.
+
+## D61 — Search engines and link previews get real pages
+
+The site was shipping an empty `#root` shell. It had no `robots.txt`, sitemap,
+favicon, home Open Graph tags or structured data. Search crawlers that do not
+run JavaScript had no page text to read, and link previews had no useful home
+image to show.
+
+The build now writes the site's real content into the home and post HTML. The
+home page includes its work, writing and contact details; each post includes
+its title, date, standfirst and body. This is safe because React's
+`createRoot(...).render` replaces the container's children on mount. It is not
+cloaking: everyone sees the same content, with JavaScript readers moving on to
+the app.
+
+Post pages now preload only their own lead image. Previously the first preload
+was replaced but the retina home-hero preload survived, so retina phones fetched
+a 554KB image that a post never showed. The measured throttled mobile LCP on a
+post was 4.2 seconds; removing that wasted request fixes the cause.
+
+The home share image is `public/og/home.jpg`, a 1200 × 630 painting of
+Zhangjiajie's sandstone pillars. The favicon and touch icon are served from the
+matching files in `public/`.
