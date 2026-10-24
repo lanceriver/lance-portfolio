@@ -33,6 +33,20 @@ gh variable set VISITS_API_URL --body '<VisitsApiUrl>' --repo lanceriver/lance-p
 
 Start the first deployment from GitHub Actions with **Deploy site → Run workflow** on `main` (workflow dispatch).
 
+## Visit stats
+
+The counter stores a site total, per-day counts keyed by `day#YYYY-MM-DD` using Australia/Sydney dates, and per-country totals keyed by `country#<CC>`. It stores no IP addresses or other per-visitor data. Per-day and per-country counts start from the deployment date; direct calls to the execute-api URL count toward the day and are recorded as `unknown` country.
+
+After deploying the stack, switch the repository variable to the same-origin route and rerun **Deploy site**:
+
+```sh
+cd infra
+AWS_PROFILE=admin sam build && AWS_PROFILE=admin sam deploy --stack-name lance-portfolio --region us-east-1 --capabilities CAPABILITY_IAM --resolve-s3
+gh variable set VISITS_API_URL --body 'https://lanceriver.com/visits' --repo lanceriver/lance-portfolio
+```
+
+From the repository root, read the counts with `AWS_PROFILE=admin python3 scripts/visit-stats.py --days 30`. The script scans the table and includes zero-count days in the requested Sydney date range. `--days` defaults to 30, and optional `--table <name>` bypasses the stack lookup.
+
 ## Connect read-only Spotify now playing
 
 The stack adds `GET /now-playing` to the existing HTTP API and reports the current track, or the most recently played track with `playing: false`. The JSON response contains `playing`, `title`, `artist`, `url`, `art`, and `crate`; `art` is the first valid `https://i.scdn.co/image/<alphanumeric>` album image URL or `null`. `crate` lists up to four earlier distinct albums from recently played (newest first, each with `title`, `artist`, `url` and `art`, never the front record's album, under the same URL safety rules) and is an empty list when nothing is available. The endpoint only requests `user-read-currently-playing` and `user-read-recently-played`. It returns an empty stopped state when playback is unavailable and never exposes device, account, or token data.
@@ -62,7 +76,7 @@ Cost: the Standard Parameter Store value has no storage or standard-throughput A
 
 ## Verify the cutover
 
-Replace `<writing-slug>` with a directory from `dist/writing/` and `<VisitsApiUrl>` with the stack output.
+Replace `<writing-slug>` with a directory from `dist/writing/`. `<VisitsApiUrl>` is the direct execute-api stack output used for the preflight CORS checks below.
 
 ```sh
 curl -sS -o /dev/null -w '%{http_code}\n' https://lanceriver.com/
@@ -70,11 +84,12 @@ curl -sS -o /dev/null -w '%{http_code} %{redirect_url}\n' https://www.lanceriver
 curl -sS -o /dev/null -w '%{http_code} %{redirect_url}\n' https://lanceriver.com/writing/<writing-slug>
 curl -sS -o /dev/null -w '%{http_code}\n' https://lanceriver.com/this-path-does-not-exist
 curl -sSI https://lanceriver.com/ | tr -d '\r' | grep -Ei '^(strict-transport-security|x-content-type-options|x-frame-options|referrer-policy):'
+curl -i https://lanceriver.com/visits
 curl -i -X OPTIONS '<VisitsApiUrl>' -H 'Origin: https://lanceriver.com' -H 'Access-Control-Request-Method: POST' -H 'Access-Control-Request-Headers: content-type'
 curl -i -X OPTIONS '<VisitsApiUrl>' -H 'Origin: https://another-origin.example' -H 'Access-Control-Request-Method: POST' -H 'Access-Control-Request-Headers: content-type'
 ```
 
-Expected: apex returns 200; `www` returns 301 to the apex; the slashless writing URL returns 301 to its trailing-slash form; the unknown path returns 404. The first preflight includes `Access-Control-Allow-Origin: https://lanceriver.com`. The second must omit `Access-Control-Allow-Origin` (the browser rejects it even if API Gateway responds 204).
+Expected: apex returns 200; `www` returns 301 to the apex; the slashless writing URL returns 301 to its trailing-slash form; the unknown path returns 404; and `/visits` returns 200 with a JSON `count`. The first preflight includes `Access-Control-Allow-Origin: https://lanceriver.com`. The second must omit `Access-Control-Allow-Origin` (the browser rejects it even if API Gateway responds 204).
 
 ## Old site (retired 2026-10-22)
 
